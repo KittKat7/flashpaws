@@ -22,7 +22,7 @@ samples, guidance on mobile development, and a full API reference.
 title: Alpha Roadmap
 ---
 flowchart TD
-    a[Basic classes] --> basicPageUI
+    a["✔️ Basic classes"] --> basicPageUI
     subgraph basicPageUI[Basic Page UI]
         b[Home Page/Overview] --> c
         c[Deck Page]
