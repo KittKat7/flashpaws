@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutterkat/flutterkat.dart';
 import 'package:flutterkat/lang.dart';
+import 'package:flutterkat/graphics.dart';
+import 'package:flutterkat/theme.dart' as theme;
+import 'package:hive_flutter/hive_flutter.dart';
 import './lang/en_us.dart' as en_us;
 
 void main() async {
 	await initialize();
 	flktRunApp(const MyApp());
 }
+
+late Box box;
 
 /// initialize
 /// This function initializes anything variables, like the hive box, that will be needed later on.
@@ -15,20 +20,17 @@ Future<void> initialize() async {
 	// Initialize hive box.
 	await Hive.initFlutter('katapp');
 	box = await Hive.openBox('flashpaws');
-	// Get a list of all the stored decks.
-	for (String key in box.keys) {
-		Deck.decks[key] = Deck.fromJson(jsonDecode(box.get(key)));
-	}
+
 	// Set up the default aspect ratio.
 	setAspect(3, 4);
 }
 
-/// Stores data for all the page routes.
-Map<String, List<dynamic>> pageRoutes = {
-	'home': ['/', HomePage(title: getString('title'))],
-	'deck': ['/deck', DeckPage(title: getString('title_deck'))],
-	'flashcards': ['/flashcards', FlashcardPage(title: getString('title_flashcards'))]
-};
+// /// Stores data for all the page routes.
+// Map<String, List<dynamic>> pageRoutes = {
+// 	'home': ['/', HomePage(title: getString('title'))],
+// 	'deck': ['/deck', DeckPage(title: getString('title_deck'))],
+// 	'flashcards': ['/flashcards', FlashcardPage(title: getString('title_flashcards'))]
+// };
 
 class MyApp extends StatelessWidget {
 	const MyApp({super.key});
@@ -47,6 +49,15 @@ class MyApp extends StatelessWidget {
 	}
 }
 
+
+class HomePage extends StatefulWidget {
+	const HomePage({super.key, required this.title});
+
+	final String title;
+
+	@override
+	State<HomePage> createState() => _HomePageState();
+}
 
 class _HomePageState extends State<HomePage> {
 
