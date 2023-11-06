@@ -1,18 +1,28 @@
-Map<String, List<Flashcard>> decks = {};
-Map<String, List<String>> topics = {};
-Map<String, List<Flashcard>> tagGroups = {};
 
+class Flashcard {
 
-class Flashcard {  
+  static List<Flashcard> cards = [];
+
+  static List<String> getDecks([List<String> baseDeck = const []]) {
+    String baseDeckString = baseDeck.join('/').toLowerCase();
+    List<String> decks = [];
+    for (Flashcard c in cards) {
+      if (!decks.contains(c.deckString) && c.deckString.startsWith(baseDeckString)) {
+        decks.add(c.deckString.toLowerCase());
+      }
+    }
+    return decks;
+  }
 
   String key;
-  String deck;
-  String topic;
-  Record get id {
-    return (deck.toLowerCase(), key.toLowerCase());
-  }
+  List<String> deck;
   List<String> values;
   List<String> tags;
 
-  Flashcard(this.key, this.values, this.deck, this.topic, this.tags);
-}
+  Record get id { return (deck, key); }
+  String get deckString { return deck.join('/').toLowerCase(); }
+
+  Flashcard(this.key, this.deck, this.values, {List<String>? tags}) : tags = tags ?? [];
+
+
+} // end Flashcard
