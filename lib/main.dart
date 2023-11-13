@@ -35,6 +35,8 @@ Future<void> initialize() async {
 
   // set language
 	setLang(en_us.getLang);
+  // Set aspect ratio
+  setAspect(3, 4);
 	// Initialize hive box.
 	await Hive.initFlutter('katapp');
 	box = await Hive.openBox('flashpaws');
@@ -42,14 +44,13 @@ Future<void> initialize() async {
   if (!box.containsKey('flashcards')) box.put('flashcards', []);
   // TODO remove temp data
   Flashcard.cards = [
-    Flashcard("t1", ["d1","d11"], ["a1","b1"]),
-    Flashcard("t2", ["d1","d12"], ["a2","b2"]),
-    Flashcard("t3", ["d2","d11"], ["a1","b1"]),
-    Flashcard("t4", ["d2","d12"], ["a2","b2"])
+    Flashcard("t1", "d1/d11", ["a1","b1"]),
+    Flashcard("t2", "d1/d12", ["a2","b2"]),
+    Flashcard("t3", "d2/d11", ["a1","b1"]),
+    Flashcard("t4", "d2/d12", ["a2","b2"])
   ];
-  
-	// Set up the default aspect ratio.
-	setAspect(3, 4);
+
+  Flashcard.setFilter([]);	
 }
 
 /// Stores data for all the page routes.
@@ -94,12 +95,12 @@ class _HomePageState extends State<HomePage> {
 			appBar: AppBar(
 				title: TextBold(widget.title),
 			),
-			body: Aspect(child: Padding(padding: const EdgeInsets.only(top: 10), child: deckBtns(Flashcard.getDecks()))),
+			body: Aspect(child: Padding(padding: const EdgeInsets.only(top: 10), child: deckBtns(Flashcard.filteredDecks, context, this))),
 			floatingActionButton: FloatingActionButton(
 				onPressed: () => enterTxtPopup(context, "getString('prompt_create_new_deck')", (p0) => print("//TODO add a deck $p0"),),
 				tooltip: "getString('tooltip_create_new_deck')",
 				child: const Icon(Icons.add),
-			), // This trailing comma makes auto-formatting nicer for build methods.
+			),
 		);
 	}
 }
