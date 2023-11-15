@@ -28,7 +28,6 @@ class Flashcard {
   /// param String layer The layer to be added to the filter.
   static void pushFilter(String layer) {
     _filter.add(layer);
-
     filteredCards = getFilteredCards(filteredCards);
     filteredDecks = getSubdecks(filteredCards);
   } //end pushFilter
@@ -51,6 +50,7 @@ class Flashcard {
   /// @param List<Flashcard> tempCards
   /// @returns List<Flashcards> cards matching the filter
   static List<Flashcard> getFilteredCards(List<Flashcard> listOfCards) {
+    if (filter.isEmpty) return cards;
     List<Flashcard> returnList = [];
     for (Flashcard c in listOfCards) {
       if (c.deck.startsWith(filter.join("/"))) {
@@ -69,8 +69,9 @@ class Flashcard {
   static List<String> getSubdecks(List<Flashcard> listOfCards) {
     // List of subdeck layers to return
     List<String> retList = [];
-    // Join the filter stack into a single string
+    // Join the filter stack into a single string and if it is not empty, add a trailing "/"
     String filterStr = filter.join("/");
+    if (filterStr.isNotEmpty) filterStr += "/";
     // Go through the list of provided cards
     for (Flashcard c in listOfCards) {
       // If the deck of the card does not start with the filter, skip this card
@@ -90,17 +91,22 @@ class Flashcard {
   /// The key for the flashcard
   String key;
   /// The deck the flashcard is in
-  String deck;
+  String _deck;
+  set deck(String deck) { _deck = deck; }
+  String get deck { return _deck.endsWith("/") ? _deck : "$_deck/"; }
   /// All possible answers for the flashcard, index 0 is the correct one
   List<String> values;
   /// All tags that this card has
   List<String> tags;
 
   /// get id Returns the unique id of the card.
-  Record get id { return (deck, key); }
+  String get id { return deck + key; }
 
   /// Constructor
-  Flashcard(this.key, this.deck, this.values, {List<String>? tags}) : tags = tags ?? [];
+  Flashcard(this.key, this._deck, this.values, {List<String>? tags}) : tags = tags ?? [];
 
-
+  @override
+  String toString() {
+    return id;
+  }
 } //end Flashcard

@@ -44,10 +44,26 @@ Future<void> initialize() async {
   if (!box.containsKey('flashcards')) box.put('flashcards', []);
   // TODO remove temp data
   Flashcard.cards = [
-    Flashcard("t1", "d1/d11", ["a1","b1"]),
-    Flashcard("t2", "d1/d12", ["a2","b2"]),
-    Flashcard("t3", "d2/d11", ["a1","b1"]),
-    Flashcard("t4", "d2/d12", ["a2","b2"])
+    Flashcard("t1", "d1/d11/", ["a1","b1"]),
+    Flashcard("t2", "d1/d12/", ["a2","b2"]),
+    Flashcard("t3", "d2/d11/", ["a1","b1"]),
+    Flashcard("t4", "d2/d12/", ["a2","b2"]),
+    Flashcard("t5", "d3/d11/", ["a1","b1"]),
+    Flashcard("t6", "d3/d12/", ["a2","b2"]),
+    Flashcard("t7", "d4/d11/", ["a1","b1"]),
+    Flashcard("t8", "d4/d12/", ["a2","b2"]),
+    Flashcard("t9", "d5/d11/", ["a1","b1"]),
+    Flashcard("t10", "d5/d12/", ["a2","b2"]),
+    Flashcard("t11", "d6/d11/", ["a1","b1"]),
+    Flashcard("t12", "d6/d12/", ["a2","b2"]),
+    Flashcard("t13", "d7/d11/", ["a1","b1"]),
+    Flashcard("t14", "d7/d12/", ["a2","b2"]),
+    Flashcard("t15", "d8/d11/", ["a1","b1"]),
+    Flashcard("t16", "d8/d12/", ["a2","b2"]),
+    Flashcard("t17", "d9/d11/", ["a1","b1"]),
+    Flashcard("t18", "d9/d12/", ["a2","b2"]),
+    Flashcard("t19", "d10/d11/", ["a1","b1"]),
+    Flashcard("t20", "d10/d12/", ["a2","b2"]),
   ];
 
   Flashcard.setFilter([]);	
@@ -95,7 +111,13 @@ class _HomePageState extends State<HomePage> {
 			appBar: AppBar(
 				title: TextBold(widget.title),
 			),
-			body: Aspect(child: Padding(padding: const EdgeInsets.only(top: 10), child: deckBtns(Flashcard.filteredDecks, context, this))),
+			body: Aspect(child: Padding(
+        padding: const EdgeInsets.only(top: 10),
+        child: SingleChildScrollView(child: Column(children: [
+          deckBtns(Flashcard.filteredDecks, () => setState(() {})),
+          cardBtns(Flashcard.filteredCards, () => setState(() {}))
+        ]
+      )))),
 			floatingActionButton: FloatingActionButton(
 				onPressed: () => enterTxtPopup(context, "getString('prompt_create_new_deck')", (p0) => print("//TODO add a deck $p0"),),
 				tooltip: "getString('tooltip_create_new_deck')",
