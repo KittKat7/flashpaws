@@ -19,7 +19,7 @@ class Flashcard {
   static void setFilter(List<String> filter) {
     _filter = filter;
     filteredCards = getFilteredCards(cards);
-    filteredDecks = getSubdecks(filteredCards);
+    filteredDecks = getLayers(filteredCards);
   }
 
   /// pushFilter
@@ -29,7 +29,7 @@ class Flashcard {
   static void pushFilter(String layer) {
     _filter.add(layer);
     filteredCards = getFilteredCards(filteredCards);
-    filteredDecks = getSubdecks(filteredCards);
+    filteredDecks = getLayers(filteredCards);
   } //end pushFilter
 
   /// popFilter
@@ -40,7 +40,7 @@ class Flashcard {
     String tmp = filter[-1];
     filter.removeAt(-1);
     filteredCards = getFilteredCards(cards);
-    filteredDecks = getSubdecks(filteredCards);
+    filteredDecks = getLayers(filteredCards);
     return tmp;
   } //end popFilter
 
@@ -56,6 +56,12 @@ class Flashcard {
       if (c.deck.startsWith(filter.join("/"))) {
         returnList.add(c);
       } //end if
+      // for tags
+      for (String tag in c.tags) {
+        if (tag.startsWith(filter.join("/"))) {
+          returnList.add(c);
+        } //end if
+      } //end for
     } //end for
     return returnList;
   } //end getFilteredCards
@@ -66,7 +72,7 @@ class Flashcard {
   /// @param List<Flashcards> The list of cards to get subdecks from
   /// @returns List<String> a list of all subdecks from the provided cards, matching the active
   /// filter
-  static List<String> getSubdecks(List<Flashcard> listOfCards) {
+  static List<String> getLayers(List<Flashcard> listOfCards) {
     // List of subdeck layers to return
     List<String> retList = [];
     // Join the filter stack into a single string and if it is not empty, add a trailing "/"
@@ -85,8 +91,40 @@ class Flashcard {
       // Add the layer to the list if it is not allready added AND the layer is not empty
       if (!retList.contains(tmpStr) && tmpStr.isNotEmpty) retList.add(tmpStr);
     } //end for
+
+    // Do the same things for tags
+    // Go through the list of provided cards
+    for (Flashcard c in listOfCards) {
+      for (String tag in c.tags) {
+        // If the tag of the card does not start with the filter, skip this card
+        if (!tag.startsWith(filterStr)) continue;
+        // Get the tag for the card with the filter removed from the tag
+        String tmpStr = tag.substring(filterStr.length);
+        // If the subtag starts with "/", remove the leading "/"
+        if (tmpStr.startsWith("/")) tmpStr = tmpStr.substring(1);
+        // Get the next layer in the tag
+        tmpStr = tmpStr.split("/")[0];
+        // Add the layer to the list if it is not allready added AND the layer is not empty
+        if (!retList.contains(tmpStr) && tmpStr.isNotEmpty) retList.add(tmpStr);
+      } //end for
+    } //end for
     return retList;
-  } //end getSubdecks
+  } //end getLayers
+
+  static void newCard(String key, String deck, List<String> values, [List<String>? tags]) {
+    tags??=[];
+    Flashcard card = Flashcard(key, deck, values, tags);
+    String id = card.id;
+    for (int i = 0; i < cards.length; i++) {
+      if (cards[i].id == id) {
+        cards[i] = card;
+        return;
+      }
+    }
+    cards.add(card);
+    filteredCards = getFilteredCards(filteredCards);
+    filteredDecks = getLayers(filteredCards);
+  } //end newCard
 
   /// The key for the flashcard
   String key;
@@ -103,7 +141,7 @@ class Flashcard {
   String get id { return deck + key; }
 
   /// Constructor
-  Flashcard(this.key, this._deck, this.values, {List<String>? tags}) : tags = tags ?? [];
+  Flashcard(this.key, this._deck, this.values, [List<String>? tags]) : tags = tags ?? [];
 
   @override
   String toString() {

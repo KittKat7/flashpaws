@@ -44,26 +44,26 @@ Future<void> initialize() async {
   if (!box.containsKey('flashcards')) box.put('flashcards', []);
   // TODO remove temp data
   Flashcard.cards = [
-    Flashcard("t1", "d1/d11/", ["a1","b1"]),
-    Flashcard("t2", "d1/d12/", ["a2","b2"]),
-    Flashcard("t3", "d2/d11/", ["a1","b1"]),
-    Flashcard("t4", "d2/d12/", ["a2","b2"]),
-    Flashcard("t5", "d3/d11/", ["a1","b1"]),
-    Flashcard("t6", "d3/d12/", ["a2","b2"]),
-    Flashcard("t7", "d4/d11/", ["a1","b1"]),
-    Flashcard("t8", "d4/d12/", ["a2","b2"]),
-    Flashcard("t9", "d5/d11/", ["a1","b1"]),
-    Flashcard("t10", "d5/d12/", ["a2","b2"]),
-    Flashcard("t11", "d6/d11/", ["a1","b1"]),
-    Flashcard("t12", "d6/d12/", ["a2","b2"]),
-    Flashcard("t13", "d7/d11/", ["a1","b1"]),
-    Flashcard("t14", "d7/d12/", ["a2","b2"]),
-    Flashcard("t15", "d8/d11/", ["a1","b1"]),
-    Flashcard("t16", "d8/d12/", ["a2","b2"]),
-    Flashcard("t17", "d9/d11/", ["a1","b1"]),
-    Flashcard("t18", "d9/d12/", ["a2","b2"]),
-    Flashcard("t19", "d10/d11/", ["a1","b1"]),
-    Flashcard("t20", "d10/d12/", ["a2","b2"]),
+    Flashcard("Temp Card 1", "deck1/layer1/", ["Answer 1","Answer B 1"], ["#learned/good"]),
+    Flashcard("Temp Card 2", "deck1/layer2/", ["Answer 2","Answer B 2"], ["#learned/good"]),
+    Flashcard("Temp Card 3", "deck2abcd/layer1/", ["Answer 1","Answer B 1"], ["#learned/good"]),
+    Flashcard("Temp Card 4", "deck2abcd/layer2/", ["Answer 2","Answer B2 "], ["#learned/good"]),
+    Flashcard("Temp Card 5", "deck3/layer1/", ["Answer 1","Answer B 1"]),
+    Flashcard("Temp Card 6", "deck3/layer2/", ["Answer 2","Answer B 2"]),
+    Flashcard("Temp Card 7", "deck4/layer1/", ["Answer 1","Answer B 1"], ["#learned/med"]),
+    Flashcard("Temp Card 8", "deck4/layer2/", ["Answer 2","Answer B 2"]),
+    Flashcard("Temp Card 9", "deck5/layer1/", ["Answer 1","Answer B 1"]),
+    Flashcard("Temp Card 10", "deck5/layer2/", ["Answer 2","Answer B 2"]),
+    Flashcard("Temp Card 11", "deck6/layer1/", ["Answer 1","Answer B 1"], ["#learned/bad"]),
+    Flashcard("Temp Card 12", "deck6/layer2/", ["Answer 2","Answer B 2"]),
+    Flashcard("Temp Card 13", "deck7/layer1/", ["Answer 1","Answer B 1"], ["#smile/happy"]),
+    Flashcard("Temp Card 14", "deck7/layer2/", ["Answer 2","Answer B 2"], ["#smile/happy"]),
+    Flashcard("Temp Card 15", "deck8/layer1/", ["Answer 1","Answer B 1"], ["#learned/bad"]),
+    Flashcard("Temp Card 16", "deck8/layer2/", ["Answer 2","Answer B 2"], ["#smile"]),
+    Flashcard("Temp Card 17", "deck9/layer1/", ["Answer 1","Answer B 1"], ["#smile"]),
+    Flashcard("Temp Card 18", "deck9/layer2/", ["Answer 2","Answer B 2"], ["#smile"]),
+    Flashcard("Temp Card 19", "deck10/layer1/", ["Answer 1","Answer B 1"], ["#smile"]),
+    Flashcard("Temp Card 20", "deck10/layer2/", ["Answer 2","Answer B 2"]),
   ];
 
   Flashcard.setFilter([]);	
@@ -114,12 +114,17 @@ class _HomePageState extends State<HomePage> {
 			body: Aspect(child: Padding(
         padding: const EdgeInsets.only(top: 10),
         child: SingleChildScrollView(child: Column(children: [
+          startBtns(),
           deckBtns(Flashcard.filteredDecks, () => setState(() {})),
           cardBtns(Flashcard.filteredCards, () => setState(() {}))
         ]
       )))),
 			floatingActionButton: FloatingActionButton(
-				onPressed: () => enterTxtPopup(context, "getString('prompt_create_new_deck')", (p0) => print("//TODO add a deck $p0"),),
+				onPressed: () => createCardPopup(
+          context,
+          "//TODO CREATE CARD",
+          (p0, p1, p2, [p3]) { Flashcard.newCard(p0, p1, p2, p3); setState(() {});},
+        ),
 				tooltip: "getString('tooltip_create_new_deck')",
 				child: const Icon(Icons.add),
 			),

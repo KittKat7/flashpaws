@@ -30,12 +30,18 @@ class DeckBtn extends StatelessWidget {
     // primary style
     ButtonStyle style = isApplied ? selStyle : priStyle;
 
+    // The button.
+    Widget button = ElevatedButton(style: style, onPressed: () => onPressed(), child: child);
+    // pad the button.
+    Widget paddedBtn = Padding(padding: const EdgeInsets.all(5), child: button);
+
     // return an ElevatedButton with the selected style, with the correct onPressed, and correct
     // child.
-    return ElevatedButton(style: style, onPressed: () => onPressed(), child: child);
-  }
+    return paddedBtn;
+  } //end Build
 } //end DeckBtn
 
+/// CardBtn //TODO comment
 class CardBtn extends StatelessWidget {
   /// The card to be displayed.
   final Flashcard card;
@@ -62,9 +68,34 @@ class CardBtn extends StatelessWidget {
         ))
       )
     ]);
-  }
+  } //end Build
+} //end CardBtn
 
-}
+///TODO comment
+class StartBtn extends StatelessWidget {
+  /// The card to be displayed.
+  final String text;
+  final Icon icon;
+  /// The function to run when the button is pressed.
+  final void Function() onPressed;
+
+  /// Constructor
+  const StartBtn({super.key, required this.icon, required this.text, required this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+
+    ButtonStyle style = ElevatedButton.styleFrom(
+      backgroundColor: colorScheme(context).background
+    );
+
+    return ElevatedButton(
+      style: style,
+      onPressed: () => print("flashcard"),
+      child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [icon, MarkD(text)])
+    );
+  } //end Build
+} //end CardBtn
 
 /// deckBtns
 /// This methd builds a list of DeckBtn based on the provided decks.
@@ -75,6 +106,7 @@ class CardBtn extends StatelessWidget {
 Widget deckBtns(List<String> layers, void Function() updateState) {
   // All the buttons generated and to be displayed.
   List<Widget> children = [];
+  
   // Add a button to reset the filter and display all decks / cards.
   children.add(DeckBtn(
     layer: "//TODO All",
@@ -110,15 +142,16 @@ Widget deckBtns(List<String> layers, void Function() updateState) {
     ));
   } //end for
   // Create and returnt he GridView widget with the created list of buttons, and return it.
-  Widget grid = GridView.count(
-    primary: false,
-    shrinkWrap: true,
-    crossAxisCount: 3,
-    mainAxisSpacing: 10,
-    crossAxisSpacing: 10,
-    childAspectRatio: 4,
-    children: children,
-  );
+  // Widget grid = GridView.count(
+  //   primary: false,
+  //   shrinkWrap: true,
+  //   crossAxisCount: 3,
+  //   mainAxisSpacing: 10,
+  //   crossAxisSpacing: 10,
+  //   childAspectRatio: 4,
+  //   children: children,
+  // );
+  Widget grid = Align(alignment: Alignment.topLeft, child: Wrap(alignment: WrapAlignment.start, children: children,));
   return grid;
 } //end deckBtns
 
@@ -136,6 +169,109 @@ Widget cardBtns(List<Flashcard> cards, void Function() updateState) {
   }
   Widget grid = Column(children: children,);
   return grid;
+} //end cardBtns
+
+Widget startBtns() {
+
+  Widget flashcard = StartBtn(
+    icon: const Icon(Icons.play_arrow),
+    text: "flashcard",
+    onPressed: () => print("flashcard"));
+  Widget infinite = StartBtn(
+    icon: const Icon(Icons.fast_forward),
+    text: "infinite",
+    onPressed: () => print("infinite"));
+  Widget multichoice = StartBtn(
+    icon: const Icon(Icons.check_box),
+    text: "multichoice",
+    onPressed: () => print(" multichoice"));
+
+  Widget startBtns = GridView.count(
+    primary: false,
+    shrinkWrap: true,
+    crossAxisCount: 3,
+    mainAxisSpacing: 10,
+    crossAxisSpacing: 10,
+    childAspectRatio: 4,
+    children: [flashcard, infinite, multichoice],
+  );
+
+  startBtns = Padding(padding: const EdgeInsets.only(bottom: 10), child: startBtns);
+
+  return startBtns;
 }
 
+void createCardPopup(
+    BuildContext context,
+    String title,
+    Function(String, String, List<String>, [List<String>?]) onConfirm,
+  ) {
+  final TextEditingController keyController = TextEditingController();
+  final TextEditingController deckController = TextEditingController();
+  final TextEditingController valueController = TextEditingController();
+  final TextEditingController tagController = TextEditingController();
 
+  TextField keyField = TextField(
+    decoration: InputDecoration(hintText: "//TODO Key"),
+    controller: keyController,
+    keyboardType: TextInputType.multiline,
+    maxLines: null,
+  );
+
+  TextField deckField = TextField(
+    decoration: InputDecoration(hintText: "//TODO Deck"),
+    controller: deckController,
+    keyboardType: TextInputType.multiline,
+    maxLines: null,
+  );
+
+  TextField valueField = TextField(
+    decoration: InputDecoration(hintText: "//TODO Values"),
+    controller: valueController,
+    keyboardType: TextInputType.multiline,
+    maxLines: null,
+  );
+
+  TextField tagField = TextField(
+    decoration: InputDecoration(hintText: "//TODO Tags"),
+    controller: tagController,
+    keyboardType: TextInputType.multiline,
+    maxLines: null,
+  );
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: MarkD(title),
+        content: Column(children: [keyField, deckField, valueField, tagField]),
+        actions: <Widget>[
+          TextButton(
+            child: const Text("//TODO Cancel"),
+            onPressed: () {
+              // Handle cancel
+              Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+            child: const Text("//TODO Confirm"),
+            onPressed: () {
+              // Handle confirm
+              String key = keyController.text;
+              String deck = deckController.text;
+              if (!deck.endsWith("/")) deck += "/";
+              List<String> values = valueController.text.split("\n+++\n");
+              List<String> tags = [];
+              for (String t in tagController.text.split(" ")) {
+                if (t.startsWith('#')) tags.add(t);
+              }
+
+              Navigator.of(context).pop();
+              onConfirm(key, deck, values, tags);
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
