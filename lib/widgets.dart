@@ -1,12 +1,13 @@
 import 'package:flashpaws/flashcard.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterkat/flutterkat.dart';
 import 'package:flutterkat/theme.dart';
 import 'package:flutterkat/widgets.dart';
 
 /// DeckBtn
 /// A custom ElevatedButton which is used exclusivly for buttons allowing the user to modify the
 /// deck filter.
-class DeckBtn extends StatelessWidget {
+class LayerBtn extends StatelessWidget {
   /// What text should be displayed on the button.
   final String layer;
   /// What to do when the button is pressed, should either be adding to the filter or setting the
@@ -16,14 +17,14 @@ class DeckBtn extends StatelessWidget {
   final bool isApplied;
 
   /// Constructor
-  const DeckBtn({super.key, required this.layer, required this.onPressed, this.isApplied = false});
+  const LayerBtn({super.key, required this.layer, required this.onPressed, this.isApplied = false});
 
   @override
   Widget build(BuildContext context) {
     // the child the button will display.
     Widget child = MarkD(layer);
     // The styling for not selected buttons.
-    ButtonStyle priStyle = ElevatedButton.styleFrom(backgroundColor: colorScheme(context).primary);
+    ButtonStyle priStyle = ElevatedButton.styleFrom(backgroundColor: colorScheme(context).primaryContainer);
     // The styling for selected buttons.
     ButtonStyle selStyle = ElevatedButton.styleFrom(backgroundColor: colorScheme(context).surface);
     // If the button is selected (isApplied) style is the selected style, otherwise style is the
@@ -61,12 +62,13 @@ class CardBtn extends StatelessWidget {
             elevation: 0,
             padding: const EdgeInsets.all(10),
             backgroundColor: Theme.of(context).canvasColor,
-            side: BorderSide(width: 1, color: colorScheme(context).primary)
+            side: BorderSide(width: 1, color: colorScheme(context).primary),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           ),
           onPressed: () { onPressed(); },
-          child: MarkD("## ${card.key}\n${card.deck}\n___\n${card.values[0]}")
-        ))
-      )
+          child: MarkD("## ${card.key}\n${card.deck}\n___\n${card.values[0]}"),
+        ),
+      ))
     ]);
   } //end Build
 } //end CardBtn
@@ -108,7 +110,7 @@ Widget deckBtns(List<String> layers, void Function() updateState) {
   List<Widget> children = [];
   
   // Add a button to reset the filter and display all decks / cards.
-  children.add(DeckBtn(
+  children.add(LayerBtn(
     layer: "//TODO All",
     onPressed: () { Flashcard.setFilter([]); updateState(); },
     isApplied: true,
@@ -126,7 +128,7 @@ Widget deckBtns(List<String> layers, void Function() updateState) {
       str += "${Flashcard.filter[j]}/";
     } str += Flashcard.filter[i];
     // Add the DeckBtn with the string of layers split by "/".
-    children.add(DeckBtn(
+    children.add(LayerBtn(
       layer: layer,
       onPressed: () { Flashcard.setFilter(str.split("/")); updateState(); },
       isApplied: true
@@ -136,7 +138,7 @@ Widget deckBtns(List<String> layers, void Function() updateState) {
   // For every layer in the provided list of layers, add a button which onPress pushes that layer
   // onto the filter.
   for (String layer in layers) {
-    children.add(DeckBtn(
+    children.add(LayerBtn(
       layer: layer,
       onPressed: () { Flashcard.pushFilter(layer); updateState(); }
     ));
@@ -175,16 +177,16 @@ Widget startBtns() {
 
   Widget flashcard = StartBtn(
     icon: const Icon(Icons.play_arrow),
-    text: "flashcard",
-    onPressed: () => print("flashcard"));
+    text: getString('btn_flashcards'),
+    onPressed: () => print("//TODO flashcard"));
   Widget infinite = StartBtn(
     icon: const Icon(Icons.fast_forward),
-    text: "infinite",
-    onPressed: () => print("infinite"));
+    text: getString('btn_infinite'),
+    onPressed: () => print("//TODO infinite"));
   Widget multichoice = StartBtn(
     icon: const Icon(Icons.check_box),
-    text: "multichoice",
-    onPressed: () => print(" multichoice"));
+    text: getString('btn_multitest'),
+    onPressed: () => print("//TODO multichoice"));
 
   Widget startBtns = GridView.count(
     primary: false,
@@ -242,25 +244,31 @@ void createCardPopup(
   showDialog(
     context: context,
     builder: (BuildContext context) {
+      var column = Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [keyField, deckField, valueField, tagField]
+      );
       return AlertDialog(
         title: MarkD(title),
-        content: Column(children: [keyField, deckField, valueField, tagField]),
+        content: column,
         actions: <Widget>[
           TextButton(
-            child: const Text("//TODO Cancel"),
+            child: Text(getString('cancel')),
             onPressed: () {
               // Handle cancel
               Navigator.of(context).pop();
             },
           ),
           TextButton(
-            child: const Text("//TODO Confirm"),
+            child: Text(getString('confirm')),
             onPressed: () {
               // Handle confirm
               String key = keyController.text;
               String deck = deckController.text;
               if (!deck.endsWith("/")) deck += "/";
-              List<String> values = valueController.text.split("\n+++\n");
+              String valuesStr = valueController.text;
+              if (valuesStr.endsWith("\n+++")) valuesStr = valuesStr.substring(0, valuesStr.length-4);
+              List<String> values = valuesStr.split("\n+++\n");
               List<String> tags = [];
               for (String t in tagController.text.split(" ")) {
                 if (t.startsWith('#')) tags.add(t);

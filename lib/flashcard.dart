@@ -111,7 +111,13 @@ class Flashcard {
     return retList;
   } //end getLayers
 
-  static void newCard(String key, String deck, List<String> values, [List<String>? tags]) {
+  static void newCard(String key, String deck, List<String> valuesIn, [List<String>? tagsIn]) {
+    key = key.trim();
+    deck = deck.trim();
+    List<String> values = [for (String v in valuesIn) v.trim()];
+    tagsIn ??= [];
+    List<String> tags = [for (String t in tagsIn) t.trim()];
+    print("$valuesIn\n-----\n$values");
     tags??=[];
     Flashcard card = Flashcard(key, deck, values, tags);
     String id = card.id;
@@ -124,6 +130,8 @@ class Flashcard {
     cards.add(card);
     filteredCards = getFilteredCards(filteredCards);
     filteredDecks = getLayers(filteredCards);
+    filteredDecks.sort((a, b) => a.compareTo(b));
+    filteredCards.sort((a, b) => a.id.compareTo(b.id));
   } //end newCard
 
   /// The key for the flashcard

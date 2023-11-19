@@ -23,23 +23,22 @@ title: Alpha Timeline
 ---
 flowchart TD
     a["✔️ Basic class"] --> basicPageUI
-    subgraph basicPageUI["🔜 Basic Page UI"]
-        b[Home Page/Overview] --> c
-        c[Deck Page]
+    subgraph basicPageUI["✔️ Basic Page UI"]
+        b["✔️ Home Page/Overview"]
     end
     basicPageUI --> d
-    subgraph d[Saving/loading in Hive]
+    subgraph d["🔜 Saving/loading in Hive]"
         d1[Read data from Hive] --> d2
         d2[Write data to Hive]
     end
     d --> cards
     subgraph cards[Cards]
         direction TB
-        subgraph e[Ability to create cards]
+        subgraph e["🔜 Ability to create cards"]
             direction TB
-            e1[UI for creating card] --> e2
-            e2[Add card in memory] --> e3
-            e3[Save to Hive]
+            e1["✔️ UI for creating card"] --> e2
+            e2["✔️ Add card in memory"] --> e3
+            e3["🔜 Save to Hive"]
         end
         e --> f
         subgraph f[Deleting card]
