@@ -118,7 +118,6 @@ class Flashcard {
     tagsIn ??= [];
     List<String> tags = [for (String t in tagsIn) t.trim()];
     print("$valuesIn\n-----\n$values");
-    tags??=[];
     Flashcard card = Flashcard(key, deck, values, tags);
     String id = card.id;
     for (int i = 0; i < cards.length; i++) {
