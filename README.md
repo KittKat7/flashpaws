@@ -27,7 +27,7 @@ flowchart TD
         b["✔️ Home Page/Overview"]
     end
     basicPageUI --> d
-    subgraph d["🔜 Saving/loading in Hive]"
+    subgraph d["🔜 Saving/loading in Hive"]
         d1[Read data from Hive] --> d2
         d2[Write data to Hive]
     end
