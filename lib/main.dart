@@ -107,27 +107,32 @@ class _HomePageState extends State<HomePage> {
 
 	@override
 	Widget build(BuildContext context) {
-		return Scaffold(
-			appBar: AppBar(
-				title: TextBold(widget.title),
-			),
-			body: Aspect(child: Padding(
-        padding: const EdgeInsets.only(top: 10),
-        child: SingleChildScrollView(child: Column(children: [
-          startBtns(),
-          deckBtns(Flashcard.filteredDecks, () => setState(() {})),
-          cardBtns(Flashcard.filteredCards, () => setState(() {}))
-        ]
-      )))),
-			floatingActionButton: FloatingActionButton(
-				onPressed: () => createCardPopup(
-          context,
-          "//TODO CREATE CARD",
-          (p0, p1, p2, [p3]) { Flashcard.newCard(p0, p1, p2, p3); setState(() {});},
+		return PopScope(
+      canPop: false,
+      onPopInvoked: (p0) => Flashcard.popFilter(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: TextBold(widget.title),
         ),
-				tooltip: "getString('tooltip_create_new_deck')",
-				child: const Icon(Icons.add),
-			),
-		);
+        body: Aspect(child: Padding(
+          padding: const EdgeInsets.only(top: 10),
+          child: SingleChildScrollView(child: Column(children: [
+            startBtns(),
+            deckBtns(Flashcard.filteredDecks, () => setState(() {})),
+            cardBtns(Flashcard.filteredCards, () => setState(() {})),
+            const Text(""),
+          ]
+        )))),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => createCardPopup(
+            context,
+            "//TODO CREATE CARD",
+            (p0, p1, p2, [p3]) { Flashcard.newCard(p0, p1, p2, p3); setState(() {});},
+          ),
+          tooltip: "getString('tooltip_create_new_deck')",
+          child: const Icon(Icons.add),
+        ),
+      ),
+    );
 	}
 }
