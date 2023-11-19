@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterkat/flutterkat.dart';
@@ -15,8 +17,8 @@ const int version = 2023102700;
 
 void main() async {
   await flutterkatInit();
-	await initialize();
-	flktRunApp(const MyApp());
+  await initialize();
+  flktRunApp(const MyApp());
 }
 
 /// initialize
@@ -27,87 +29,117 @@ Future<void> initialize() async {
   if (savedVerionTmp != null) {
     int savedVersion = int.parse(savedVerionTmp);
     if (savedVersion != version) {
-      print("//TODO VERSION MISMATH CODE EXECURE HERE");
+      print("//TODO VERSION MISMATH CODE EXECUTE HERE");
     }
   } else {
     flktSave('version', version.toString());
   }
 
   // set language
-	setLang(en_us.getLang);
+  setLang(en_us.getLang);
   // Set aspect ratio
   setAspect(3, 4);
-	// Initialize hive box.
-	await Hive.initFlutter('katapp');
-	box = await Hive.openBox('flashpaws');
+  // Initialize hive box.
+  await Hive.initFlutter('katapp');
+  box = await Hive.openBox('flashpaws');
 
-  if (!box.containsKey('flashcards')) box.put('flashcards', []);
-  // TODO remove temp data
-  Flashcard.cards = [
-    Flashcard("Temp Card 1", "deck1/layer1/", ["Answer 1","Answer B 1"], ["#learned/good"]),
-    Flashcard("Temp Card 2", "deck1/layer2/", ["Answer 2","Answer B 2"], ["#learned/good"]),
-    Flashcard("Temp Card 3", "deck2abcd/layer1/", ["Answer 1","Answer B 1"], ["#learned/good"]),
-    Flashcard("Temp Card 4", "deck2abcd/layer2/", ["Answer 2","Answer B2 "], ["#learned/good"]),
-    Flashcard("Temp Card 5", "deck3/layer1/", ["Answer 1","Answer B 1"]),
-    Flashcard("Temp Card 6", "deck3/layer2/", ["Answer 2","Answer B 2"]),
-    Flashcard("Temp Card 7", "deck4/layer1/", ["Answer 1","Answer B 1"], ["#learned/med"]),
-    Flashcard("Temp Card 8", "deck4/layer2/", ["Answer 2","Answer B 2"]),
-    Flashcard("Temp Card 9", "deck5/layer1/", ["Answer 1","Answer B 1"]),
-    Flashcard("Temp Card 10", "deck5/layer2/", ["Answer 2","Answer B 2"]),
-    Flashcard("Temp Card 11", "deck6/layer1/", ["Answer 1","Answer B 1"], ["#learned/bad"]),
-    Flashcard("Temp Card 12", "deck6/layer2/", ["Answer 2","Answer B 2"]),
-    Flashcard("Temp Card 13", "deck7/layer1/", ["Answer 1","Answer B 1"], ["#smile/happy"]),
-    Flashcard("Temp Card 14", "deck7/layer2/", ["Answer 2","Answer B 2"], ["#smile/happy"]),
-    Flashcard("Temp Card 15", "deck8/layer1/", ["Answer 1","Answer B 1"], ["#learned/bad"]),
-    Flashcard("Temp Card 16", "deck8/layer2/", ["Answer 2","Answer B 2"], ["#smile"]),
-    Flashcard("Temp Card 17", "deck9/layer1/", ["Answer 1","Answer B 1"], ["#smile"]),
-    Flashcard("Temp Card 18", "deck9/layer2/", ["Answer 2","Answer B 2"], ["#smile"]),
-    Flashcard("Temp Card 19", "deck10/layer1/", ["Answer 1","Answer B 1"], ["#smile"]),
-    Flashcard("Temp Card 20", "deck10/layer2/", ["Answer 2","Answer B 2"]),
-  ];
+  Flashcard.hiveBox = box;
 
-  Flashcard.setFilter([]);	
+  if (!box.containsKey('flashcards') || box.get('flashcards').isEmpty || box.get('flashcards')[0] is! String) {
+    List<Flashcard> newCards = [
+      Flashcard(
+        getString('introcard_how_to_new_card'),
+        'introduction',
+        [getString('introcard_how_to_new_card_answer')],
+        []
+      ),
+      Flashcard(
+        getString('introcard_how_to_sort_cards'),
+        'introduction',
+        [getString('introcard_how_to_sort_cards_answer')],
+        []
+      ),
+      Flashcard(
+        getString('introcard_how_to_practice'),
+        'introduction',
+        [getString('introcard_how_to_practice_answer')],
+        []
+      ),
+    ];
+    
+    Flashcard.saveCards(newCards);
+  }
+  
+  for (String json in box.get('flashcards')) {
+    Flashcard.cards.add(Flashcard.fromJson(jsonDecode(json)));
+  }
+  
+  // // TODO remove temp data
+  // Flashcard.cards = [
+  //   Flashcard("Temp Card 1", "deck1/layer1/", ["Answer 1","Answer B 1"], ["#learned/good"]),
+  //   Flashcard("Temp Card 2", "deck1/layer2/", ["Answer 2","Answer B 2"], ["#learned/good"]),
+  //   Flashcard("Temp Card 3", "deck2abcd/layer1/", ["Answer 1","Answer B 1"], ["#learned/good"]),
+  //   Flashcard("Temp Card 4", "deck2abcd/layer2/", ["Answer 2","Answer B2 "], ["#learned/good"]),
+  //   Flashcard("Temp Card 5", "deck3/layer1/", ["Answer 1","Answer B 1"]),
+  //   Flashcard("Temp Card 6", "deck3/layer2/", ["Answer 2","Answer B 2"]),
+  //   Flashcard("Temp Card 7", "deck4/layer1/", ["Answer 1","Answer B 1"], ["#learned/med"]),
+  //   Flashcard("Temp Card 8", "deck4/layer2/", ["Answer 2","Answer B 2"]),
+  //   Flashcard("Temp Card 9", "deck5/layer1/", ["Answer 1","Answer B 1"]),
+  //   Flashcard("Temp Card 10", "deck5/layer2/", ["Answer 2","Answer B 2"]),
+  //   Flashcard("Temp Card 11", "deck6/layer1/", ["Answer 1","Answer B 1"], ["#learned/bad"]),
+  //   Flashcard("Temp Card 12", "deck6/layer2/", ["Answer 2","Answer B 2"]),
+  //   Flashcard("Temp Card 13", "deck7/layer1/", ["Answer 1","Answer B 1"], ["#smile/happy"]),
+  //   Flashcard("Temp Card 14", "deck7/layer2/", ["Answer 2","Answer B 2"], ["#smile/happy"]),
+  //   Flashcard("Temp Card 15", "deck8/layer1/", ["Answer 1","Answer B 1"], ["#learned/bad"]),
+  //   Flashcard("Temp Card 16", "deck8/layer2/", ["Answer 2","Answer B 2"], ["#smile"]),
+  //   Flashcard("Temp Card 17", "deck9/layer1/", ["Answer 1","Answer B 1"], ["#smile"]),
+  //   Flashcard("Temp Card 18", "deck9/layer2/", ["Answer 2","Answer B 2"], ["#smile"]),
+  //   Flashcard("Temp Card 19", "deck10/layer1/", ["Answer 1","Answer B 1"], ["#smile"]),
+  //   Flashcard("Temp Card 20", "deck10/layer2/", ["Answer 2","Answer B 2"]),
+  // ];
+
+  Flashcard.setFilter([]);
 }
 
 /// Stores data for all the page routes.
 Map<String, List<dynamic>> pageRoutes = {
-	'home': ['/', HomePage(title: getString('title'))],
+  'home': ['/', HomePage(title: getString('title'))],
 // 	'deck': ['/deck', DeckPage(title: getString('title_deck'))],
 // 	'flashcards': ['/flashcards', FlashcardPage(title: getString('title_flashcards'))]
 };
 
 class MyApp extends StatelessWidget {
-	const MyApp({super.key});
+  const MyApp({super.key});
 
-	// This widget is the root of your application.
-	@override
-	Widget build(BuildContext context) {
-		return MaterialApp(
-			title: getString('title'),
-			theme: theme.getLightTheme(context),
-			darkTheme: theme.getDarkTheme(context),
-			themeMode: ThemeMode.system,
-			// home: const HomePage(title: 'Flutter Demo Home Page'),
-			routes: genRoutes(pageRoutes),
-		);
-	}
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: getString('title'),
+      theme: theme.getLightTheme(context),
+      darkTheme: theme.getDarkTheme(context),
+      themeMode: ThemeMode.system,
+      // home: const HomePage(title: 'Flutter Demo Home Page'),
+      routes: genRoutes(pageRoutes),
+    );
+  }
 }
 
 
 class HomePage extends StatefulWidget {
-	const HomePage({super.key, required this.title});
+  const HomePage({super.key, required this.title});
 
-	final String title;
+  final String title;
 
-	@override
-	State<HomePage> createState() => _HomePageState();
+  @override
+  State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
 
-	@override
-	Widget build(BuildContext context) {
-		return PopScope(
+  @override
+  Widget build(BuildContext context) {
+    return PopScope(
       canPop: false,
       onPopInvoked: (p0) => Flashcard.popFilter(),
       child: Scaffold(
@@ -126,13 +158,13 @@ class _HomePageState extends State<HomePage> {
         floatingActionButton: FloatingActionButton(
           onPressed: () => createCardPopup(
             context,
-            "//TODO CREATE CARD",
+            getString('header_create_new_card'),
             (p0, p1, p2, [p3]) { Flashcard.newCard(p0, p1, p2, p3); setState(() {});},
           ),
-          tooltip: "getString('tooltip_create_new_deck')",
+          tooltip: getString('tooltip_create_card'),
           child: const Icon(Icons.add),
         ),
       ),
     );
-	}
+  }
 }

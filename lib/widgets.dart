@@ -1,6 +1,7 @@
 import 'package:flashpaws/flashcard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterkat/flutterkat.dart';
+import 'package:flutterkat/graphics.dart';
 import 'package:flutterkat/theme.dart';
 import 'package:flutterkat/widgets.dart';
 
@@ -48,9 +49,10 @@ class CardBtn extends StatelessWidget {
   final Flashcard card;
   /// The function to run when the button is pressed.
   final void Function() onPressed;
+  final void Function(BuildContext) onLongPress;
 
   /// Constructor
-  const CardBtn({super.key, required this.card, required this.onPressed});
+  const CardBtn({super.key, required this.card, required this.onPressed, required this.onLongPress});
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +68,7 @@ class CardBtn extends StatelessWidget {
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           ),
           onPressed: () { onPressed(); },
+          onLongPress: () { onLongPress(context); },
           child: MarkD("## ${card.key}\n${card.deck}\n___\n${card.values[0]}"),
         ),
       ))
@@ -111,7 +114,7 @@ Widget deckBtns(List<String> layers, void Function() updateState) {
   
   // Add a button to reset the filter and display all decks / cards.
   children.add(LayerBtn(
-    layer: "//TODO All",
+    layer: getString('btn_all_cards'),
     onPressed: () { Flashcard.setFilter([]); updateState(); },
     isApplied: true,
   ));
@@ -166,13 +169,26 @@ Widget cardBtns(List<Flashcard> cards, void Function() updateState) {
   
   for (Flashcard card in cards) {
     children.add(
-      CardBtn(card: card, onPressed: () { print("CARD ${card.id}"); })
+      CardBtn(
+        card: card,
+        onPressed: () { print("CARD ${card.id}"); },
+        onLongPress: (context) {
+          confirmPopup(
+            context,
+            getString('header_delete_card'),
+            getString('msg_confirm_delete_card', [card.id]),
+            () { Flashcard.removeCard(card); updateState(); }
+          );
+        },
+      )
     );
   }
   Widget grid = Column(children: children,);
   return grid;
 } //end cardBtns
 
+/// startBtns
+/// //TODO
 Widget startBtns() {
 
   Widget flashcard = StartBtn(
@@ -203,6 +219,8 @@ Widget startBtns() {
   return startBtns;
 }
 
+/// createCardPopup
+/// //TODO
 void createCardPopup(
     BuildContext context,
     String title,
@@ -214,28 +232,28 @@ void createCardPopup(
   final TextEditingController tagController = TextEditingController();
 
   TextField keyField = TextField(
-    decoration: InputDecoration(hintText: "//TODO Key"),
+    decoration: InputDecoration(hintText: getString('hint_create_new_card_key')),
     controller: keyController,
     keyboardType: TextInputType.multiline,
     maxLines: null,
   );
 
   TextField deckField = TextField(
-    decoration: InputDecoration(hintText: "//TODO Deck"),
+    decoration: InputDecoration(hintText: getString('hint_create_new_card_deck')),
     controller: deckController,
     keyboardType: TextInputType.multiline,
     maxLines: null,
   );
 
   TextField valueField = TextField(
-    decoration: InputDecoration(hintText: "//TODO Values"),
+    decoration: InputDecoration(hintText: getString('hint_create_new_card_values')),
     controller: valueController,
     keyboardType: TextInputType.multiline,
     maxLines: null,
   );
 
   TextField tagField = TextField(
-    decoration: InputDecoration(hintText: "//TODO Tags"),
+    decoration: InputDecoration(hintText: getString('hint_create_new_card_tags')),
     controller: tagController,
     keyboardType: TextInputType.multiline,
     maxLines: null,
@@ -271,8 +289,14 @@ void createCardPopup(
               List<String> values = valuesStr.split("\n+++\n");
               List<String> tags = [];
               for (String t in tagController.text.split(" ")) {
-                if (t.startsWith('#')) tags.add(t);
-              }
+                if (t.isEmpty) continue;
+                t = t.trim();
+                if (t.startsWith('#')) {
+                  tags.add(t);
+                } else {
+                  tags.add('#$t');
+                } //end if else
+              } //end for
 
               Navigator.of(context).pop();
               onConfirm(key, deck, values, tags);

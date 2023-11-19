@@ -1,4 +1,6 @@
 
+import 'dart:convert';
+
 class Flashcard {
 
   /// The list of all cards.
@@ -131,7 +133,25 @@ class Flashcard {
     filteredDecks = getLayers(filteredCards);
     filteredDecks.sort((a, b) => a.compareTo(b));
     filteredCards.sort((a, b) => a.id.compareTo(b.id));
+
+    saveCards();
   } //end newCard
+
+  static removeCard(Flashcard card) {
+    cards.remove(card);
+    saveCards();
+  }
+
+  static var hiveBox;
+
+  static saveCards([List<Flashcard>? cardsIn]) {
+    List<Flashcard> saveCards = cardsIn??=cards;
+    List<String> cardsJson = [];
+    for (Flashcard card in saveCards) {
+      cardsJson.add(jsonEncode(card.toJson()));
+    }
+    hiveBox.put('flashcards', cardsJson);
+  }
 
   /// The key for the flashcard
   String key;
@@ -154,4 +174,13 @@ class Flashcard {
   String toString() {
     return id;
   }
+
+  Map<String, dynamic> toJson() => {
+    'key': key,
+    'deck': deck,
+    'values': values,
+    'tags': tags,
+  };
+  factory Flashcard.fromJson(Map<String, dynamic> json) =>
+    Flashcard(json['key'], json['deck'], List<String>.from(json['values']), List<String>.from(json['tags']));
 } //end Flashcard

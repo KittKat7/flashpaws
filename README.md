@@ -27,28 +27,28 @@ flowchart TD
         b["✔️ Home Page/Overview"]
     end
     basicPageUI --> d
-    subgraph d["🔜 Saving/loading in Hive"]
-        d1[Read data from Hive] --> d2
-        d2[Write data to Hive]
+    subgraph d["✔️ Saving/loading in Hive"]
+        d1["✔️ Read data from Hive"] --> d2
+        d2["✔️ Write data to Hive"]
     end
     d --> cards
     subgraph cards[Cards]
         direction TB
-        subgraph e["🔜 Ability to create cards"]
+        subgraph e["✔️ Ability to create cards"]
             direction TB
             e1["✔️ UI for creating card"] --> e2
             e2["✔️ Add card in memory"] --> e3
-            e3["🔜 Save to Hive"]
+            e3["✔️ Save to Hive"]
         end
         e --> f
-        subgraph f[Deleting card]
+        subgraph f["✔️ Deleting card"]
             direction TB
-            f1[UI for confirm delete] --> f2
-            f2[Remove card from mem and references] --> f3
-            f3[Remove card from Hive]
+            f1["✔️ UI for confirm delete"] --> f2
+            f2["✔️ Remove card from memory and references"] --> f3
+            f3["✔️ Remove card from Hive"]
         end
         f --> g
-        subgraph g[Ability to modify cards]
+        subgraph g["🔜 Ability to modify cards"]
             direction TB
             g1[UI for modifying card] --> g2
             g2[Change card in memory and references] --> g3
@@ -65,7 +65,7 @@ flowchart TD
             h3[Save to Hive]
         end
         h --> i
-        subgraph i[Deleting deck]
+        subgraph i[X Deleting deck]
             direction TB
             i1[UI for confirm delete] --> i2
             i2[Remove deck from mem and references] --> i3
@@ -85,9 +85,9 @@ flowchart TD
         l[Import from Markdown]
     end
     markdown --> additionalPageUI
-    subgraph additionalPageUI[Additional Pages]
+    subgraph additionalPageUI["🔜 Additional Pages"]
         m[Collection Page] --> n
-        n[Flashcard Page] --> o
+        n["🔜 Flashcard Page"] --> o
         o[Multitest Page]
     end
 ```
