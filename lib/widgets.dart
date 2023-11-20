@@ -40,8 +40,8 @@ class LayerBtn extends StatelessWidget {
     // return an ElevatedButton with the selected style, with the correct onPressed, and correct
     // child.
     return paddedBtn;
-  } //end Build
-} //end DeckBtn
+  }//e Build
+}//e DeckBtn
 
 /// CardBtn //TODO comment
 class CardBtn extends StatelessWidget {
@@ -73,8 +73,8 @@ class CardBtn extends StatelessWidget {
         ),
       ))
     ]);
-  } //end Build
-} //end CardBtn
+  }//e Build
+}//e CardBtn
 
 ///TODO comment
 class StartBtn extends StatelessWidget {
@@ -99,8 +99,8 @@ class StartBtn extends StatelessWidget {
       onPressed: () => print("flashcard"),
       child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [icon, MarkD(text)])
     );
-  } //end Build
-} //end CardBtn
+  }//e Build
+}//e CardBtn
 
 /// deckBtns
 /// This methd builds a list of DeckBtn based on the provided decks.
@@ -136,7 +136,7 @@ Widget deckBtns(List<String> layers, void Function() updateState) {
       onPressed: () { Flashcard.setFilter(str.split("/")); updateState(); },
       isApplied: true
     ));
-  } //end for
+  }//e for
   
   // For every layer in the provided list of layers, add a button which onPress pushes that layer
   // onto the filter.
@@ -145,7 +145,7 @@ Widget deckBtns(List<String> layers, void Function() updateState) {
       layer: layer,
       onPressed: () { Flashcard.pushFilter(layer); updateState(); }
     ));
-  } //end for
+  }//e for
   // Create and returnt he GridView widget with the created list of buttons, and return it.
   // Widget grid = GridView.count(
   //   primary: false,
@@ -158,15 +158,17 @@ Widget deckBtns(List<String> layers, void Function() updateState) {
   // );
   Widget grid = Align(alignment: Alignment.topLeft, child: Wrap(alignment: WrapAlignment.start, children: children,));
   return grid;
-} //end deckBtns
+}//e deckBtns
 
 /// cardBtns
-/// Creates and returns a column of flashcards.
+/// Creates and returns a column of Flashcards.
 /// @param List<Flashcard> cards The cards that need to be displayed.
-/// @param 
+/// @param void Function() updateState A function which updates the page.
+/// @return Column A Column of Flashcard buttons.
 Widget cardBtns(List<Flashcard> cards, void Function() updateState) {
   List<Widget> children = [];
   
+  // for every card in the list of cards, create a button, and add it to a list.
   for (Flashcard card in cards) {
     children.add(
       CardBtn(
@@ -178,14 +180,16 @@ Widget cardBtns(List<Flashcard> cards, void Function() updateState) {
             getString('header_delete_card'),
             getString('msg_confirm_delete_card', [card.id]),
             () { Flashcard.removeCard(card); updateState(); }
-          );
-        },
-      )
-    );
-  }
-  Widget grid = Column(children: children,);
-  return grid;
-} //end cardBtns
+          );//e confirmPopup
+        },//e onLongPress
+      )//e CardBtn
+    );//e add
+  }//e for
+
+  // Using the generated list of buttons, create and return the Column.
+  Widget column = Column(children: children,);
+  return column;
+}//e cardBtns
 
 /// startBtns
 /// //TODO
@@ -220,45 +224,46 @@ Widget startBtns() {
 }
 
 /// createCardPopup
-/// //TODO
+/// A popuop that allows the user to enter information, and create a card from the provided
+/// information.
 void createCardPopup(
     BuildContext context,
     String title,
     Function(String, String, List<String>, [List<String>?]) onConfirm,
   ) {
+  // The text controllers for the text entry fields
   final TextEditingController keyController = TextEditingController();
   final TextEditingController deckController = TextEditingController();
   final TextEditingController valueController = TextEditingController();
   final TextEditingController tagController = TextEditingController();
 
+  // Create the text fields
   TextField keyField = TextField(
     decoration: InputDecoration(hintText: getString('hint_create_new_card_key')),
     controller: keyController,
     keyboardType: TextInputType.multiline,
     maxLines: null,
-  );
-
+  );//e keyField
   TextField deckField = TextField(
     decoration: InputDecoration(hintText: getString('hint_create_new_card_deck')),
     controller: deckController,
     keyboardType: TextInputType.multiline,
     maxLines: null,
-  );
-
+  );//e deckField
   TextField valueField = TextField(
     decoration: InputDecoration(hintText: getString('hint_create_new_card_values')),
     controller: valueController,
     keyboardType: TextInputType.multiline,
     maxLines: null,
-  );
-
+  );//e valueField
   TextField tagField = TextField(
     decoration: InputDecoration(hintText: getString('hint_create_new_card_tags')),
     controller: tagController,
     keyboardType: TextInputType.multiline,
     maxLines: null,
-  );
+  );//e tagField
 
+  // showDialog
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -281,13 +286,16 @@ void createCardPopup(
             child: Text(getString('confirm')),
             onPressed: () {
               // Handle confirm
+              // Get the text, and ensure propper formatting.
               String key = keyController.text;
               String deck = deckController.text;
+              // Ensure deck ends with '/'
               if (!deck.endsWith("/")) deck += "/";
               String valuesStr = valueController.text;
               if (valuesStr.endsWith("\n+++")) valuesStr = valuesStr.substring(0, valuesStr.length-4);
               List<String> values = valuesStr.split("\n+++\n");
               List<String> tags = [];
+              // Ensure tags start with '#'
               for (String t in tagController.text.split(" ")) {
                 if (t.isEmpty) continue;
                 t = t.trim();
@@ -295,15 +303,15 @@ void createCardPopup(
                   tags.add(t);
                 } else {
                   tags.add('#$t');
-                } //end if else
-              } //end for
+                }//e if else
+              }//e for
 
               Navigator.of(context).pop();
               onConfirm(key, deck, values, tags);
-            },
-          ),
-        ],
-      );
-    },
-  );
-}
+            },//e onPressed
+          ),//e TextButton
+        ],//e <Widget>[]
+      );//e AlertDialog
+    },//e builder
+  );//e showDialog
+}//e createCardPopup

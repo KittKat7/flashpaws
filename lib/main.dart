@@ -42,37 +42,47 @@ Future<void> initialize() async {
   // Initialize hive box.
   await Hive.initFlutter('katapp');
   box = await Hive.openBox('flashpaws');
-
+  
+  // Instanciate the hiveBox variable of Flashcard
   Flashcard.hiveBox = box;
 
-  if (!box.containsKey('flashcards') || box.get('flashcards').isEmpty || box.get('flashcards')[0] is! String) {
+  // If there are no prexisting cards, or something was saved incorrectly and not saved as a String,
+  // create the list of introduction flashcards.
+  if (!box.containsKey('flashcards') || box.get('flashcards').isEmpty
+    || box.get('flashcards')[0] is! String) {
+    // List of new flashcards to be added.
     List<Flashcard> newCards = [
+      // Flashcard for how to make a new card.
       Flashcard(
         getString('introcard_how_to_new_card'),
         'introduction',
         [getString('introcard_how_to_new_card_answer')],
         []
       ),
+      // Flashcard for how to sort cards.
       Flashcard(
         getString('introcard_how_to_sort_cards'),
         'introduction',
         [getString('introcard_how_to_sort_cards_answer')],
         []
       ),
+      // Flashcard for how to practice the flashcards.
       Flashcard(
         getString('introcard_how_to_practice'),
         'introduction',
         [getString('introcard_how_to_practice_answer')],
         []
       ),
-    ];
+    ];//e newCards
     
+    // Save flashcards.
     Flashcard.saveCards(newCards);
-  }
+  }//e if
   
+  // For every card in the box, convert it from json, and add it to the list of cards.
   for (String json in box.get('flashcards')) {
     Flashcard.cards.add(Flashcard.fromJson(jsonDecode(json)));
-  }
+  }//e for
   
   // // TODO remove temp data
   // Flashcard.cards = [
@@ -98,8 +108,9 @@ Future<void> initialize() async {
   //   Flashcard("Temp Card 20", "deck10/layer2/", ["Answer 2","Answer B 2"]),
   // ];
 
+  // Initialize the filter to be empty.
   Flashcard.setFilter([]);
-}
+}//e initialize()
 
 /// Stores data for all the page routes.
 Map<String, List<dynamic>> pageRoutes = {
@@ -108,6 +119,8 @@ Map<String, List<dynamic>> pageRoutes = {
 // 	'flashcards': ['/flashcards', FlashcardPage(title: getString('title_flashcards'))]
 };
 
+/// MyApp
+/// The app :)
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 

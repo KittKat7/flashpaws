@@ -1,6 +1,8 @@
 
 import 'dart:convert';
 
+import 'package:hive_flutter/hive_flutter.dart';
+
 class Flashcard {
 
   /// The list of all cards.
@@ -32,7 +34,7 @@ class Flashcard {
     _filter.add(layer);
     filteredCards = getFilteredCards(filteredCards);
     filteredDecks = getLayers(filteredCards);
-  } //end pushFilter
+  }//e pushFilter
 
   /// popFilter
   /// Removes the top layer from the filter and returns it.
@@ -44,7 +46,7 @@ class Flashcard {
     filteredCards = getFilteredCards(cards);
     filteredDecks = getLayers(filteredCards);
     return tmp;
-  } //end popFilter
+  }//e popFilter
 
   /// getFilteredCards
   /// Takes a list of Flashcards as the parameter, and filter those cards based on the current
@@ -57,16 +59,16 @@ class Flashcard {
     for (Flashcard c in listOfCards) {
       if (c.deck.startsWith(filter.join("/"))) {
         returnList.add(c);
-      } //end if
+      }//e if
       // for tags
       for (String tag in c.tags) {
         if (tag.startsWith(filter.join("/"))) {
           returnList.add(c);
-        } //end if
-      } //end for
-    } //end for
+        }//e if
+      }//e for
+    }//e for
     return returnList;
-  } //end getFilteredCards
+  }//e getFilteredCards
 
   /// getSubdecks
   /// Takes a list of cards and gets the a list of all subdecks from these cards matching the
@@ -92,7 +94,7 @@ class Flashcard {
       tmpStr = tmpStr.split("/")[0];
       // Add the layer to the list if it is not allready added AND the layer is not empty
       if (!retList.contains(tmpStr) && tmpStr.isNotEmpty) retList.add(tmpStr);
-    } //end for
+    }//e for
 
     // Do the same things for tags
     // Go through the list of provided cards
@@ -108,41 +110,56 @@ class Flashcard {
         tmpStr = tmpStr.split("/")[0];
         // Add the layer to the list if it is not allready added AND the layer is not empty
         if (!retList.contains(tmpStr) && tmpStr.isNotEmpty) retList.add(tmpStr);
-      } //end for
-    } //end for
+      }//e for
+    }//e for
     return retList;
-  } //end getLayers
+  }//e getLayers
 
+  /// newCard
+  /// Creates a new card, adds it to the list, and save it to persistant storage.
+  /// @param String key The key for the card.
+  /// @param String deck The deck the card is a part of.
+  /// @param List<String> valuesIn A list of answers for the card.
+  /// @param List<String>? tagsIn A list of tags the card is part of.
   static void newCard(String key, String deck, List<String> valuesIn, [List<String>? tagsIn]) {
+    // Format / trim paramaters
     key = key.trim();
     deck = deck.trim();
     List<String> values = [for (String v in valuesIn) v.trim()];
     tagsIn ??= [];
     List<String> tags = [for (String t in tagsIn) t.trim()];
-    print("$valuesIn\n-----\n$values");
+
+    // Create the new card and check to see if it has already been added. If it has, return and do
+    // nothing.
     Flashcard card = Flashcard(key, deck, values, tags);
     String id = card.id;
     for (int i = 0; i < cards.length; i++) {
       if (cards[i].id == id) {
         cards[i] = card;
         return;
-      }
-    }
+      }//e if
+    }//e for
+
+    // Add the card, update and sort filtered cards and layers.
     cards.add(card);
     filteredCards = getFilteredCards(filteredCards);
     filteredDecks = getLayers(filteredCards);
     filteredDecks.sort((a, b) => a.compareTo(b));
     filteredCards.sort((a, b) => a.id.compareTo(b.id));
-
+    // Save to persistant.
     saveCards();
-  } //end newCard
+  }//e newCard
 
-  static removeCard(Flashcard card) {
+  /// removeCard
+  /// Removes a card from the list of cards.
+  /// @param Flashcard card The card to be removed.
+  static void removeCard(Flashcard card) {
+    // Remove the card from the list and update persistant.
     cards.remove(card);
     saveCards();
-  }
+  }//e removeCard
 
-  static var hiveBox;
+  static late Box<dynamic> hiveBox;
 
   static saveCards([List<Flashcard>? cardsIn]) {
     List<Flashcard> saveCards = cardsIn??=cards;
@@ -175,12 +192,21 @@ class Flashcard {
     return id;
   }
 
+  /// toJson
+  /// Returns a map that is ready to be encoded to JSON.
+  /// @return Map<String, dynamic> A map ready to be encoded to JSON.
   Map<String, dynamic> toJson() => {
     'key': key,
     'deck': deck,
     'values': values,
     'tags': tags,
-  };
+  };//e toJson
+
+  /// fromJson
+  /// Takes a JSON map and returns a Flashcard created with that data.
+  /// @param Map<String, dynamic> json The JSON style Map to create a Flashcard with.
+  /// @return Flashcard A Flashcard created from the Map.
   factory Flashcard.fromJson(Map<String, dynamic> json) =>
     Flashcard(json['key'], json['deck'], List<String>.from(json['values']), List<String>.from(json['tags']));
-} //end Flashcard
+  //e fromJson
+}//e Flashcard
