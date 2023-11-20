@@ -42,7 +42,7 @@ class Flashcard {
   /// @returns String the popped string from the filter.
   static String popFilter() {
     String tmp = filter[-1];
-    filter.removeAt(-1);
+    filter.removeAt(filter.length -1);
     filteredCards = getFilteredCards(cards);
     filteredDecks = getLayers(filteredCards);
     return tmp;
