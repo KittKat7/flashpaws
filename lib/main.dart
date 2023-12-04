@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:flashpaws/settings.dart';
+
 import 'widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterkat/flutterkat.dart';
@@ -115,6 +117,7 @@ Future<void> initialize() async {
 /// Stores data for all the page routes.
 Map<String, List<dynamic>> pageRoutes = {
   'home': ['/', HomePage(title: getString('title'))],
+  'settings': ['/settings/', SettingsPage(title: "//TODO SETTINGS")]
 // 	'deck': ['/deck', DeckPage(title: getString('title_deck'))],
 // 	'flashcards': ['/flashcards', FlashcardPage(title: getString('title_flashcards'))]
 };
@@ -157,7 +160,9 @@ class _HomePageState extends State<HomePage> {
       onPopInvoked: (p0) => Flashcard.popFilter(),
       child: Scaffold(
         appBar: AppBar(
-          leading: IconButton(icon: Icon(Icons.menu), onPressed: () { themeMenuPopup(context); },),
+          leading: IconButton(icon: Icon(Icons.menu), onPressed: () { 
+            Navigator.of(context).pushNamed(getRoute('settings')); 
+          }),
           title: TextBold(widget.title),
         ),
         body: Aspect(child: Padding(

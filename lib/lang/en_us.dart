@@ -5,6 +5,7 @@ Map<String, String> get getLang {
   // generic
   lang['confirm'] = 'Confirm';
   lang['cancel'] = 'Cancel';
+  lang['close'] = 'Close';
 
   // btns
   lang['btn_all_cards'] = 'All Cards';

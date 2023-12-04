@@ -322,6 +322,13 @@ void createCardPopup(
 /// information.
 void themeMenuPopup(BuildContext context) {
 
+  var themeModeRow = Wrap(
+    children: [
+      ElevatedButton(onPressed: () => getAppThemeMode(context).setLightMode(), child: MarkD("//TODO Light Theme")),
+      ElevatedButton(onPressed: () => getAppThemeMode(context).setDarkMode(), child: MarkD("//TODO Dark Theme")),
+      ElevatedButton(onPressed: () => getAppThemeMode(context).setAutoMode(), child: MarkD("//TODO Auto Theme")),
+  ]);
+
   // showDialog
   showDialog(
     context: context,
@@ -329,24 +336,15 @@ void themeMenuPopup(BuildContext context) {
       var column = Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          ElevatedButton(onPressed: () => getAppThemeMode(context).setLightMode(), child: MarkD("//TODO Light Theme")),
-          ElevatedButton(onPressed: () => getAppThemeMode(context).setDarkMode(), child: MarkD("//TODO Dark Theme")),
-          ElevatedButton(onPressed: () => getAppThemeMode(context).setAutoMode(), child: MarkD("//TODO Auto Theme")),
-          ]
+          themeModeRow,
+        ]
       );
       return AlertDialog(
         title: MarkD("//TODO theme menu"),
         content: column,
         actions: <Widget>[
           TextButton(
-            child: Text(getString('cancel')),
-            onPressed: () {
-              // Handle cancel
-              Navigator.of(context).pop();
-            },
-          ),
-          TextButton(
-            child: Text(getString('confirm')),
+            child: Text(getString('close')),
             onPressed: () {
               Navigator.of(context).pop();
             },//e onPressed
