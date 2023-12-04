@@ -315,3 +315,44 @@ void createCardPopup(
     },//e builder
   );//e showDialog
 }//e createCardPopup
+
+
+/// createCardPopup
+/// A popuop that allows the user to enter information, and create a card from the provided
+/// information.
+void themeMenuPopup(BuildContext context) {
+
+  // showDialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      var column = Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ElevatedButton(onPressed: () => getAppThemeMode(context).setLightMode(), child: MarkD("//TODO Light Theme")),
+          ElevatedButton(onPressed: () => getAppThemeMode(context).setDarkMode(), child: MarkD("//TODO Dark Theme")),
+          ElevatedButton(onPressed: () => getAppThemeMode(context).setAutoMode(), child: MarkD("//TODO Auto Theme")),
+          ]
+      );
+      return AlertDialog(
+        title: MarkD("//TODO theme menu"),
+        content: column,
+        actions: <Widget>[
+          TextButton(
+            child: Text(getString('cancel')),
+            onPressed: () {
+              // Handle cancel
+              Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+            child: Text(getString('confirm')),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },//e onPressed
+          ),//e TextButton
+        ],//e <Widget>[]
+      );//e AlertDialog
+    },//e builder
+  );//e showDialog
+}//e createCardPopup

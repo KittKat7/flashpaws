@@ -131,7 +131,7 @@ class MyApp extends StatelessWidget {
       title: getString('title'),
       theme: theme.getLightTheme(context),
       darkTheme: theme.getDarkTheme(context),
-      themeMode: ThemeMode.system,
+      themeMode: theme.getThemeMode(context),
       // home: const HomePage(title: 'Flutter Demo Home Page'),
       routes: genRoutes(pageRoutes),
     );
@@ -157,6 +157,7 @@ class _HomePageState extends State<HomePage> {
       onPopInvoked: (p0) => Flashcard.popFilter(),
       child: Scaffold(
         appBar: AppBar(
+          leading: IconButton(icon: Icon(Icons.menu), onPressed: () { themeMenuPopup(context); },),
           title: TextBold(widget.title),
         ),
         body: Aspect(child: Padding(
