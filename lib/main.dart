@@ -120,6 +120,7 @@ Map<String, List<dynamic>> pageRoutes = {
   'home': ['/', HomePage(title: getString('title'))],
   'settings': ['/settings/', SettingsPage(title: "//TODO SETTINGS")], //TODO
   'review': ['/review/', ReviewPage(title: "//TODO REVIEW")], //TODO
+  'reviewComplete': ['/review/complete/', ReviewCompletePage(title: "//TODO REVIEW COMPLETE")], //TODO
 // 	'deck': ['/deck', DeckPage(title: getString('title_deck'))],
 // 	'flashcards': ['/flashcards', FlashcardPage(title: getString('title_flashcards'))]
 };

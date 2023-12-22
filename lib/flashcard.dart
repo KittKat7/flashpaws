@@ -72,6 +72,12 @@ class Flashcard {
     return returnList;
   }//e getFilteredCards
 
+  static List<Flashcard> getShuffledFilteredCards() {
+    List<Flashcard> tmpList = List<Flashcard>.from(filteredCards);
+    tmpList.shuffle();
+    return tmpList;
+  }
+
   /// getSubdecks
   /// Takes a list of cards and gets the a list of all subdecks from these cards matching the
   /// current filter.

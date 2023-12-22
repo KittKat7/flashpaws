@@ -65,7 +65,7 @@ flowchart TD
             h3[Save to Hive]
         end
         h --> i
-        subgraph i[X Deleting deck]
+        subgraph i[Deleting deck]
             direction TB
             i1[UI for confirm delete] --> i2
             i2[Remove deck from mem and references] --> i3
@@ -87,7 +87,7 @@ flowchart TD
     markdown --> additionalPageUI
     subgraph additionalPageUI["🔜 Additional Pages"]
         m[Collection Page] --> n
-        n["🔜 Review Page"] --> practicePage
+        n["🔜 Review Page\n 🔜 Add long press capability to confidence buttons, will reset selection.\n 🔜 Remove ability to remove confidence rating by short clicking selected option.\n 🔜 make setting confidence update saved card data."] --> practicePage
         practicePage["🔜 Practice Page"] --> o
         o["Multitest Page"]
     end
