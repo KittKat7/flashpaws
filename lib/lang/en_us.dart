@@ -9,8 +9,8 @@ Map<String, String> get getLang {
 
   // btns
   lang['btn_all_cards'] = 'All Cards';
-  lang['btn_flashcards'] = 'Flashcards';
-  lang['btn_infinite'] = 'Infinite';
+  lang['btn_practice'] = 'Practice';
+  lang['btn_review'] = 'Review';
   lang['btn_multitest'] = 'Multi-Choice';
 
   // tooltip

@@ -17,6 +17,8 @@ class Flashcard {
   /// get filter Returns the current filter.
   static List<String> get filter { return _filter; }
 
+  int confidence;
+
   /// setFilter
   /// Sets the filter to the passed parameter, and updates the filtered cards and subdecks.
   /// @param List<String> filter The new filter
@@ -185,7 +187,7 @@ class Flashcard {
   String get id { return deck + key; }
 
   /// Constructor
-  Flashcard(this.key, this._deck, this.values, [List<String>? tags]) : tags = tags ?? [];
+  Flashcard(this.key, this._deck, this.values, [List<String>? tags, int? confidence]) : tags = tags ?? [], confidence = confidence ?? -1;
 
   @override
   String toString() {
@@ -200,6 +202,7 @@ class Flashcard {
     'deck': deck,
     'values': values,
     'tags': tags,
+    'cnfdnc': confidence
   };//e toJson
 
   /// fromJson
@@ -207,6 +210,6 @@ class Flashcard {
   /// @param Map<String, dynamic> json The JSON style Map to create a Flashcard with.
   /// @return Flashcard A Flashcard created from the Map.
   factory Flashcard.fromJson(Map<String, dynamic> json) =>
-    Flashcard(json['key'], json['deck'], List<String>.from(json['values']), List<String>.from(json['tags']));
+    Flashcard(json['key'], json['deck'], List<String>.from(json['values']), List<String>.from(json['tags']), json['cnfdnc']);
   //e fromJson
 }//e Flashcard

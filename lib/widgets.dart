@@ -82,7 +82,7 @@ class StartBtn extends StatelessWidget {
   final String text;
   final Icon icon;
   /// The function to run when the button is pressed.
-  final void Function() onPressed;
+  final void Function(BuildContext) onPressed;
 
   /// Constructor
   const StartBtn({super.key, required this.icon, required this.text, required this.onPressed});
@@ -96,7 +96,7 @@ class StartBtn extends StatelessWidget {
 
     return ElevatedButton(
       style: style,
-      onPressed: () => print("flashcard"),
+      onPressed: () => onPressed(context),
       child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [icon, MarkD(text)])
     );
   }//e Build
@@ -195,18 +195,21 @@ Widget cardBtns(List<Flashcard> cards, void Function() updateState) {
 /// //TODO
 Widget startBtns() {
 
-  Widget flashcard = StartBtn(
+  Widget practice = StartBtn(
     icon: const Icon(Icons.play_arrow),
-    text: getString('btn_flashcards'),
-    onPressed: () => print("//TODO flashcard"));
-  Widget infinite = StartBtn(
+    text: getString('btn_practice'),
+    onPressed: (p1) => print("//TODO Practice")
+  );
+  Widget review = StartBtn(
     icon: const Icon(Icons.fast_forward),
-    text: getString('btn_infinite'),
-    onPressed: () => print("//TODO infinite"));
-  Widget multichoice = StartBtn(
+    text: getString('btn_review'),
+    onPressed: (context) => Navigator.of(context).pushNamed(getRoute('review'))
+  );
+  Widget multitest = StartBtn(
     icon: const Icon(Icons.check_box),
     text: getString('btn_multitest'),
-    onPressed: () => print("//TODO multichoice"));
+    onPressed: (p1) => print("//TODO MultiTest")
+  );
 
   Widget startBtns = GridView.count(
     primary: false,
@@ -215,7 +218,7 @@ Widget startBtns() {
     mainAxisSpacing: 10,
     crossAxisSpacing: 10,
     childAspectRatio: 4,
-    children: [flashcard, infinite, multichoice],
+    children: [practice, review, multitest],
   );
 
   startBtns = Padding(padding: const EdgeInsets.only(bottom: 10), child: startBtns);

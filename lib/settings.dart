@@ -1,7 +1,5 @@
-import 'package:flashpaws/flashcard.dart';
 import 'package:flashpaws/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterkat/flutterkat.dart';
 import 'package:flutterkat/theme.dart';
 import 'package:flutterkat/widgets.dart';
 

@@ -87,7 +87,8 @@ flowchart TD
     markdown --> additionalPageUI
     subgraph additionalPageUI["🔜 Additional Pages"]
         m[Collection Page] --> n
-        n["🔜 Flashcard Page"] --> o
-        o[Multitest Page]
+        n["🔜 Review Page"] --> practicePage
+        practicePage["🔜 Practice Page"] --> o
+        o["Multitest Page"]
     end
 ```
