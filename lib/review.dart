@@ -1,8 +1,6 @@
 import 'package:flashpaws/flashcard.dart';
-import 'package:flashpaws/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterkat/flutterkat.dart';
-import 'package:flutterkat/theme.dart';
 import 'package:flutterkat/widgets.dart';
 
 class ReviewPage extends StatefulWidget {
@@ -58,9 +56,9 @@ class _ReviewPageState extends State<ReviewPage> {
         shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.zero))
       ),
       onPressed: () => flipCard(),
-      child: Padding(padding: EdgeInsets.all(10), child: 
-        !isShowingValue? Column(children: [MarkD(currentCard.key), Divider()])
-        : Column(children: [MarkD(currentCard.key), Divider(), MarkD(currentCard.values[0])])
+      child: Padding(padding: const EdgeInsets.all(10), child: 
+        !isShowingValue? Column(children: [MarkD(currentCard.key), const Divider()])
+        : Column(children: [MarkD(currentCard.key), const Divider(), MarkD(currentCard.values[0])])
       )//e Padding()
     );
     
@@ -85,11 +83,17 @@ class _ReviewPageState extends State<ReviewPage> {
     var navBtns = Row(children: [
       Expanded(
         flex: 1,
-        child: IconButton(onPressed: () => prevCard(), icon: Icon(Icons.chevron_left))
+        child: IconButton(
+          onPressed: () => index != 0 ? prevCard() : nextCard(),
+          icon: index != 0 ? const Icon(Icons.chevron_left) : const Icon(Icons.chevron_right)
+        )
       ),
       Expanded(
         flex: 1,
-        child: IconButton(onPressed: () => nextCard(), icon: Icon(Icons.chevron_right))
+        child: IconButton(
+          onPressed: () => nextCard(),
+          icon: index < deck.length-1? const Icon(Icons.chevron_right) : const Icon(Icons.check)
+        )
       ),
     ]);
     

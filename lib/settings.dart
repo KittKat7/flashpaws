@@ -1,5 +1,6 @@
 import 'package:flashpaws/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterkat/flutterkat.dart';
 import 'package:flutterkat/theme.dart';
 import 'package:flutterkat/widgets.dart';
 
@@ -23,8 +24,8 @@ class _SettingsPageState extends State<SettingsPage> {
       body: Aspect(child: Padding(
         padding: const EdgeInsets.only(top: 10),
         child: SingleChildScrollView(child: Column(children: [
-          ElevatedButton(onPressed: () =>  themeMenuPopup(context), child: MarkD("//TODO Change Theme")),
-          ElevatedButton(onPressed: () =>  getColorTheme(context).cycleColor(), child: MarkD("//TODO Change Theme Color"))
+          ElevatedButton(onPressed: () =>  themeMenuPopup(context), child: MarkD(getString('btn_theme_brightness_menu'))),
+          ElevatedButton(onPressed: () =>  getColorTheme(context).cycleColor(), child: MarkD(getString('btn_cycle_theme_color')))
         ]
       )))),
     );

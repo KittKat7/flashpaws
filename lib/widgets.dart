@@ -198,7 +198,7 @@ Widget startBtns() {
   Widget practice = StartBtn(
     icon: const Icon(Icons.play_arrow),
     text: getString('btn_practice'),
-    onPressed: (p1) => print("//TODO Practice")
+    onPressed: (context) => Navigator.of(context).pushNamed(getRoute('practice'))
   );
   Widget review = StartBtn(
     icon: const Icon(Icons.fast_forward),
@@ -327,9 +327,9 @@ void themeMenuPopup(BuildContext context) {
 
   var themeModeRow = Wrap(
     children: [
-      ElevatedButton(onPressed: () => getAppThemeMode(context).setLightMode(), child: MarkD("//TODO Light Theme")),
-      ElevatedButton(onPressed: () => getAppThemeMode(context).setDarkMode(), child: MarkD("//TODO Dark Theme")),
-      ElevatedButton(onPressed: () => getAppThemeMode(context).setAutoMode(), child: MarkD("//TODO Auto Theme")),
+      ElevatedButton(onPressed: () => getAppThemeMode(context).setLightMode(), child: MarkD(getString('btn_light_theme'))),
+      ElevatedButton(onPressed: () => getAppThemeMode(context).setDarkMode(), child: MarkD(getString('btn_dark_theme'))),
+      ElevatedButton(onPressed: () => getAppThemeMode(context).setAutoMode(), child: MarkD(getString('btn_auto_theme'))),
   ]);
 
   // showDialog
@@ -343,7 +343,7 @@ void themeMenuPopup(BuildContext context) {
         ]
       );
       return AlertDialog(
-        title: MarkD("//TODO theme menu"),
+        title: MarkD(getString('btn_theme_brightness_menu')),
         content: column,
         actions: <Widget>[
           TextButton(

@@ -2,6 +2,11 @@ Map<String, String> get getLang {
 	Map<String, String> lang = {};
 	lang['title'] = 'Flashpaws';
 
+  // page titles
+  lang['settingsPage'] = 'Settings';
+  lang['reviewPage'] = 'Review';
+  lang['practicePage'] = 'Practice';
+
   // generic
   lang['confirm'] = 'Confirm';
   lang['cancel'] = 'Cancel';
@@ -12,6 +17,11 @@ Map<String, String> get getLang {
   lang['btn_practice'] = 'Practice';
   lang['btn_review'] = 'Review';
   lang['btn_multitest'] = 'Multi-Choice';
+  lang['btn_light_theme'] = 'Light Theme';
+  lang['btn_dark_theme'] = 'Dark Theme';
+  lang['btn_auto_theme'] = 'System Theme';
+  lang['btn_theme_brightness_menu'] = 'Change Theme';
+  lang['btn_cycle_theme_color'] = 'Cycle Theme Color';
 
   // tooltip
   lang['tooltip_create_card'] = 'Create card';

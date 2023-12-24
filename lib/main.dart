@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flashpaws/practice.dart';
 import 'package:flashpaws/review.dart';
 import 'package:flashpaws/settings.dart';
 
@@ -118,9 +119,10 @@ Future<void> initialize() async {
 /// Stores data for all the page routes.
 Map<String, List<dynamic>> pageRoutes = {
   'home': ['/', HomePage(title: getString('title'))],
-  'settings': ['/settings/', SettingsPage(title: "//TODO SETTINGS")], //TODO
-  'review': ['/review/', ReviewPage(title: "//TODO REVIEW")], //TODO
-  'reviewComplete': ['/review/complete/', ReviewCompletePage(title: "//TODO REVIEW COMPLETE")], //TODO
+  'settings': ['/settings/', SettingsPage(title: getString('settingsPage'))],
+  'review': ['/review/', ReviewPage(title: getString('reviewPage'))],
+  'reviewComplete': ['/review/complete/', ReviewCompletePage(title: getString('reviewPage'))],
+  'practice': ['/practice/', PracticePage(title: getString('practicePage'))],
 // 	'deck': ['/deck', DeckPage(title: getString('title_deck'))],
 // 	'flashcards': ['/flashcards', FlashcardPage(title: getString('title_flashcards'))]
 };
