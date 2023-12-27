@@ -23,11 +23,11 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       body: Aspect(child: Padding(
         padding: const EdgeInsets.only(top: 10),
-        child: SingleChildScrollView(child: Column(children: [
+        child: SingleChildScrollView(child: Align(alignment: Alignment.center, child: Column(children: [
           ElevatedButton(onPressed: () =>  themeMenuPopup(context), child: MarkD(getString('btn_theme_brightness_menu'))),
           ElevatedButton(onPressed: () =>  getColorTheme(context).cycleColor(), child: MarkD(getString('btn_cycle_theme_color')))
-        ]
-      )))),
+        ])))
+      )),
     );
   }
 }

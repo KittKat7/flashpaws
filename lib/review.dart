@@ -103,7 +103,7 @@ class _ReviewPageState extends State<ReviewPage> {
       ),
       body: Aspect(child: Padding(
         padding: const EdgeInsets.only(top: 10),
-        child: Align(alignment: Alignment.center, child: SingleChildScrollView(child: Column(children: [
+        child: Align(alignment: Alignment.topCenter, child: SingleChildScrollView(child: Column(children: [
           // ITEMS:
           // complete/total
           
