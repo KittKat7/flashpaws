@@ -97,7 +97,7 @@ class StartBtn extends StatelessWidget {
     return ElevatedButton(
       style: style,
       onPressed: () => onPressed(context),
-      child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [icon, MarkD(text)])
+      child: Row(mainAxisAlignment: MainAxisAlignment.center, mainAxisSize: MainAxisSize.min, children: [icon, MarkD(text)])
     );
   }//e Build
 }//e CardBtn
@@ -156,8 +156,8 @@ Widget deckBtns(List<String> layers, void Function() updateState) {
   //   childAspectRatio: 4,
   //   children: children,
   // );
-  Widget grid = Align(alignment: Alignment.topLeft, child: Wrap(alignment: WrapAlignment.start, children: children,));
-  return grid;
+  Widget wrap = Align(alignment: Alignment.topLeft, child: Wrap(alignment: WrapAlignment.start, children: children,));
+  return wrap;
 }//e deckBtns
 
 /// cardBtns
@@ -211,6 +211,8 @@ Widget startBtns() {
     onPressed: (p1) => print("//TODO MultiTest")
   );
 
+  Widget wrap = Align(alignment: Alignment.topCenter, child: Wrap(alignment: WrapAlignment.start, children: [practice, review, multitest]));
+
   Widget startBtns = GridView.count(
     primary: false,
     shrinkWrap: true,
@@ -221,7 +223,7 @@ Widget startBtns() {
     children: [practice, review, multitest],
   );
 
-  startBtns = Padding(padding: const EdgeInsets.only(bottom: 10), child: startBtns);
+  startBtns = Padding(padding: const EdgeInsets.only(bottom: 10), child: wrap);
 
   return startBtns;
 }
@@ -357,3 +359,60 @@ void themeMenuPopup(BuildContext context) {
     },//e builder
   );//e showDialog
 }//e createCardPopup
+
+
+//TODO create confidence buttons.
+class LongPressWidget extends StatelessWidget {
+
+  final Widget child;
+  final void Function() onLongPress;
+
+  LongPressWidget({required this.child, required this.onLongPress});
+
+  @override
+  Widget build(BuildContext context) {
+    // create widget
+    Widget longPress = GestureDetector(onLongPress: () => onLongPress(), child: child,);
+    return longPress;
+  }
+}
+
+class ConfidenceBtn extends StatelessWidget {
+  
+  final Icon icon;
+  final void Function() onPressed;
+  final void Function() onLongPress;
+  ConfidenceBtn({required this.icon, required this.onPressed, required this.onLongPress});
+
+  @override
+  Widget build(BuildContext context) {
+    var iconBtn = IconButton(onPressed: onPressed, icon: icon);
+    var longPressWidget = LongPressWidget(onLongPress: onLongPress, child: iconBtn);
+    return longPressWidget;
+  }
+}
+
+Widget confidenceBtns(Flashcard currentCard, void Function(int p) setConfidence) {
+  Widget expand(Widget child) {
+    return Expanded(flex: 1, child: child);
+  }
+  var confidenceBtns = Row(children: [
+    expand(ConfidenceBtn(
+      icon: Icon(currentCard.confidence == 0? Icons.remove_circle : Icons.remove_circle_outline),
+      onPressed: () => setConfidence(0),
+      onLongPress: () => setConfidence(-1),
+    )),
+    expand(ConfidenceBtn(
+      icon: Icon(currentCard.confidence == 1? Icons.circle : Icons.circle_outlined),
+      onPressed: () => setConfidence(1),
+      onLongPress: () => setConfidence(-1),
+    )),
+    expand(ConfidenceBtn(
+      icon: Icon(currentCard.confidence == 2? Icons.add_circle : Icons.add_circle_outline),
+      onPressed: () => setConfidence(2),
+      onLongPress: () => setConfidence(-1),
+    )),
+  ]);
+  return confidenceBtns;
+}
+

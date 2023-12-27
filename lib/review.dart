@@ -1,4 +1,5 @@
 import 'package:flashpaws/flashcard.dart';
+import 'package:flashpaws/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterkat/flutterkat.dart';
 import 'package:flutterkat/widgets.dart';
@@ -62,7 +63,9 @@ class _ReviewPageState extends State<ReviewPage> {
       )//e Padding()
     );
     
-    var confidenceBtns = Row(children: [
+    var confidBtns = confidenceBtns(currentCard, (p) { setConfidence(p); Flashcard.saveCards(); });
+    
+    /*Row(children: [
       Expanded(flex: 1, child: IconButton(
         onPressed: () => currentCard.confidence == 0? setConfidence(-1) : setConfidence(0),
         color: Colors.red,
@@ -78,7 +81,7 @@ class _ReviewPageState extends State<ReviewPage> {
         color: Colors.green,
         icon: Icon(currentCard.confidence == 2? Icons.add_circle : Icons.add_circle_outline)
       )),
-    ]);
+    ]);*/
 
     var navBtns = Row(children: [
       Expanded(
@@ -88,6 +91,7 @@ class _ReviewPageState extends State<ReviewPage> {
           icon: index != 0 ? const Icon(Icons.chevron_left) : const Icon(Icons.chevron_right)
         )
       ),
+      Expanded(flex: 2, child: confidBtns),
       Expanded(
         flex: 1,
         child: IconButton(
@@ -99,21 +103,13 @@ class _ReviewPageState extends State<ReviewPage> {
     
     return Scaffold(
       appBar: AppBar(
-        title: TextBold(widget.title),
+        title: TextBold("${widget.title} - ${deck.indexOf(currentCard)}/${deck.length}"),
       ),
       body: Aspect(child: Padding(
         padding: const EdgeInsets.only(top: 10),
-        child: Align(alignment: Alignment.topCenter, child: SingleChildScrollView(child: Column(children: [
-          // ITEMS:
-          // complete/total
-          
-          // Card
-          cardBtn,
-          // Rating slider
-          if (valueHasShown) confidenceBtns,
-          // Back / Forward arrows
-        ]
-      ))))),
+        child: Align(alignment: Alignment.topCenter, child:
+          SingleChildScrollView(child: cardBtn)
+        ))),
       bottomNavigationBar: BottomAppBar(child: navBtns),
     );
   }//e build
@@ -151,7 +147,7 @@ class _ReviewCompletePageState extends State<ReviewCompletePage> {
       body: Aspect(child: Padding(
         padding: const EdgeInsets.only(top: 10),
         child: SingleChildScrollView(child: 
-        MarkD("**STATS:**  \n**Score:** $score / ${deck.length * 2}  \n**Percent:** $percentScore")
+        MarkD(getString('txt_review_stats', [score, (deck.length * 2), percentScore]))
       ))),
     );
   }

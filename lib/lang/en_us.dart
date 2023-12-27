@@ -5,7 +5,8 @@ Map<String, String> get getLang {
   // page titles
   lang['settingsPage'] = 'Settings';
   lang['reviewPage'] = 'Review';
-  lang['practicePage'] = 'Practice';
+  lang['reviewCompletePage'] = 'Review Complete';
+  lang['practicePage'] = 'Practice - \${0} Cards Practiced';
 
   // generic
   lang['confirm'] = 'Confirm';
@@ -32,6 +33,9 @@ Map<String, String> get getLang {
 
   // msg
   lang['msg_confirm_delete_card'] = 'The card \'\${0}\' will be deleted, continue?';
+
+  // texts
+  lang['txt_review_stats'] = '**STATS:**  \n**Score:** \${0} / \${1}  \n**Percent:** \${2}';
 
   // hint
   lang['hint_create_new_card_key'] = 'Key';

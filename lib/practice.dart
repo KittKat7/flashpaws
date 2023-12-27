@@ -1,5 +1,7 @@
 import 'package:flashpaws/flashcard.dart';
+import 'package:flashpaws/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterkat/flutterkat.dart';
 import 'package:flutterkat/widgets.dart';
 
 class PracticePage extends StatefulWidget {
@@ -53,29 +55,14 @@ class _PracticePageState extends State<PracticePage> {
       )//e Padding()
     );
     
-    var confidenceBtns = Row(children: [
-      Expanded(flex: 1, child: IconButton(
-        onPressed: () => currentCard.confidence == 0? setConfidence(-1) : setConfidence(0),
-        color: Colors.red,
-        icon: Icon(currentCard.confidence == 0? Icons.remove_circle : Icons.remove_circle_outline)
-      )),
-      Expanded(flex: 1, child: IconButton(
-        onPressed: () => currentCard.confidence == 1? setConfidence(-1) : setConfidence(1),
-        color: Colors.grey[400],
-        icon: Icon(currentCard.confidence == 1?  Icons.circle : Icons.circle_outlined)
-      )),
-      Expanded(flex: 1, child: IconButton(
-        onPressed: () => currentCard.confidence == 2? setConfidence(-1) : setConfidence(2),
-        color: Colors.green,
-        icon: Icon(currentCard.confidence == 2? Icons.add_circle : Icons.add_circle_outline)
-      )),
-    ]);
+    var confidBtns = confidenceBtns(currentCard, (p) { setConfidence(p); Flashcard.saveCards(); });
 
     var navBtns = Row(children: [
       const Expanded(
         flex: 1,
         child: SizedBox()
       ),
+      Expanded(flex: 2, child: confidBtns),
       Expanded(
         flex: 1,
         child: IconButton(
@@ -87,21 +74,13 @@ class _PracticePageState extends State<PracticePage> {
     
     return Scaffold(
       appBar: AppBar(
-        title: TextBold("${widget.title} - $cardsPracticed"),
+        title: TextBold(getString('practicePage', [cardsPracticed])),
       ),
       body: Aspect(child: Padding(
         padding: const EdgeInsets.only(top: 10),
-        child: Align(alignment: Alignment.center, child: SingleChildScrollView(child: Column(children: [
-          // ITEMS:
-          // complete/total
-          
-          // Card
-          cardBtn,
-          // Rating slider
-          if (valueHasShown) confidenceBtns,
-          // Back / Forward arrows
-        ]
-      ))))),
+        child: Align(alignment: Alignment.center, child:
+          SingleChildScrollView(child: cardBtn)
+        ))),
       bottomNavigationBar: BottomAppBar(child: navBtns),
     );
   }//e build

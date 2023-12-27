@@ -121,7 +121,7 @@ Map<String, List<dynamic>> pageRoutes = {
   'home': ['/', HomePage(title: getString('title'))],
   'settings': ['/settings/', SettingsPage(title: getString('settingsPage'))],
   'review': ['/review/', ReviewPage(title: getString('reviewPage'))],
-  'reviewComplete': ['/review/complete/', ReviewCompletePage(title: getString('reviewPage'))],
+  'reviewComplete': ['/review/complete/', ReviewCompletePage(title: getString('reviewCompletePage'))],
   'practice': ['/practice/', PracticePage(title: getString('practicePage'))],
 // 	'deck': ['/deck', DeckPage(title: getString('title_deck'))],
 // 	'flashcards': ['/flashcards', FlashcardPage(title: getString('title_flashcards'))]

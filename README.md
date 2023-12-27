@@ -1,20 +1,6 @@
 # flashpaws
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-
+Flashpaws - A Slightly cat themed, powerful, and simple flashcard app. Designed to help you study any subject. Featuring high levels of sorting customization, the ability to import and export your flashcards to JSON, import flashcards from formatted markdown, and test your knowlage on your flashcards.
 
 ## Timeline
 ```mermaid
@@ -55,38 +41,16 @@ flowchart TD
             g3[Save to Hive]
         end
     end
-    cards --> decks
-    subgraph decks[Decks]
-        direction TB
-        subgraph h[Create deck]
-            direction TB
-            h1[UI for creating deck] --> h2
-            h2[Add deck in memory] --> h3
-            h3[Save to Hive]
-        end
-        h --> i
-        subgraph i[Deleting deck]
-            direction TB
-            i1[UI for confirm delete] --> i2
-            i2[Remove deck from mem and references] --> i3
-            i3[Remove deck from Hive]
-        end
-        i --> j
-        subgraph j[Ability to modify deck]
-            direction TB
-            j1[UI for modifying deck] --> j2
-            j2[Change deck in memory and references] --> j3
-            j3[Save to Hive]
-        end
+    cards --> importexport
+    subgraph importexport[Import/export]
+        k["Export to Markdown"] --> l
+        l["Import from Markdown"] --> importFromJson
+        importFromJson["Import from JSON"] --> exportToJson
+        exportToJson["Export to JSON"]
     end
-    decks --> markdown
-    subgraph markdown[Import/export]
-        k[Export to Markdown] --> l
-        l[Import from Markdown]
-    end
-    markdown --> additionalPageUI
+    importexport --> additionalPageUI
     subgraph additionalPageUI["🔜 Additional Pages"]
-        n["✔️ Review Page\n 🔜 Add long press capability to confidence buttons, will reset selection.\n 🔜 Remove ability to remove confidence rating by short clicking selected option.\n 🔜 make setting confidence update saved card data."] --> practicePage
+        n["✔️ Review Page\n ✔️ Add long press capability to confidence buttons, will reset selection.\n ✔️ Remove ability to remove confidence rating by short clicking selected option.\n 🔜 make setting confidence update saved card data."] --> practicePage
         practicePage["✔️ Practice Page"] --> o
         o["Multitest Page"]
     end
