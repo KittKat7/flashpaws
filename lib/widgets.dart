@@ -322,31 +322,32 @@ void createCardPopup(
 }//e createCardPopup
 
 
-/// createCardPopup
+/// themeMenuPopup
 /// A popuop that allows the user to enter information, and create a card from the provided
 /// information.
-void themeMenuPopup(BuildContext context) {
+void themeModePopup(BuildContext context) {
 
-  var themeModeRow = Wrap(
+  var themeModeList = Column(
+    mainAxisSize: MainAxisSize.min,
     children: [
-      ElevatedButton(onPressed: () => getAppThemeMode(context).setLightMode(), child: MarkD(getString('btn_light_theme'))),
-      ElevatedButton(onPressed: () => getAppThemeMode(context).setDarkMode(), child: MarkD(getString('btn_dark_theme'))),
-      ElevatedButton(onPressed: () => getAppThemeMode(context).setAutoMode(), child: MarkD(getString('btn_auto_theme'))),
+      ElevatedButton(
+        onPressed: () => getAppThemeMode(context).setLightMode(),
+        child: MarkD(getString('btn_light_theme'))),
+      ElevatedButton(
+        onPressed: () => getAppThemeMode(context).setDarkMode(),
+        child: MarkD(getString('btn_dark_theme'))),
+      ElevatedButton(
+        onPressed: () => getAppThemeMode(context).setAutoMode(),
+        child: MarkD(getString('btn_auto_theme'))),
   ]);
 
   // showDialog
   showDialog(
     context: context,
     builder: (BuildContext context) {
-      var column = Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          themeModeRow,
-        ]
-      );
       return AlertDialog(
         title: MarkD(getString('btn_theme_brightness_menu')),
-        content: column,
+        content: themeModeList,
         actions: <Widget>[
           TextButton(
             child: Text(getString('close')),
@@ -359,6 +360,47 @@ void themeMenuPopup(BuildContext context) {
     },//e builder
   );//e showDialog
 }//e createCardPopup
+
+/// themeMenuPopup
+/// A popuop that allows the user to enter information, and create a card from the provided
+/// information.
+void themeColorPopup(BuildContext context) {
+
+  List<String> colors = getAvailableThemeColors;
+
+  List<Widget> colorButtons = [];
+
+  for (String c in colors) {
+    colorButtons.add(
+      ElevatedButton(
+        onPressed:() => getColorTheme(context).setColor(c),
+        child: Text("${c.substring(0, 1).toUpperCase()}${c.substring(1).toLowerCase()}"))
+    );
+  }
+
+  var themeModeList = Column(
+    mainAxisSize: MainAxisSize.min,
+    children: colorButtons);
+
+  // showDialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: MarkD(getString('btn_theme_brightness_menu')),
+        content: themeModeList,
+        actions: <Widget>[
+          TextButton(
+            child: Text(getString('close')),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },//e onPressed
+          ),//e TextButton
+        ],//e <Widget>[]
+      );//e AlertDialog
+    },//e builder
+  );//e showDialog
+}//e themeColorPopup
 
 
 //TODO create confidence buttons.

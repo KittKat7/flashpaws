@@ -75,6 +75,7 @@ class _PracticePageState extends State<PracticePage> {
     return Scaffold(
       appBar: AppBar(
         title: TextBold(getString('practicePage', [cardsPracticed])),
+        centerTitle: true,
       ),
       body: Aspect(child: Padding(
         padding: const EdgeInsets.only(top: 10),

@@ -22,7 +22,7 @@ Map<String, String> get getLang {
   lang['btn_dark_theme'] = 'Dark Theme';
   lang['btn_auto_theme'] = 'System Theme';
   lang['btn_theme_brightness_menu'] = 'Change Theme';
-  lang['btn_cycle_theme_color'] = 'Cycle Theme Color';
+  lang['btn_theme_color_menu'] = 'Cycle Theme Color';
 
   // tooltip
   lang['tooltip_create_card'] = 'Create card';
@@ -31,6 +31,7 @@ Map<String, String> get getLang {
   lang['header_create_new_card'] = 'Create New Card';
   lang['header_delete_card'] = 'Delete Flashcard';
   lang['header_exit_app'] = 'Exit ${lang['title']}';
+  lang['header_settings_drawer'] = 'Settings';
 
   // msg
   lang['msg_confirm_delete_card'] = 'The card \'\${0}\' will be deleted, continue?';

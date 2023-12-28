@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flashpaws/practice.dart';
 import 'package:flashpaws/review.dart';
-import 'package:flashpaws/settings.dart';
 import 'package:flutter/services.dart';
 
 import 'widgets.dart';
@@ -120,7 +119,6 @@ Future<void> initialize() async {
 /// Stores data for all the page routes.
 Map<String, List<dynamic>> pageRoutes = {
   'home': ['/', HomePage(title: getString('title'))],
-  'settings': ['/settings/', SettingsPage(title: getString('settingsPage'))],
   'review': ['/review/', ReviewPage(title: getString('reviewPage'))],
   'reviewComplete': ['/review/complete/', ReviewCompletePage(title: getString('reviewCompletePage'))],
   'practice': ['/practice/', PracticePage(title: getString('practicePage'))],
@@ -161,6 +159,23 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    Drawer drawer = Drawer(
+      child: ListView(
+        padding: EdgeInsets.only(top: 20),
+        children: [
+          Align(alignment: Alignment.center, child: TextBold(getString('header_settings_drawer'))),
+          Divider(),
+          ElevatedButton(
+            onPressed: () => themeModePopup(context),
+            child: MarkD(getString('btn_theme_brightness_menu'))),
+          ElevatedButton(
+            // onPressed: () => getColorTheme(context).cycleColor(),
+            onPressed: () => themeColorPopup(context),
+            child: MarkD(getString('btn_theme_color_menu')))
+        ]
+      )
+    );
+
     return PopScope(
       canPop: false,
       onPopInvoked: (p0) { 
@@ -177,11 +192,16 @@ class _HomePageState extends State<HomePage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          leading: IconButton(icon: Icon(Icons.menu), onPressed: () { 
-            Navigator.of(context).pushNamed(getRoute('settings')); 
+          leading: Builder(builder: (context) {
+            return IconButton(icon: const Icon(Icons.menu), onPressed: () { 
+              // Navigator.of(context).pushNamed(getRoute('settings'));
+              Scaffold.of(context).openDrawer(); 
+            });
           }),
           title: TextBold(widget.title),
+          centerTitle: true,
         ),
+        drawer: drawer,
         body: Aspect(child: Padding(
           padding: const EdgeInsets.only(top: 10),
           child: SingleChildScrollView(child: Column(children: [

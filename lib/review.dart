@@ -64,24 +64,6 @@ class _ReviewPageState extends State<ReviewPage> {
     );
     
     var confidBtns = confidenceBtns(currentCard, (p) { setConfidence(p); Flashcard.saveCards(); });
-    
-    /*Row(children: [
-      Expanded(flex: 1, child: IconButton(
-        onPressed: () => currentCard.confidence == 0? setConfidence(-1) : setConfidence(0),
-        color: Colors.red,
-        icon: Icon(currentCard.confidence == 0? Icons.remove_circle : Icons.remove_circle_outline)
-      )),
-      Expanded(flex: 1, child: IconButton(
-        onPressed: () => currentCard.confidence == 1? setConfidence(-1) : setConfidence(1),
-        color: Colors.grey[400],
-        icon: Icon(currentCard.confidence == 1?  Icons.circle : Icons.circle_outlined)
-      )),
-      Expanded(flex: 1, child: IconButton(
-        onPressed: () => currentCard.confidence == 2? setConfidence(-1) : setConfidence(2),
-        color: Colors.green,
-        icon: Icon(currentCard.confidence == 2? Icons.add_circle : Icons.add_circle_outline)
-      )),
-    ]);*/
 
     var navBtns = Row(children: [
       Expanded(
@@ -104,10 +86,11 @@ class _ReviewPageState extends State<ReviewPage> {
     return Scaffold(
       appBar: AppBar(
         title: TextBold("${widget.title} - ${deck.indexOf(currentCard)}/${deck.length}"),
+        centerTitle: true,
       ),
       body: Aspect(child: Padding(
         padding: const EdgeInsets.only(top: 10),
-        child: Align(alignment: Alignment.topCenter, child:
+        child: Align(alignment: Alignment.center, child:
           SingleChildScrollView(child: cardBtn)
         ))),
       bottomNavigationBar: BottomAppBar(child: navBtns),
@@ -115,40 +98,35 @@ class _ReviewPageState extends State<ReviewPage> {
   }//e build
 }//e  _ReviewPageState
 
-class ReviewCompletePage extends StatefulWidget {
-  const ReviewCompletePage({super.key, required this.title});
+class ReviewCompletePage extends StatelessWidget {
+  ReviewCompletePage({super.key, required this.title});
 
   final String title;
 
-  @override
-  State<ReviewCompletePage> createState() => _ReviewCompletePageState();
-}
-
-class _ReviewCompletePageState extends State<ReviewCompletePage> {
-
-  List<Flashcard> deck = Flashcard.filteredCards;
-
-  int score = 0;
-  double percentScore = 0;
+  final List<Flashcard> deck = Flashcard.filteredCards;
 
   @override
   Widget build(BuildContext context) {
+    int score = 0;
+    double percentScore = 0;
+
     for (Flashcard c in deck) {
       if (c.confidence != -1) {
         score += c.confidence;
-      }
-    }
+      }//e if
+    }//e for
     percentScore = ((score / 2) / deck.length) * 100;
 
     return Scaffold(
       appBar: AppBar(
-        title: TextBold(widget.title),
+        title: TextBold(title),
+        centerTitle: true,
       ),
       body: Aspect(child: Padding(
         padding: const EdgeInsets.only(top: 10),
-        child: SingleChildScrollView(child: 
+        child: Align(alignment: Alignment.center, child: SingleChildScrollView(child: 
         MarkD(getString('txt_review_stats', [(score / 2), deck.length, percentScore]))
-      ))),
+      )))),
     );
-  }
-}
+  }//e build()
+}//e ReviewCompletePage
