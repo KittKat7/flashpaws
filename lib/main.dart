@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flashpaws/practice.dart';
 import 'package:flashpaws/review.dart';
 import 'package:flashpaws/settings.dart';
+import 'package:flutter/services.dart';
 
 import 'widgets.dart';
 import 'package:flutter/material.dart';
@@ -162,7 +163,18 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: (p0) => Flashcard.popFilter(),
+      onPopInvoked: (p0) { 
+        if (Flashcard.filter.isNotEmpty) {
+          setState(() => Flashcard.popFilter());
+        } else {
+          confirmPopup(
+            context,
+            getString('header_exit_app'),
+            getString('msg_confirm_app_exit'),
+            () => SystemChannels.platform.invokeMethod('SystemNavigator.pop')
+          );
+        }
+      },
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(icon: Icon(Icons.menu), onPressed: () { 

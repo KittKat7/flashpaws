@@ -30,9 +30,11 @@ Map<String, String> get getLang {
   // heading
   lang['header_create_new_card'] = 'Create New Card';
   lang['header_delete_card'] = 'Delete Flashcard';
+  lang['header_exit_app'] = 'Exit ${lang['title']}';
 
   // msg
   lang['msg_confirm_delete_card'] = 'The card \'\${0}\' will be deleted, continue?';
+  lang['msg_confirm_app_exit'] = 'You are about to exit the app, continue?';
 
   // texts
   lang['txt_review_stats'] = '**STATS:**  \n**Score:** \${0} / \${1}  \n**Percent:** \${2}';
