@@ -138,7 +138,7 @@ class _ReviewCompletePageState extends State<ReviewCompletePage> {
         score += c.confidence;
       }
     }
-    percentScore = (score / (deck.length * 2)) * 100;
+    percentScore = ((score / 2) / deck.length) * 100;
 
     return Scaffold(
       appBar: AppBar(
@@ -147,7 +147,7 @@ class _ReviewCompletePageState extends State<ReviewCompletePage> {
       body: Aspect(child: Padding(
         padding: const EdgeInsets.only(top: 10),
         child: SingleChildScrollView(child: 
-        MarkD(getString('txt_review_stats', [score, (deck.length * 2), percentScore]))
+        MarkD(getString('txt_review_stats', [(score / 2), deck.length, percentScore]))
       ))),
     );
   }

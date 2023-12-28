@@ -50,7 +50,7 @@ flowchart TD
     end
     importexport --> additionalPageUI
     subgraph additionalPageUI["🔜 Additional Pages"]
-        n["✔️ Review Page\n ✔️ Add long press capability to confidence buttons, will reset selection.\n ✔️ Remove ability to remove confidence rating by short clicking selected option.\n 🔜 make setting confidence update saved card data."] --> practicePage
+        n["✔️ Review Page\n ✔️ Add long press capability to confidence buttons, will reset selection.\n ✔️ Remove ability to remove confidence rating by short clicking selected option.\n ✔️ make setting confidence update saved card data."] --> practicePage
         practicePage["✔️ Practice Page"] --> o
         o["Multitest Page"]
     end
