@@ -125,7 +125,7 @@ class ReviewCompletePage extends StatelessWidget {
       body: Aspect(child: Padding(
         padding: const EdgeInsets.only(top: 10),
         child: Align(alignment: Alignment.center, child: SingleChildScrollView(child: 
-        MarkD(getString('txt_review_stats', [(score / 2), deck.length, percentScore]))
+        MarkD(getString('txt_review_stats', [(score / 2), deck.length, percentScore.round()]))
       )))),
     );
   }//e build()

@@ -208,7 +208,7 @@ Widget startBtns() {
   Widget multitest = StartBtn(
     icon: const Icon(Icons.check_box),
     text: getString('btn_multitest'),
-    onPressed: (p1) => print("//TODO MultiTest")
+    onPressed: (context) => Navigator.of(context).pushNamed(getRoute('multichoice'))
   );
 
   Widget wrap = Align(alignment: Alignment.topCenter, child: Wrap(alignment: WrapAlignment.start, children: [practice, review, multitest]));

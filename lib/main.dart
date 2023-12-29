@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flashpaws/multichoice_page.dart';
 import 'package:flashpaws/practice.dart';
 import 'package:flashpaws/review.dart';
 import 'package:flutter/services.dart';
@@ -87,30 +88,6 @@ Future<void> initialize() async {
   for (String json in box.get('flashcards')) {
     Flashcard.cards.add(Flashcard.fromJson(jsonDecode(json)));
   }//e for
-  
-  // // TODO remove temp data
-  // Flashcard.cards = [
-  //   Flashcard("Temp Card 1", "deck1/layer1/", ["Answer 1","Answer B 1"], ["#learned/good"]),
-  //   Flashcard("Temp Card 2", "deck1/layer2/", ["Answer 2","Answer B 2"], ["#learned/good"]),
-  //   Flashcard("Temp Card 3", "deck2abcd/layer1/", ["Answer 1","Answer B 1"], ["#learned/good"]),
-  //   Flashcard("Temp Card 4", "deck2abcd/layer2/", ["Answer 2","Answer B2 "], ["#learned/good"]),
-  //   Flashcard("Temp Card 5", "deck3/layer1/", ["Answer 1","Answer B 1"]),
-  //   Flashcard("Temp Card 6", "deck3/layer2/", ["Answer 2","Answer B 2"]),
-  //   Flashcard("Temp Card 7", "deck4/layer1/", ["Answer 1","Answer B 1"], ["#learned/med"]),
-  //   Flashcard("Temp Card 8", "deck4/layer2/", ["Answer 2","Answer B 2"]),
-  //   Flashcard("Temp Card 9", "deck5/layer1/", ["Answer 1","Answer B 1"]),
-  //   Flashcard("Temp Card 10", "deck5/layer2/", ["Answer 2","Answer B 2"]),
-  //   Flashcard("Temp Card 11", "deck6/layer1/", ["Answer 1","Answer B 1"], ["#learned/bad"]),
-  //   Flashcard("Temp Card 12", "deck6/layer2/", ["Answer 2","Answer B 2"]),
-  //   Flashcard("Temp Card 13", "deck7/layer1/", ["Answer 1","Answer B 1"], ["#smile/happy"]),
-  //   Flashcard("Temp Card 14", "deck7/layer2/", ["Answer 2","Answer B 2"], ["#smile/happy"]),
-  //   Flashcard("Temp Card 15", "deck8/layer1/", ["Answer 1","Answer B 1"], ["#learned/bad"]),
-  //   Flashcard("Temp Card 16", "deck8/layer2/", ["Answer 2","Answer B 2"], ["#smile"]),
-  //   Flashcard("Temp Card 17", "deck9/layer1/", ["Answer 1","Answer B 1"], ["#smile"]),
-  //   Flashcard("Temp Card 18", "deck9/layer2/", ["Answer 2","Answer B 2"], ["#smile"]),
-  //   Flashcard("Temp Card 19", "deck10/layer1/", ["Answer 1","Answer B 1"], ["#smile"]),
-  //   Flashcard("Temp Card 20", "deck10/layer2/", ["Answer 2","Answer B 2"]),
-  // ];
 
   // Initialize the filter to be empty.
   Flashcard.setFilter([]);
@@ -122,8 +99,8 @@ Map<String, List<dynamic>> pageRoutes = {
   'review': ['/review/', ReviewPage(title: getString('reviewPage'))],
   'reviewComplete': ['/review/complete/', ReviewCompletePage(title: getString('reviewCompletePage'))],
   'practice': ['/practice/', PracticePage(title: getString('practicePage'))],
-// 	'deck': ['/deck', DeckPage(title: getString('title_deck'))],
-// 	'flashcards': ['/flashcards', FlashcardPage(title: getString('title_flashcards'))]
+  'multichoice': ['/multichoice/', MultiChoicePage(title: getString('multichoicePage'))],
+  'multichoiceResult': ['/multichoice/result/', MultiChoiceResultPage(title: getString('multichoiceResultPage'))],
 };
 
 /// MyApp
@@ -161,10 +138,10 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     Drawer drawer = Drawer(
       child: ListView(
-        padding: EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 20),
         children: [
           Align(alignment: Alignment.center, child: TextBold(getString('header_settings_drawer'))),
-          Divider(),
+          const Divider(),
           ElevatedButton(
             onPressed: () => themeModePopup(context),
             child: MarkD(getString('btn_theme_brightness_menu'))),

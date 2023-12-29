@@ -7,6 +7,8 @@ Map<String, String> get getLang {
   lang['reviewPage'] = 'Review';
   lang['reviewCompletePage'] = 'Review Complete';
   lang['practicePage'] = 'Practice - \${0} Cards Practiced';
+  lang['multichoicePage'] = 'MultiChoice Test - Time Elapsed: \${0}';
+  lang['multichoiceResultPage'] = 'MultiChoice Results- Time: \${0}';
 
   // generic
   lang['confirm'] = 'Confirm';
@@ -22,7 +24,7 @@ Map<String, String> get getLang {
   lang['btn_dark_theme'] = 'Dark Theme';
   lang['btn_auto_theme'] = 'System Theme';
   lang['btn_theme_brightness_menu'] = 'Change Theme';
-  lang['btn_theme_color_menu'] = 'Cycle Theme Color';
+  lang['btn_theme_color_menu'] = 'Select Theme Color';
 
   // tooltip
   lang['tooltip_create_card'] = 'Create card';
@@ -32,19 +34,27 @@ Map<String, String> get getLang {
   lang['header_delete_card'] = 'Delete Flashcard';
   lang['header_exit_app'] = 'Exit ${lang['title']}';
   lang['header_settings_drawer'] = 'Settings';
+  lang['header_finish_test'] = 'Finish Test?';
 
   // msg
   lang['msg_confirm_delete_card'] = 'The card \'\${0}\' will be deleted, continue?';
   lang['msg_confirm_app_exit'] = 'You are about to exit the app, continue?';
+  lang['msg_finish_test'] = 'Are you sure you would like to finish this test?';
 
   // texts
-  lang['txt_review_stats'] = '**STATS:**  \n**Score:** \${0} / \${1}  \n**Percent:** \${2}';
+  lang['txt_review_stats'] = '## **STATS:**  \n### **Score:** \${0} / \${1} **Percent:** \${2}%';
+  lang['txt_multichoice_stats'] = '## **TEST RESULTS:**  \n### **Points Scored:** \${0} / \${1} **Percent:** \${2}%';
 
   // hint
   lang['hint_create_new_card_key'] = 'Key';
   lang['hint_create_new_card_deck'] = 'Deck';
   lang['hint_create_new_card_values'] = 'Values (separate by: [new line]+++[newline])';
   lang['hint_create_new_card_tags'] = 'Tags (separated by [space])';
+
+  // emojis
+  lang['ico_check'] = '✔️';
+  lang['ico_cross'] = '❌';
+  lang['ico_mark'] = '❕';
 
   //intro cards
   lang['introcard_how_to_new_card'] = 'How to create a new card.';
