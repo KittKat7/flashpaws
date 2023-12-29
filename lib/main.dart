@@ -17,6 +17,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import './lang/en_us.dart' as en_us;
 
 late Box box;
+String lastUpdate = '20231228 2115';
 
 const int version = 2023102700;
 
@@ -140,7 +141,7 @@ class _HomePageState extends State<HomePage> {
       child: ListView(
         padding: const EdgeInsets.only(top: 20),
         children: [
-          Align(alignment: Alignment.center, child: TextBold(getString('header_settings_drawer'))),
+          Align(alignment: Alignment.center, child: TextBold(getString('header_settings_drawer', [lastUpdate]))),
           const Divider(),
           ElevatedButton(
             onPressed: () => themeModePopup(context),
