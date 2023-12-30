@@ -72,7 +72,7 @@ class MultiChoice {
     List<String> cardValues = values[id]!;
 
     Map<String, dynamic> ret = {
-      'id': id,
+      'id': deck[index].deck,
       'key': key,
       'values': cardValues
     };

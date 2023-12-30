@@ -226,100 +226,7 @@ Widget startBtns() {
   startBtns = Padding(padding: const EdgeInsets.only(bottom: 10), child: wrap);
 
   return startBtns;
-}
-
-/// createCardPopup
-/// A popuop that allows the user to enter information, and create a card from the provided
-/// information.
-void createCardPopup(
-    BuildContext context,
-    String title,
-    Function(String, String, List<String>, [List<String>?]) onConfirm,
-  ) {
-  // The text controllers for the text entry fields
-  final TextEditingController keyController = TextEditingController();
-  final TextEditingController deckController = TextEditingController();
-  final TextEditingController valueController = TextEditingController();
-  final TextEditingController tagController = TextEditingController();
-
-  // Create the text fields
-  TextField keyField = TextField(
-    decoration: InputDecoration(hintText: getString('hint_create_new_card_key')),
-    controller: keyController,
-    keyboardType: TextInputType.multiline,
-    maxLines: null,
-  );//e keyField
-  TextField deckField = TextField(
-    decoration: InputDecoration(hintText: getString('hint_create_new_card_deck')),
-    controller: deckController,
-    keyboardType: TextInputType.multiline,
-    maxLines: null,
-  );//e deckField
-  TextField valueField = TextField(
-    decoration: InputDecoration(hintText: getString('hint_create_new_card_values')),
-    controller: valueController,
-    keyboardType: TextInputType.multiline,
-    maxLines: null,
-  );//e valueField
-  TextField tagField = TextField(
-    decoration: InputDecoration(hintText: getString('hint_create_new_card_tags')),
-    controller: tagController,
-    keyboardType: TextInputType.multiline,
-    maxLines: null,
-  );//e tagField
-
-  // showDialog
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      var column = Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [keyField, deckField, valueField, tagField]
-      );
-      return AlertDialog(
-        title: MarkD(title),
-        content: column,
-        actions: <Widget>[
-          TextButton(
-            child: Text(getString('cancel')),
-            onPressed: () {
-              // Handle cancel
-              Navigator.of(context).pop();
-            },
-          ),
-          TextButton(
-            child: Text(getString('confirm')),
-            onPressed: () {
-              // Handle confirm
-              // Get the text, and ensure propper formatting.
-              String key = keyController.text;
-              String deck = deckController.text;
-              // Ensure deck ends with '/'
-              if (!deck.endsWith("/")) deck += "/";
-              String valuesStr = valueController.text;
-              if (valuesStr.endsWith("\n+++")) valuesStr = valuesStr.substring(0, valuesStr.length-4);
-              List<String> values = valuesStr.split("\n+++\n");
-              List<String> tags = [];
-              // Ensure tags start with '#'
-              for (String t in tagController.text.split(" ")) {
-                if (t.isEmpty) continue;
-                t = t.trim();
-                if (t.startsWith('#')) {
-                  tags.add(t);
-                } else {
-                  tags.add('#$t');
-                }//e if else
-              }//e for
-
-              Navigator.of(context).pop();
-              onConfirm(key, deck, values, tags);
-            },//e onPressed
-          ),//e TextButton
-        ],//e <Widget>[]
-      );//e AlertDialog
-    },//e builder
-  );//e showDialog
-}//e createCardPopup
+}//e startBtns()
 
 
 /// themeMenuPopup
@@ -458,3 +365,216 @@ Widget confidenceBtns(Flashcard currentCard, void Function(int p) setConfidence)
   return confidenceBtns;
 }
 
+
+//TODO
+class CreateCardAlert extends StatefulWidget {
+  const CreateCardAlert({super.key, required this.onConfirm});
+
+  final Function(String, String, List<String>, [List<String>?]) onConfirm;
+  @override
+  State<CreateCardAlert> createState() => _CreateCardAlertState();
+}
+
+class _CreateCardAlertState extends State<CreateCardAlert> {
+
+  String key = "";
+  List<String> values = [""];
+  String deck = "";
+  String tags = "";
+
+  late TextField keyField;
+  List<TextField> valueFields = [];
+  late TextField deckField;
+  late TextField tagField;
+
+  void _updateValues(int n, String text) {
+    if (text.isEmpty && n != 0) {
+      values.removeAt(n);
+      valueFields.removeAt(n);
+      return;
+    }
+    values[n] = text;
+    if (n == valueFields.length - 1) {
+      //create new text box
+      valueFields.add(TextField(
+        onChanged: (t) => setState(() => _updateValues(n+1, t)),
+        decoration: InputDecoration(hintText: getString('hint_create_new_card_values_fake')),
+        keyboardType: TextInputType.multiline,
+        maxLines: null,
+      ));
+      values.add("");
+    }
+  }
+
+  @override
+  void initState() {
+    // Create the text fields
+    keyField = TextField(
+      onChanged: (t) => key = t,
+      decoration: InputDecoration(hintText: getString('hint_create_new_card_key')),
+      keyboardType: TextInputType.multiline,
+      maxLines: null,
+    );//e keyField
+    valueFields.add(TextField(
+      onChanged: (t) => setState(() => _updateValues(0, t)),
+      decoration: InputDecoration(hintText: getString('hint_create_new_card_values')),
+      keyboardType: TextInputType.multiline,
+      maxLines: null,
+    ));//e valueFields
+    deckField = TextField(
+      onChanged: (t) => deck = t,
+      decoration: InputDecoration(hintText: getString('hint_create_new_card_deck')),
+      keyboardType: TextInputType.multiline,
+      maxLines: null,
+    );//e deckField
+    tagField = TextField(
+      onChanged: (t) => tags = t,
+      decoration: InputDecoration(hintText: getString('hint_create_new_card_tags')),
+      keyboardType: TextInputType.multiline,
+      maxLines: null,
+    );//e tagField
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    List<Widget> allFields = [];
+    allFields.add(keyField);
+    allFields.addAll(valueFields);
+    allFields.add(deckField);
+    allFields.add(tagField);
+
+    Column column = Column(
+      mainAxisSize: MainAxisSize.min,
+      children: allFields,
+    );
+
+    var alert = AlertDialog(
+      title: MarkD(getString('header_create_new_card')),
+      content: SingleChildScrollView(child: column,),
+      actions: <Widget>[
+        // cancel btn
+        TextButton(
+          child: Text(getString('cancel')),
+          onPressed: () {
+            // Handle cancel
+            Navigator.of(context).pop();
+          },
+        ),
+        // confirm button
+        TextButton(
+          child: Text(getString('confirm')),
+          onPressed: () {
+            if (key.isEmpty) {
+              alertPopup(
+                context,
+                getString('err_hdr_create_empty_key'),
+                getString('err_msg_create_empty_key'),
+                [getString('confirm')],
+                [(){}]);
+              return;
+            }
+            if (values[0].isEmpty) {
+              alertPopup(
+                context,
+                getString('err_hdr_create_empty_values'),
+                getString('err_msg_create_empty_values'),
+                [getString('confirm')],
+                [(){}]);
+              return;
+            }
+
+            // Handle confirm
+            // Get the text, and ensure propper formatting.
+            // Ensure deck ends with '/'
+            if (!deck.endsWith("/")) deck += "/";
+            List<String> tagsList = [];
+            // Ensure tags start with '#'
+            for (String t in tags.split(" ")) {
+              if (t.isEmpty) continue;
+              t = t.trim();
+              if (t.startsWith('#')) {
+                tagsList.add(t);
+              } else {
+                tagsList.add('#$t');
+              }//e if else
+            }//e for
+
+            // Remove duplicate values and empty values
+            while (values.contains("")) {
+              values.remove("");
+            }//e while
+            values = values.toSet().toList();
+
+            for (Flashcard card in Flashcard.cards) {
+              if (card.key == key && card.deck == deck) {
+                alertPopup(
+                  context,
+                  getString('err_hdr_create_duplicate_card'),
+                  getString('err_msg_create_duplicate_card'),
+                  [getString('confirm')],
+                  [(){}]);
+                return;
+              }//e if
+            }//e for
+
+            Navigator.of(context).pop();
+            widget.onConfirm(key, deck, values, tagsList);
+          },//e onPressed
+        ),//e TextButton
+      ],//e <Widget>[]
+    );
+
+    return alert;
+  }
+}//e _CreateCardWidgetState
+
+
+/// createCardPopup
+/// A popuop that allows the user to enter information, and create a card from the provided
+/// information.
+void createCardPopup(
+    BuildContext context,
+    Function(String, String, List<String>, [List<String>?]) onConfirm,
+  ) {
+  // showDialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return CreateCardAlert(onConfirm: onConfirm);
+    }//e builder
+  );//e showDialog
+}//e createCardPopup
+
+/// alertPopup
+/// Pops up an alert on screen using the parameters provided.
+void alertPopup(
+  BuildContext context,
+  String title,
+  String message,
+  List<String> btnStrings,
+  List<Function> btnActions
+) {
+
+  List<Widget> actions = [];
+  for (int i = 0; i < btnStrings.length && i < btnActions.length; i++) {
+    actions.add(
+      TextButton(
+        child: MarkD(btnStrings[i]),
+        onPressed: () { Navigator.of(context).pop(); btnActions[i](); },
+      )
+    );
+  }
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: MarkD(title),
+        content: MarkD(message),
+        actions: actions,
+      );
+    }//e builder
+  );//e showDialog
+}//e alertPopup

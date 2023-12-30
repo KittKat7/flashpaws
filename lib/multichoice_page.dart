@@ -178,7 +178,7 @@ class MultiChoiceResultPage extends StatelessWidget {
                   borderRadius: BorderRadius.all(Radius.circular(0))),
               ),
               onPressed: () {},
-              child: MarkD("($icon) $ans"))
+              child: MarkD("$icon $ans"))
           )
         );//e add
       }//e for

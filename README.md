@@ -5,7 +5,7 @@ Flashpaws - A Slightly cat themed, powerful, and simple flashcard app. Designed 
 ## Timeline
 ```mermaid
 ---
-title: Alpha Timeline
+title: Timeline To Release
 ---
 flowchart TD
     a["✔️ Basic class"] --> basicPageUI
@@ -49,9 +49,9 @@ flowchart TD
         exportToJson["Export to JSON"]
     end
     importexport --> additionalPageUI
-    subgraph additionalPageUI["🔜 Additional Pages"]
+    subgraph additionalPageUI["✔️ Additional Pages"]
         n["✔️ Review Page\n ✔️ Add long press capability to confidence buttons, will reset selection.\n ✔️ Remove ability to remove confidence rating by short clicking selected option.\n ✔️ make setting confidence update saved card data."] --> practicePage
         practicePage["✔️ Practice Page"] --> o
-        o["Multitest Page"]
+        o["✔️ Multitest Page"]
     end
 ```

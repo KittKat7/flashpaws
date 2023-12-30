@@ -8,7 +8,7 @@ Map<String, String> get getLang {
   lang['reviewCompletePage'] = 'Review Complete';
   lang['practicePage'] = 'Practice - \${0} Cards Practiced';
   lang['multichoicePage'] = 'MultiChoice Test - Time Elapsed: \${0}';
-  lang['multichoiceResultPage'] = 'MultiChoice Results- Time: \${0}';
+  lang['multichoiceResultPage'] = 'MultiChoice Results - Time: \${0}';
 
   // generic
   lang['confirm'] = 'Confirm';
@@ -46,15 +46,24 @@ Map<String, String> get getLang {
   lang['txt_multichoice_stats'] = '## **TEST RESULTS:**  \n### **Points Scored:** \${0} / \${1} **Percent:** \${2}%';
 
   // hint
-  lang['hint_create_new_card_key'] = 'Key';
-  lang['hint_create_new_card_deck'] = 'Deck';
-  lang['hint_create_new_card_values'] = 'Values (separate by: [new line]+++[newline])';
+  lang['hint_create_new_card_key'] = 'Term/Question';
+  lang['hint_create_new_card_deck'] = 'Deck (folder)';
+  lang['hint_create_new_card_values'] = 'Correct Definition/Answer';
+  lang['hint_create_new_card_values_fake'] = 'Fake Definition/Answer (optional)';
   lang['hint_create_new_card_tags'] = 'Tags (separated by [space])';
 
+  // errors
+  lang['err_hdr_create_empty_key'] = 'ERROR: Empty Key';
+  lang['err_msg_create_empty_key'] = 'The term/question is empty. Please enter the term/question for this card.';
+  lang['err_hdr_create_empty_values'] = 'ERROR: Empty Values';
+  lang['err_msg_create_empty_values'] = 'The definition/answer is empty. Please enter the definition/answer for this card.';
+  lang['err_hdr_create_duplicate_card'] = 'ERROR: Duplicate Card';
+  lang['err_msg_create_duplicate_card'] = 'There is already a card in this deck with the same term/question. Please change the term/question of this card, or put it in a different deck.';
+
   // emojis
-  lang['ico_check'] = '✔️';
-  lang['ico_cross'] = '❌';
-  lang['ico_mark'] = '❕';
+  lang['ico_check'] = '(✔️)';
+  lang['ico_cross'] = '(❌)';
+  lang['ico_mark'] = '(❕)';
 
   //intro cards
   lang['introcard_how_to_new_card'] = 'How to create a new card.';

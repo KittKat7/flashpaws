@@ -192,7 +192,6 @@ class _HomePageState extends State<HomePage> {
         floatingActionButton: FloatingActionButton(
           onPressed: () => createCardPopup(
             context,
-            getString('header_create_new_card'),
             (p0, p1, p2, [p3]) { Flashcard.newCard(p0, p1, p2, p3); setState(() {});},
           ),
           tooltip: getString('tooltip_create_card'),
