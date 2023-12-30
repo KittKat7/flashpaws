@@ -110,10 +110,9 @@ class ReviewCompletePage extends StatelessWidget {
 
   final String title;
 
-  final List<Flashcard> deck = Flashcard.filteredCards;
-
   @override
   Widget build(BuildContext context) {
+    List<Flashcard> deck = Flashcard.filteredCards;
     int score = 0;
     double percentScore = 0;
 
