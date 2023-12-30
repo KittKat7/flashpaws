@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flashpaws/multichoice_page.dart';
 import 'package:flashpaws/practice.dart';
-import 'package:flashpaws/review.dart';
+import 'package:flashpaws/review_page.dart';
 import 'package:flutter/services.dart';
 
 import 'widgets.dart';

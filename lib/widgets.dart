@@ -341,23 +341,23 @@ class ConfidenceBtn extends StatelessWidget {
   }
 }
 
-Widget confidenceBtns(Flashcard currentCard, void Function(int p) setConfidence) {
+Widget confidenceBtns(currentConfidence, void Function(int p) setConfidence) {
   Widget expand(Widget child) {
     return Expanded(flex: 1, child: child);
   }
   var confidenceBtns = Row(children: [
     expand(ConfidenceBtn(
-      icon: Icon(currentCard.confidence == 0? Icons.remove_circle : Icons.remove_circle_outline),
+      icon: Icon(currentConfidence == 0? Icons.remove_circle : Icons.remove_circle_outline),
       onPressed: () => setConfidence(0),
       onLongPress: () => setConfidence(-1),
     )),
     expand(ConfidenceBtn(
-      icon: Icon(currentCard.confidence == 1? Icons.circle : Icons.circle_outlined),
+      icon: Icon(currentConfidence == 1? Icons.circle : Icons.circle_outlined),
       onPressed: () => setConfidence(1),
       onLongPress: () => setConfidence(-1),
     )),
     expand(ConfidenceBtn(
-      icon: Icon(currentCard.confidence == 2? Icons.add_circle : Icons.add_circle_outline),
+      icon: Icon(currentConfidence == 2? Icons.add_circle : Icons.add_circle_outline),
       onPressed: () => setConfidence(2),
       onLongPress: () => setConfidence(-1),
     )),

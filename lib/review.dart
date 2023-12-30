@@ -1,138 +1,81 @@
 import 'package:flashpaws/flashcard.dart';
-import 'package:flashpaws/widgets.dart';
-import 'package:flutter/material.dart';
-import 'package:flutterkat/flutterkat.dart';
-import 'package:flutterkat/widgets.dart';
 
-class ReviewPage extends StatefulWidget {
-  const ReviewPage({super.key, required this.title});
+class Review {
+  static Review review = Review();
 
-  final String title;
+  late int _index;
+  late bool _isShowingValue;
+  late List<Flashcard> _deck;
+  late Flashcard _currentCard;
 
-  @override
-  State<ReviewPage> createState() => _ReviewPageState();
-}//e ReviewPage
+  int get index { return _index; }
+  int get length { return _deck.length; }
+  bool get isShowingValue { return _isShowingValue; }
+  String get currentKey { return _currentCard.key; }
+  String get currentValue { return _currentCard.values[0]; }
+  String get currentDeck { return _currentCard.deck; }
 
-class _ReviewPageState extends State<ReviewPage> {
+  Review() {
+    _index = 0;
+    _isShowingValue = false;
+    _deck = Flashcard.getShuffledFilteredCards();
+    _currentCard = _deck[_index];
+  }//e Review()
 
-  List<Flashcard> deck = Flashcard.getShuffledFilteredCards();
+  void flipCard() {
+    _isShowingValue = !_isShowingValue;
+  }//e flipCard()
 
-  int index = 0;
-  bool isShowingValue = false;
-  bool valueHasShown = false;
+  bool hasNextCard() {
+    if (_index + 1 == _deck.length) return false;
+    return true;
+  }//e hasNextCard()
 
-  @override
-  Widget build(BuildContext context) {
-    Flashcard currentCard = deck[index];
+  bool hasPrevCard() {
+    if (_index <= 0) return false;
+    return true;
+  }//e hasPrevCard()
 
-    flipCard() {setState(() {
-      isShowingValue = !isShowingValue;
-      valueHasShown = true;
-    });}//e flipCard()
+  void _updateCurrentCard([int offset = 0]) {
+    _index += offset;
+    _isShowingValue = false;
+    _currentCard = _deck[_index];
+  }//e _updateCurrentCard()
 
-    nextCard() {setState(() {
-      isShowingValue = false;
-      valueHasShown = false;
-      if (index < deck.length - 1) {
-        index++;
-      } else {
-        Navigator.of(context).popAndPushNamed(getRoute('reviewComplete'));
-      }
-    });}//e nextCard()
+  void nextCard() {
+    if (!hasNextCard()) return;
+    _updateCurrentCard(1);
+  }//e nextCard()
 
-    prevCard() {setState(() {
-      isShowingValue = false;
-      valueHasShown = false;
-      if (index > 0) {
-        index--;
-      }
-    });}//e prevCard()
+  void prevCard() {
+    if (!hasPrevCard()) return;
+    _updateCurrentCard(-1);
+  }//e prevCard()
 
-    setConfidence(int cnfdnc) {setState(() {
-      currentCard.confidence = cnfdnc;
-    });}//e setConfidence()
+  int getConfidence() {
+    return _currentCard.confidence;
+  }//e getConfidence
 
-    var cardBtn = ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.zero))
-      ),
-      onPressed: () => flipCard(),
-      child: Padding(padding: const EdgeInsets.all(10), child: 
-        !isShowingValue? Column(children: [
-          MarkD(currentCard.key),
-          TextItalic(currentCard.deck),
-          const Divider()])
-        : Column(children: [
-          MarkD(currentCard.key),
-          TextItalic(currentCard.deck),
-          const Divider(),
-          MarkD(currentCard.values[0])])
-      )//e Padding()
-    );
-    
-    var confidBtns = confidenceBtns(currentCard, (p) { setConfidence(p); Flashcard.saveCards(); });
+  void setConfidence(int cnfdnc) {
+    _currentCard.confidence = cnfdnc;
+  }//e setConfidence()
 
-    var navBtns = Row(children: [
-      Expanded(
-        flex: 1,
-        child: IconButton(
-          onPressed: () => index != 0 ? prevCard() : nextCard(),
-          icon: index != 0 ? const Icon(Icons.chevron_left) : const Icon(Icons.chevron_right)
-        )
-      ),
-      Expanded(flex: 2, child: confidBtns),
-      Expanded(
-        flex: 1,
-        child: IconButton(
-          onPressed: () => nextCard(),
-          icon: index < deck.length-1? const Icon(Icons.chevron_right) : const Icon(Icons.check)
-        )
-      ),
-    ]);
-    
-    return Scaffold(
-      appBar: AppBar(
-        title: TextBold("${widget.title} - ${deck.indexOf(currentCard)}/${deck.length}"),
-        centerTitle: true,
-      ),
-      body: Aspect(child: Padding(
-        padding: const EdgeInsets.only(top: 10),
-        child: Align(alignment: Alignment.center, child:
-          SingleChildScrollView(child: cardBtn)
-        ))),
-      bottomNavigationBar: BottomAppBar(child: navBtns),
-    );
-  }//e build
-}//e  _ReviewPageState
-
-class ReviewCompletePage extends StatelessWidget {
-  ReviewCompletePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    List<Flashcard> deck = Flashcard.filteredCards;
-    int score = 0;
+  Map<String, num> getData() {
+    double score = 0;
     double percentScore = 0;
 
-    for (Flashcard c in deck) {
+    for (Flashcard c in _deck) {
       if (c.confidence != -1) {
-        score += c.confidence;
+        score += c.confidence / 2;
       }//e if
     }//e for
-    percentScore = ((score / 2) / deck.length) * 100;
+    percentScore = (score / _deck.length) * 100;
+    percentScore.round();
+    return {
+      'points': score,
+      'total': _deck.length,
+      'percent': percentScore
+    };
+  }//e getData()
 
-    return Scaffold(
-      appBar: AppBar(
-        title: TextBold(title),
-        centerTitle: true,
-      ),
-      body: Aspect(child: Padding(
-        padding: const EdgeInsets.only(top: 10),
-        child: Align(alignment: Alignment.center, child: SingleChildScrollView(child: 
-        MarkD(getString('txt_review_stats', [(score / 2), deck.length, percentScore.round()]))
-      )))),
-    );
-  }//e build()
-}//e ReviewCompletePage
+}//e Review
