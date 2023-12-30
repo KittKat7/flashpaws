@@ -5,9 +5,32 @@ import 'package:flutterkat/graphics.dart';
 import 'package:flutterkat/theme.dart';
 import 'package:flutterkat/widgets.dart';
 
-/// DeckBtn
-/// A custom ElevatedButton which is used exclusivly for buttons allowing the user to modify the
-/// deck filter.
+/// A Flutter widget representing a customizable layer button.
+///
+/// The [LayerBtn] widget displays a button with text specified by the [layer]
+/// parameter. The appearance and behavior of the button can be customized based
+/// on the [isApplied] parameter, which determines whether the button is in a
+/// selected state.
+///
+/// The [onPressed] parameter is a callback function that will be executed when
+/// the button is pressed. It is of type `void Function()`.
+///
+/// Example usage:
+/// ```dart
+/// LayerBtn(
+///   layer: 'Layer Name',
+///   onPressed: () {
+///     // Handle button press.
+///   },
+///   isApplied: true, // Set to true for a selected state, false otherwise.
+/// )
+/// ```
+///
+/// The button's appearance is determined by the [isApplied] parameter. If
+/// [isApplied] is true, the button will have a different background color
+/// indicating its selected state; otherwise, it will have a primary color
+/// background. The button text is formatted using the `MarkD` widget, allowing
+/// rich text and markdown-like styling.
 class LayerBtn extends StatelessWidget {
   /// What text should be displayed on the button.
   final String layer;
@@ -43,7 +66,36 @@ class LayerBtn extends StatelessWidget {
   }//e Build
 }//e DeckBtn
 
-/// CardBtn //TODO comment
+/// A Flutter widget representing a customizable card button.
+///
+/// This [CardBtn] widget displays a [Flashcard] within an [ElevatedButton] that
+/// triggers specified actions on both regular press and long press events.
+///
+/// The [card] parameter is the flashcard to be displayed within the button.
+///
+/// The [onPressed] parameter is a callback function that will be executed when
+/// the button is pressed. It is of type `void Function()`.
+///
+/// The [onLongPress] parameter is a callback function that will be executed when
+/// the button is long-pressed. It is of type `void Function(BuildContext)`.
+///
+/// Example usage:
+/// ```dart
+/// CardBtn(
+///   card: myFlashcard,
+///   onPressed: () {
+///     // Handle regular button press.
+///   },
+///   onLongPress: (BuildContext context) {
+///     // Handle long press with access to the build context.
+///   },
+/// )
+/// ```
+///
+/// The button is styled with a transparent background and a border that follows
+/// the primary color scheme of the current theme. The content of the button is
+/// formatted using the `MarkD` widget, allowing rich text and markdown-like
+/// styling for the flashcard content.
 class CardBtn extends StatelessWidget {
   /// The card to be displayed.
   final Flashcard card;
@@ -69,14 +121,37 @@ class CardBtn extends StatelessWidget {
           ),
           onPressed: () { onPressed(); },
           onLongPress: () { onLongPress(context); },
-          child: MarkD("## ${card.key}\n${card.deck}\n___\n${card.values[0]}"),
+          child: MarkD("## ${card.key}\n${card.deckStr}\n___\n${card.values[0]}"),
         ),
       ))
     ]);
   }//e Build
 }//e CardBtn
 
-///TODO comment
+/// A Flutter widget representing a customizable start button.
+///
+/// The [StartBtn] widget displays a button with an [Icon] and text specified
+/// by the [icon] and [text] parameters, respectively. The appearance and
+/// behavior of the button can be customized based on the specified [onPressed]
+/// callback function.
+///
+/// The [onPressed] parameter is a callback function that will be executed when
+/// the button is pressed. It is of type `void Function(BuildContext)`.
+///
+/// Example usage:
+/// ```dart
+/// StartBtn(
+///   icon: Icon(Icons.play_arrow),
+///   text: 'Start',
+///   onPressed: (BuildContext context) {
+///     // Handle button press with access to the build context.
+///   },
+/// )
+/// ```
+///
+/// The button's appearance is determined by the default background color of the
+/// current theme. The button content consists of an [Icon] and text, both
+/// aligned in a row at the center.
 class StartBtn extends StatelessWidget {
   /// The card to be displayed.
   final String text;
@@ -100,14 +175,26 @@ class StartBtn extends StatelessWidget {
       child: Row(mainAxisAlignment: MainAxisAlignment.center, mainAxisSize: MainAxisSize.min, children: [icon, MarkD(text)])
     );
   }//e Build
-}//e CardBtn
+}//e StartBtn
 
-/// deckBtns
-/// This methd builds a list of DeckBtn based on the provided decks.
-/// @param List<String> layers A list of layers that need a button.
-/// @param void Function() updateState A function which when calls updates the state of the page
-/// reloading and updating which buttons are displayed.
-/// @return Widget A GridView widget containing all generated DeckBtns.
+/// Generates a widget containing layer buttons for the given list of [layers].
+///
+/// The [deckBtns] method takes a list of layer names and a callback function
+/// [updateState]. It creates buttons for resetting the filter and displaying
+/// all decks/cards, buttons for reverting to each applied layer, and buttons for
+/// adding new layers to the filter. The [onPressed] callbacks perform actions
+/// based on the selected layer, such as setting the filter or pushing a new
+/// layer onto the filter.
+///
+/// Example usage:
+/// ```dart
+/// Widget deckButtonsWidget = deckBtns(myLayerList, () {
+///   // Update state logic.
+/// });
+/// ```
+///
+/// The generated list of layer buttons is then used to create a [Wrap] widget
+/// for a flexible layout, aligned to the top left.
 Widget deckBtns(List<String> layers, void Function() updateState) {
   // All the buttons generated and to be displayed.
   List<Widget> children = [];
@@ -146,25 +233,28 @@ Widget deckBtns(List<String> layers, void Function() updateState) {
       onPressed: () { Flashcard.pushFilter(layer); updateState(); }
     ));
   }//e for
-  // Create and returnt he GridView widget with the created list of buttons, and return it.
-  // Widget grid = GridView.count(
-  //   primary: false,
-  //   shrinkWrap: true,
-  //   crossAxisCount: 3,
-  //   mainAxisSpacing: 10,
-  //   crossAxisSpacing: 10,
-  //   childAspectRatio: 4,
-  //   children: children,
-  // );
+
   Widget wrap = Align(alignment: Alignment.topLeft, child: Wrap(alignment: WrapAlignment.start, children: children,));
   return wrap;
 }//e deckBtns
 
-/// cardBtns
-/// Creates and returns a column of Flashcards.
-/// @param List<Flashcard> cards The cards that need to be displayed.
-/// @param void Function() updateState A function which updates the page.
-/// @return Column A Column of Flashcard buttons.
+/// Generates a widget containing card buttons for the given list of [Flashcard]s.
+///
+/// The [cardBtns] method takes a list of [Flashcard]s and a callback function
+/// [updateState]. For each card in the list, it creates a [CardBtn] with
+/// specified [onPressed] and [onLongPress] callbacks. The [onPressed] callback
+/// prints a message to the console, and the [onLongPress] callback displays a
+/// confirmation popup for deleting the card.
+///
+/// Example usage:
+/// ```dart
+/// Widget cardButtonsWidget = cardBtns(myFlashcardList, () {
+///   // Update state logic.
+/// });
+/// ```
+///
+/// The generated list of card buttons is then used to create a [Column] widget
+/// containing all the buttons.
 Widget cardBtns(List<Flashcard> cards, void Function() updateState) {
   List<Widget> children = [];
   
@@ -179,7 +269,7 @@ Widget cardBtns(List<Flashcard> cards, void Function() updateState) {
             context,
             getString('header_delete_card'),
             getString('msg_confirm_delete_card', [card.id]),
-            () { Flashcard.removeCard(card); updateState(); }
+            () { Flashcard.removeCard(card); Flashcard.setFilter(Flashcard.filter); updateState(); }
           );//e confirmPopup
         },//e onLongPress
       )//e CardBtn
@@ -191,8 +281,22 @@ Widget cardBtns(List<Flashcard> cards, void Function() updateState) {
   return column;
 }//e cardBtns
 
-/// startBtns
-/// //TODO
+/// Generates a widget containing start buttons for different actions.
+///
+/// The [startBtns] method creates a widget containing three start buttons for
+/// different actions: practice, review, and multitest. Each button includes an
+/// icon, text, and an [onPressed] callback to navigate to the corresponding
+/// screen using the [Navigator].
+///
+/// Example usage:
+/// ```dart
+/// Widget startButtonsWidget = startBtns();
+/// ```
+///
+/// The method uses the [StartBtn] widget to create individual buttons for
+/// practice, review, and multitest. These buttons are then arranged in a
+/// [Wrap] widget for a flexible layout. Additionally, the buttons are also
+/// displayed in a [GridView] with three columns for a more organized display.
 Widget startBtns() {
 
   Widget practice = StartBtn(
@@ -229,9 +333,21 @@ Widget startBtns() {
 }//e startBtns()
 
 
-/// themeMenuPopup
-/// A popuop that allows the user to enter information, and create a card from the provided
-/// information.
+/// Displays a theme mode selection popup in the specified [context].
+///
+/// The [themeModePopup] method creates an AlertDialog containing a column of
+/// ElevatedButtons, each representing a different theme mode option. The
+/// options include setting the theme to light mode, dark mode, or automatic
+/// mode.
+///
+/// Example usage:
+/// ```dart
+/// themeModePopup(context);
+/// ```
+///
+/// The method utilizes the [getAppThemeMode] function to access the
+/// `AppThemeMode` instance and sets the theme mode based on the user's
+/// selection.
 void themeModePopup(BuildContext context) {
 
   var themeModeList = Column(
@@ -268,9 +384,21 @@ void themeModePopup(BuildContext context) {
   );//e showDialog
 }//e createCardPopup
 
-/// themeMenuPopup
-/// A popuop that allows the user to enter information, and create a card from the provided
-/// information.
+/// Displays a theme color selection popup in the specified [context].
+///
+/// The [themeColorPopup] method creates an AlertDialog containing a column of
+/// ElevatedButtons, each representing a different theme color option. The
+/// available theme colors are retrieved using the [getAvailableThemeColors]
+/// function. When a color button is pressed, the method uses the
+/// [getColorTheme] function to set the color theme accordingly.
+///
+/// Example usage:
+/// ```dart
+/// themeColorPopup(context);
+/// ```
+///
+/// The method dynamically generates the color buttons based on the available
+/// theme colors and their corresponding names.
 void themeColorPopup(BuildContext context) {
 
   List<String> colors = getAvailableThemeColors;
@@ -310,7 +438,22 @@ void themeColorPopup(BuildContext context) {
 }//e themeColorPopup
 
 
-//TODO create confidence buttons.
+/// A Flutter widget that adds a long-press gesture to a child widget.
+///
+/// The [LongPressWidget] class allows you to wrap any widget with a
+/// long-press gesture. It takes a [child] widget and a [onLongPress] callback
+/// function that will be executed when the user performs a long-press on the
+/// wrapped widget.
+///
+/// Example usage:
+/// ```dart
+/// LongPressWidget(
+///   child: YourWidget(),
+///   onLongPress: () {
+///     // Handle long-press action.
+///   },
+/// )
+/// ```
 class LongPressWidget extends StatelessWidget {
 
   final Widget child;
@@ -323,24 +466,61 @@ class LongPressWidget extends StatelessWidget {
     // create widget
     Widget longPress = GestureDetector(onLongPress: () => onLongPress(), child: child,);
     return longPress;
-  }
-}
+  }//e buidl()
+}//e LongPressWidget
 
+/// A Flutter widget representing a confidence button with additional long-press functionality.
+///
+/// The [ConfidenceBtn] class combines an [IconButton] with a long-press gesture,
+/// allowing users to perform both regular press and long-press actions. It takes
+/// an [icon] for the regular press action, [onPressed] callback for the regular
+/// press event, and [onLongPress] callback for the long-press event.
+///
+/// Example usage:
+/// ```dart
+/// ConfidenceBtn(
+///   icon: Icon(Icons.thumb_up),
+///   onPressed: () {
+///     // Handle regular press action.
+///   },
+///   onLongPress: () {
+///     // Handle long-press action.
+///   },
+/// )
+/// ```
 class ConfidenceBtn extends StatelessWidget {
   
   final Icon icon;
   final void Function() onPressed;
   final void Function() onLongPress;
-  ConfidenceBtn({required this.icon, required this.onPressed, required this.onLongPress});
+  const ConfidenceBtn({super.key, required this.icon, required this.onPressed, required this.onLongPress});
 
   @override
   Widget build(BuildContext context) {
     var iconBtn = IconButton(onPressed: onPressed, icon: icon);
     var longPressWidget = LongPressWidget(onLongPress: onLongPress, child: iconBtn);
     return longPressWidget;
-  }
-}
+  }//e build()
+}//e ConfidenceBtn
 
+/// Generates a row of confidence buttons with regular and long-press actions.
+///
+/// The [confidenceBtns] method takes the [currentConfidence] level and a
+/// [setConfidence] callback function to update the confidence level. It creates
+/// a row of three [ConfidenceBtn] widgets, each representing a different
+/// confidence level (low, medium, high). The [onPressed] callback sets the
+/// confidence level when the button is pressed, and the [onLongPress] callback
+/// resets the confidence level to -1 when the button is long-pressed.
+///
+/// Example usage:
+/// ```dart
+/// Widget confidenceButtonsWidget = confidenceBtns(
+///   currentConfidenceLevel,
+///   (int confidenceLevel) {
+///     // Handle setting confidence level logic.
+///   },
+/// );
+/// ```
 Widget confidenceBtns(currentConfidence, void Function(int p) setConfidence) {
   Widget expand(Widget child) {
     return Expanded(flex: 1, child: child);
@@ -363,18 +543,37 @@ Widget confidenceBtns(currentConfidence, void Function(int p) setConfidence) {
     )),
   ]);
   return confidenceBtns;
-}
+}//e confidenceBtns
 
 
-//TODO
+/// A stateful widget for creating a new flashcard.
+///
+/// The [CreateCardAlert] class is a stateful widget that displays an alert dialog
+/// for creating a new flashcard. It takes an [appliedFilter] to pre-fill the deck
+/// or tags based on the current context. The [onConfirm] callback is invoked when
+/// the user confirms the creation of the flashcard, passing the key, deck, values,
+/// and optional tags list.
+///
+/// Example usage:
+/// ```dart
+/// CreateCardAlert(
+///   appliedFilter: "Deck1", // optional pre-filled deck or tags
+///   onConfirm: (String key, String deck, List<String> values, [List<String>? tags]) {
+///     // Handle flashcard creation logic.
+///   },
+/// )
+/// ```
 class CreateCardAlert extends StatefulWidget {
-  const CreateCardAlert({super.key, required this.onConfirm});
+
+  final String appliedFilter;
+  const CreateCardAlert({super.key, required this.onConfirm, this.appliedFilter = ""});
 
   final Function(String, String, List<String>, [List<String>?]) onConfirm;
   @override
   State<CreateCardAlert> createState() => _CreateCardAlertState();
 }
 
+/// State class for the [CreateCardAlert] widget.
 class _CreateCardAlertState extends State<CreateCardAlert> {
 
   String key = "";
@@ -398,6 +597,7 @@ class _CreateCardAlertState extends State<CreateCardAlert> {
       //create new text box
       valueFields.add(TextField(
         onChanged: (t) => setState(() => _updateValues(n+1, t)),
+        controller: TextEditingController(text: ""),
         decoration: InputDecoration(hintText: getString('hint_create_new_card_values_fake')),
         keyboardType: TextInputType.multiline,
         maxLines: null,
@@ -408,6 +608,12 @@ class _CreateCardAlertState extends State<CreateCardAlert> {
 
   @override
   void initState() {
+    if (widget.appliedFilter.startsWith('#')) {
+      tags = widget.appliedFilter;
+    } else {
+    deck = widget.appliedFilter;
+    }//e if else
+
     // Create the text fields
     keyField = TextField(
       onChanged: (t) => key = t,
@@ -422,12 +628,14 @@ class _CreateCardAlertState extends State<CreateCardAlert> {
       maxLines: null,
     ));//e valueFields
     deckField = TextField(
+      controller: TextEditingController(text: deck),
       onChanged: (t) => deck = t,
       decoration: InputDecoration(hintText: getString('hint_create_new_card_deck')),
       keyboardType: TextInputType.multiline,
       maxLines: null,
     );//e deckField
     tagField = TextField(
+      controller: TextEditingController(text: tags),
       onChanged: (t) => tags = t,
       decoration: InputDecoration(hintText: getString('hint_create_new_card_tags')),
       keyboardType: TextInputType.multiline,
@@ -530,25 +738,57 @@ class _CreateCardAlertState extends State<CreateCardAlert> {
   }
 }//e _CreateCardWidgetState
 
-
-/// createCardPopup
-/// A popuop that allows the user to enter information, and create a card from the provided
-/// information.
+/// Displays a popup for creating a new flashcard.
+///
+/// The [createCardPopup] method shows a dialog using [showDialog] with a
+/// [CreateCardAlert] widget to allow users to create a new flashcard. It takes
+/// the [context] for building the dialog, [onConfirm] callback for handling
+/// flashcard creation, and an optional [appliedFilter] to pre-fill the deck or
+/// tags in the flashcard creation form.
+///
+/// Example usage:
+/// ```dart
+/// createCardPopup(
+///   context,
+///   (String key, String deck, List<String> values, [List<String>? tags]) {
+///     // Handle flashcard creation logic.
+///   },
+///   "Deck1", // optional pre-filled deck or tags
+/// );
+/// ```
 void createCardPopup(
     BuildContext context,
     Function(String, String, List<String>, [List<String>?]) onConfirm,
+    String appliedFilter,
   ) {
   // showDialog
   showDialog(
     context: context,
     builder: (BuildContext context) {
-      return CreateCardAlert(onConfirm: onConfirm);
+      return CreateCardAlert(onConfirm: onConfirm, appliedFilter: appliedFilter);
     }//e builder
   );//e showDialog
 }//e createCardPopup
 
-/// alertPopup
-/// Pops up an alert on screen using the parameters provided.
+/// Displays an alert popup with custom title, message, and buttons.
+///
+/// The [alertPopup] method shows an alert dialog using [showDialog] with a
+/// custom title, message, and buttons. It takes the [context] for building the
+/// dialog, [title] and [message] for the alert content, and lists of [btnStrings]
+/// and [btnActions] for the button labels and corresponding actions.
+///
+/// Example usage:
+/// ```dart
+/// alertPopup(
+///   context,
+///   "Error",
+///   "An error occurred. Please try again.",
+///   ["OK"],
+///   [() {
+///     // Handle OK button action.
+///   }],
+/// );
+/// ```
 void alertPopup(
   BuildContext context,
   String title,

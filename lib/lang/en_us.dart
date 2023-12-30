@@ -35,11 +35,13 @@ Map<String, String> get getLang {
   lang['header_exit_app'] = 'Exit ${lang['title']}';
   lang['header_settings_drawer'] = 'Flashpaws - Update \${0}';
   lang['header_finish_test'] = 'Finish Test?';
+  lang['header_finish_review'] = 'Finish Review?';
 
   // msg
   lang['msg_confirm_delete_card'] = 'The card \'\${0}\' will be deleted, continue?';
   lang['msg_confirm_app_exit'] = 'You are about to exit the app, continue?';
   lang['msg_finish_test'] = 'Are you sure you would like to finish this test?';
+  lang['msg_finish_review'] = 'Are you sure you would like to finish this review?';
 
   // texts
   lang['txt_review_stats'] = '## **STATS:**  \n### **Score:** \${0} / \${1} **Percent:** \${2}%';

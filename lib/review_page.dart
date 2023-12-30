@@ -70,8 +70,12 @@ class _ReviewPageState extends State<ReviewPage> {
       Expanded(
         flex: 1,
         child: IconButton(
-          onPressed: () => review.hasNextCard()? setState(() => review.nextCard())
-            : confirmPopup(context, "//TODO", "//TODO", completeReview),
+          onPressed: () => review.hasNextCard()? setState(() => review.nextCard()) :
+            confirmPopup(
+              context,
+              getString('header_finish_review'),
+              getString('msg_finish_review'),
+              completeReview),
           icon: review.hasNextCard()? const Icon(Icons.chevron_right) : const Icon(Icons.check)
         )
       ),

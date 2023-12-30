@@ -16,6 +16,7 @@ class Flashcard {
 
   /// get filter Returns the current filter.
   static List<String> get filter { return _filter; }
+  static String get filterString { return _filter.join('/'); }
 
   int confidence;
 
@@ -184,6 +185,7 @@ class Flashcard {
   String _deck;
   set deck(String deck) { _deck = deck; }
   String get deck { return _deck.endsWith("/") ? _deck : "$_deck/"; }
+  String get deckStr { return deck.substring(0, deck.length); }
   /// All possible answers for the flashcard, index 0 is the correct one
   List<String> values;
   /// All tags that this card has
