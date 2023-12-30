@@ -1,5 +1,5 @@
 import 'package:flashpaws/flashcard.dart';
-import 'package:flashpaws/review.dart';
+import 'package:flashpaws/study.dart';
 import 'package:flashpaws/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterkat/flutterkat.dart';
@@ -51,7 +51,7 @@ class _ReviewPageState extends State<ReviewPage> {
     );
     
     var confidBtns = confidenceBtns(
-      review.getConfidence(), (p) {
+      review.confidence, (p) {
         setState(() => review.setConfidence(p));
         Flashcard.saveCards();
       }
