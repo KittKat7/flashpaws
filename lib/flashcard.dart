@@ -181,6 +181,8 @@ class Flashcard {
 
   /// The key for the flashcard
   String key;
+  // TODO BUG - Inconsistancies with how deck is stored. Add consistant '/' to start of and end of
+  // deck.
   /// The deck the flashcard is in
   String _deck;
   set deck(String deck) { _deck = deck; }
