@@ -31,6 +31,7 @@ class _MultiChoicePageState extends State<MultiChoicePage> {
     List<String> values = cardData['values'];
 
     var txtID = TextItalic(id);
+    // TODO BUG - Text key can extend offscreen
     var txtKey = Transform.scale(scale: 1.5, child: MarkD(key));
 
     List<Widget> answerBtnList = [];
@@ -101,6 +102,7 @@ class _MultiChoicePageState extends State<MultiChoicePage> {
 
     return Scaffold(
       appBar: AppBar(
+        // TODO BUG - Text in title extends off screen
         title: TextBold("${widget.title} - $filter"),
         centerTitle: true,
       ),
@@ -145,6 +147,7 @@ class MultiChoiceResultPage extends StatelessWidget {
       List<Widget> cardList = [];
       cardList.add(TextItalic(card.id));
       cardList.add(const Divider(indent: 1, endIndent: 1));
+    // TODO BUG - Text key can extend offscreen
       cardList.add(Transform.scale(scale: 1.5, child: MarkD(card.key)));
 
       List<Widget> answers = [];
@@ -188,6 +191,7 @@ class MultiChoiceResultPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        // TODO BUG - Text in title extends off screen
         title: TextBold(title),
         centerTitle: true,
       ),

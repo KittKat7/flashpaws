@@ -586,12 +586,20 @@ class _CreateCardAlertState extends State<CreateCardAlert> {
   late TextField deckField;
   late TextField tagField;
 
+  //TODO BUG need to FIX
+  // BUG - Creating flashcard, 'Fake Answer' text fields stop auto adding.
+  /// Updates the values entered by the user.
+  /// 
+  /// Takes [n] and [text] and updates the data in [values] at index [n]. If [n] and is the same as
+  /// [values.length - 1] and [text] is not empty, then it adds an additional TextField to
+  /// [valueFields] and adds another blank string to [values] to serve as a place holder until text
+  /// is entered into that TextField.
   void _updateValues(int n, String text) {
     if (text.isEmpty && n != 0) {
       values.removeAt(n);
       valueFields.removeAt(n);
       return;
-    }
+    }//e if
     values[n] = text;
     if (n == valueFields.length - 1) {
       //create new text box
@@ -603,8 +611,8 @@ class _CreateCardAlertState extends State<CreateCardAlert> {
         maxLines: null,
       ));
       values.add("");
-    }
-  }
+    }//e if
+  }//e _updateValues()
 
   @override
   void initState() {

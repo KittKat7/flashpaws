@@ -100,7 +100,9 @@ Map<String, List<dynamic>> pageRoutes = {
   'review': ['/review/', ReviewPage(title: getString('reviewPage'))],
   'reviewComplete': ['/review/complete/', ReviewCompletePage(title: getString('reviewCompletePage'))],
   'practice': ['/practice/', PracticePage(title: getString('practicePage'))],
+  // TODO BUG - Text in title extends off screen
   'multichoice': ['/multichoice/', MultiChoicePage(title: getString('multichoicePage'))],
+  // TODO BUG - Text in title extends off screen
   'multichoiceResult': ['/multichoice/result/', MultiChoiceResultPage(title: getString('multichoiceResultPage'))],
 };
 
