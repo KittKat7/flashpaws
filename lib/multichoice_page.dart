@@ -103,7 +103,7 @@ class _MultiChoicePageState extends State<MultiChoicePage> {
     return Scaffold(
       appBar: AppBar(
         // TODO BUG - Text in title extends off screen
-        title: TextBold("${widget.title} - $filter"),
+        title: TextBold(widget.title),
         centerTitle: true,
       ),
       body: Aspect(child: Padding(

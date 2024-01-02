@@ -7,8 +7,8 @@ Map<String, String> get getLang {
   lang['reviewPage'] = 'Review';
   lang['reviewCompletePage'] = 'Review Complete';
   lang['practicePage'] = 'Practice - \${0} Cards Practiced';
-  lang['multichoicePage'] = 'MultiChoice Test - Time Elapsed: \${0}';
-  lang['multichoiceResultPage'] = 'MultiChoice Results - Time: \${0}';
+  lang['multichoicePage'] = 'MultiChoice Test';
+  lang['multichoiceResultPage'] = 'MultiChoice Results';
 
   // generic
   lang['confirm'] = 'Confirm';
