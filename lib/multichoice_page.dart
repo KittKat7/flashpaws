@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flashpaws/flashcard.dart';
 import 'package:flashpaws/multichoice.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +22,30 @@ class _MultiChoicePageState extends State<MultiChoicePage> {
 
   String filter = Flashcard.filter.join('/');
   MultiChoice test = MultiChoice();
+
+  Duration timeElapsed = Duration();
+  String get timeElapsedStr {
+    return timeElapsed.toString().substring(0, timeElapsed.toString().length - 7);
+  }
+
+  Stopwatch stopwatch = Stopwatch()..start();
+
+  Timer? timer;
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    stopwatch.stop();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() => timeElapsed = stopwatch.elapsed);
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +104,7 @@ class _MultiChoicePageState extends State<MultiChoicePage> {
             const Icon(Icons.chevron_left) : const Icon(Icons.circle_outlined)
         )
       ),
-      const Expanded(flex: 2, child: SizedBox()),
+      Expanded(flex: 2, child: Center(child: Text(timeElapsedStr))),
       Expanded(
         flex: 1,
         child: IconButton(
@@ -89,6 +115,7 @@ class _MultiChoicePageState extends State<MultiChoicePage> {
               getString('header_finish_test'),
               getString('msg_finish_test'),
               () {
+                test.endTime = DateTime.now();
                 MultiChoice.test = test;
                 // Navigator.of(context).pop();
                 Navigator.of(context).popAndPushNamed(
@@ -132,7 +159,7 @@ class MultiChoiceResultPage extends StatelessWidget {
 
     List<Widget> answeredCards = [];
 
-    Map<String, num> results = test.getResults();
+    Map<String, dynamic> results = test.getResults();
     num points = results['points']!;
     num total = results['total']!;
     num percent = (results['percent']!*100).round();
@@ -200,6 +227,8 @@ class MultiChoiceResultPage extends StatelessWidget {
         child: Align(alignment: Alignment.center, child: SingleChildScrollView(
           child: Column(mainAxisSize: MainAxisSize.min, children: answeredCards)
       )))),
+      bottomNavigationBar: BottomAppBar(child: Center(
+        child: Text(results['duration']!.toString().substring(0, results['duration']!.toString().length - 7)))),
     );
   }//e build()
 }//e MultiChoiceResultPage

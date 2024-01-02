@@ -10,10 +10,17 @@ class MultiChoice {
   Map<String, List<String>> values = {};
   Map<String, String?> userAnswers = {};
 
+  late Duration timeElapsed;
+  late DateTime _initialTime = DateTime.now();
+  late DateTime _endTime = DateTime.now();
+  set endTime(DateTime endTime) {
+    _endTime = endTime;
+  }
 
   int index = 0;
 
   MultiChoice() {
+    _initialTime = DateTime.now();
     var unrandomDeck = Flashcard.filteredCards;
     unrandomDeck.shuffle();
     deck = unrandomDeck;
@@ -74,7 +81,7 @@ class MultiChoice {
     Map<String, dynamic> ret = {
       'id': deck[index].deck,
       'key': key,
-      'values': cardValues
+      'values': cardValues,
     };
 
     return ret;
@@ -108,7 +115,7 @@ class MultiChoice {
   ///    'percent': percent,
   ///  };
   ///  ```
-  Map<String, num> getResults() {
+  Map<String, dynamic> getResults() {
     int total = deck.length;
     int points = 0;
     for (Flashcard c in deck) {
@@ -120,10 +127,11 @@ class MultiChoice {
     }//e for
     double percent = points / total;
 
-    Map<String, num> ret = {
+    Map<String, dynamic> ret = {
       'points': points,
       'total': total,
       'percent': percent,
+      'duration': _endTime.difference(_initialTime),
     };
     return ret;
   }//e getResults()
