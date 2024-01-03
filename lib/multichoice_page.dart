@@ -58,7 +58,7 @@ class _MultiChoicePageState extends State<MultiChoicePage> {
 
     var txtID = TextItalic(id);
     // TODO BUG - Text key can extend offscreen
-    var txtKey = Transform.scale(scale: 1.5, child: MarkD(key));
+    var txtKey = Transform.scale(scale: 1, child: MarkD("## $key"));
 
     List<Widget> answerBtnList = [];
 
