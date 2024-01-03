@@ -46,7 +46,7 @@ class LayerBtn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // the child the button will display.
-    Widget child = MarkD(layer);
+    Widget child = Markd(layer);
     // The styling for not selected buttons.
     ButtonStyle priStyle = ElevatedButton.styleFrom(backgroundColor: colorScheme(context).primaryContainer);
     // The styling for selected buttons.
@@ -121,7 +121,15 @@ class CardBtn extends StatelessWidget {
           ),
           onPressed: () { onPressed(); },
           onLongPress: () { onLongPress(context); },
-          child: MarkD("## ${card.key}\n${card.deckStr}\n___\n${card.values[0]}"),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              HeaderMarkd(card.key),
+              Markd(card.deckStr),
+              const ThickDivider(),
+              Markd(card.values[0])
+            ]
+          )
         ),
       ))
     ]);
@@ -172,7 +180,7 @@ class StartBtn extends StatelessWidget {
     return ElevatedButton(
       style: style,
       onPressed: () => onPressed(context),
-      child: Row(mainAxisAlignment: MainAxisAlignment.center, mainAxisSize: MainAxisSize.min, children: [icon, MarkD(text)])
+      child: Row(mainAxisAlignment: MainAxisAlignment.center, mainAxisSize: MainAxisSize.min, children: [icon, Markd(text)])
     );
   }//e Build
 }//e StartBtn
@@ -355,13 +363,13 @@ void themeModePopup(BuildContext context) {
     children: [
       ElevatedButton(
         onPressed: () => getAppThemeMode(context).setLightMode(),
-        child: MarkD(getString('btn_light_theme'))),
+        child: Markd(getString('btn_light_theme'))),
       ElevatedButton(
         onPressed: () => getAppThemeMode(context).setDarkMode(),
-        child: MarkD(getString('btn_dark_theme'))),
+        child: Markd(getString('btn_dark_theme'))),
       ElevatedButton(
         onPressed: () => getAppThemeMode(context).setAutoMode(),
-        child: MarkD(getString('btn_auto_theme'))),
+        child: Markd(getString('btn_auto_theme'))),
   ]);
 
   // showDialog
@@ -369,7 +377,7 @@ void themeModePopup(BuildContext context) {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: MarkD(getString('btn_theme_brightness_menu')),
+        title: Markd(getString('btn_theme_brightness_menu')),
         content: themeModeList,
         actions: <Widget>[
           TextButton(
@@ -422,7 +430,7 @@ void themeColorPopup(BuildContext context) {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: MarkD(getString('btn_theme_brightness_menu')),
+        title: Markd(getString('btn_theme_brightness_menu')),
         content: themeModeList,
         actions: <Widget>[
           TextButton(
@@ -667,7 +675,7 @@ class _CreateCardAlertState extends State<CreateCardAlert> {
     );
 
     var alert = AlertDialog(
-      title: MarkD(getString('header_create_new_card')),
+      title: Markd(getString('header_create_new_card')),
       content: SingleChildScrollView(child: column,),
       actions: <Widget>[
         // cancel btn
@@ -809,7 +817,7 @@ void alertPopup(
   for (int i = 0; i < btnStrings.length && i < btnActions.length; i++) {
     actions.add(
       TextButton(
-        child: MarkD(btnStrings[i]),
+        child: Markd(btnStrings[i]),
         onPressed: () { Navigator.of(context).pop(); btnActions[i](); },
       )
     );
@@ -819,10 +827,43 @@ void alertPopup(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: MarkD(title),
-        content: MarkD(message),
+        title: Markd(title),
+        content: Markd(message),
         actions: actions,
       );
     }//e builder
   );//e showDialog
 }//e alertPopup
+
+
+/// Display markdown text but bigger than normal.
+/// 
+/// The [HeaderMarkd] class displays given text formatted in markdown. Unlike [Markd] this class
+/// displays the text at a specified scale increase. This is used in places where some text would
+/// need to act like a heading, IE the question for a flashcard.
+class HeaderMarkd extends StatelessWidget {
+  final String data;
+  final double scale = 1.5;
+
+  const HeaderMarkd(this.data, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Markd(data, scale: scale);
+  }//e build()
+}//e HeaderMarkd
+
+
+
+/// Displays a divider for separating terms from definitions
+/// 
+/// [ThickDivider] A divider which is used to separate the term and definitions of flashcards.
+class ThickDivider extends StatelessWidget {
+  
+  const ThickDivider({super.key});
+  
+  @override
+  Widget build(BuildContext context) {
+    return const Divider(thickness: 3);
+  }//e build()
+}//e ThickDivider

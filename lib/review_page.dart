@@ -39,14 +39,14 @@ class _ReviewPageState extends State<ReviewPage> {
       onPressed: () => setState(() => review.flipCard()),
       child: Padding(padding: const EdgeInsets.all(10), child: 
         !review.isShowingValue? Column(children: [
-          MarkD(review.currentKey),
+          Markd(review.currentKey),
           TextItalic(review.currentDeck),
           const Divider()])
         : Column(children: [
-          MarkD(review.currentKey),
+          Markd(review.currentKey),
           TextItalic(review.currentDeck),
           const Divider(),
-          MarkD(review.currentValue)])
+          Markd(review.currentValue)])
       )//e Padding()
     );
     
@@ -113,7 +113,7 @@ class ReviewCompletePage extends StatelessWidget {
       body: Aspect(child: Padding(
         padding: const EdgeInsets.only(top: 10),
         child: Align(alignment: Alignment.center, child: SingleChildScrollView(child: 
-        MarkD(getString('txt_review_stats', [results['points'], results['total'], results['percent']]))
+        Markd(getString('txt_review_stats', [results['points'], results['total'], results['percent']]))
       )))),
     );
   }//e build()

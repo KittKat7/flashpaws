@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flashpaws/flashcard.dart';
 import 'package:flashpaws/multichoice.dart';
+import 'package:flashpaws/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterkat/flutterkat.dart';
 import 'package:flutterkat/graphics.dart';
@@ -58,7 +59,7 @@ class _MultiChoicePageState extends State<MultiChoicePage> {
 
     var txtID = TextItalic(id);
     // TODO BUG - Text key can extend offscreen
-    var txtKey = Transform.scale(scale: 1, child: MarkD("## $key"));
+    var txtKey = HeaderMarkd(key);
 
     List<Widget> answerBtnList = [];
 
@@ -77,7 +78,7 @@ class _MultiChoicePageState extends State<MultiChoicePage> {
             onPressed: () => setState(() => test.answerCard(v)),
             onLongPress: () => test.getEnteredAnswer() == v?
               setState(() => test.answerCard(null)) : null,
-            child: MarkD(v))
+            child: Markd(v))
         )
       );//e add
     }//e for
@@ -88,9 +89,8 @@ class _MultiChoicePageState extends State<MultiChoicePage> {
       mainAxisSize: MainAxisSize.min,
       children: [
         txtKey,
-        const Divider(indent: 1, endIndent: 1),
         txtID,
-        const Text(""),
+        const ThickDivider(),
         answerBtns
       ],
     );
@@ -165,7 +165,7 @@ class MultiChoiceResultPage extends StatelessWidget {
     num percent = (results['percent']!*100).round();
 
     answeredCards.add(
-      MarkD(getString('txt_multichoice_stats', [points, total, percent]))
+      Markd(getString('txt_multichoice_stats', [points, total, percent]))
     );
 
     answeredCards.add(const Text(""));
@@ -175,7 +175,7 @@ class MultiChoiceResultPage extends StatelessWidget {
       cardList.add(TextItalic(card.id));
       cardList.add(const Divider(indent: 1, endIndent: 1));
     // TODO BUG - Text key can extend offscreen
-      cardList.add(Transform.scale(scale: 1.5, child: MarkD(card.key)));
+      cardList.add(Transform.scale(scale: 1.5, child: Markd(card.key)));
 
       List<Widget> answers = [];
       
@@ -208,7 +208,7 @@ class MultiChoiceResultPage extends StatelessWidget {
                   borderRadius: BorderRadius.all(Radius.circular(0))),
               ),
               onPressed: () {},
-              child: MarkD("$icon $ans"))
+              child: Markd("$icon $ans"))
           )
         );//e add
       }//e for

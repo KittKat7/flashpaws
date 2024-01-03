@@ -34,14 +34,14 @@ class _PracticePageState extends State<PracticePage> {
       onPressed: () => setState(() => practice.flipCard()),
       child: Padding(padding: const EdgeInsets.all(10), child: 
         !practice.isShowingValue? Column(children: [
-          MarkD(practice.currentKey),
+          Markd(practice.currentKey),
           TextItalic(practice.currentDeck),
           const Divider()])
         : Column(children: [
-          MarkD(practice.currentKey),
+          Markd(practice.currentKey),
           TextItalic(practice.currentDeck),
           const Divider(),
-          MarkD(practice.currentValue)])
+          Markd(practice.currentValue)])
       )//e Padding()
     );
     

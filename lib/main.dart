@@ -147,11 +147,11 @@ class _HomePageState extends State<HomePage> {
           const Divider(),
           ElevatedButton(
             onPressed: () => themeModePopup(context),
-            child: MarkD(getString('btn_theme_brightness_menu'))),
+            child: Markd(getString('btn_theme_brightness_menu'))),
           ElevatedButton(
             // onPressed: () => getColorTheme(context).cycleColor(),
             onPressed: () => themeColorPopup(context),
-            child: MarkD(getString('btn_theme_color_menu')))
+            child: Markd(getString('btn_theme_color_menu')))
         ]
       )
     );
