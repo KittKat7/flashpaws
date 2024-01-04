@@ -867,3 +867,11 @@ class ThickDivider extends StatelessWidget {
     return const Divider(thickness: 3);
   }//e build()
 }//e ThickDivider
+
+/// Returns a widget with padding on the left and right.
+/// 
+/// This method takes [widget] as a parameter, and returns [widget] with [padding] on its left and
+/// right sides.
+Widget padLeftRight(Widget? widget, double padding) {
+  return Padding(padding: EdgeInsets.only(left: padding, right: padding), child: widget,);
+}//e padLeftRight

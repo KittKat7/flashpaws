@@ -9,6 +9,51 @@ import 'package:flutterkat/graphics.dart';
 import 'package:flutterkat/theme.dart';
 import 'package:flutterkat/widgets.dart';
 
+class AnswerButton extends StatelessWidget {
+
+  final String text;
+  final bool? isSelectedAnswer;
+  final Color? backgroundColor;
+  final void Function() onPressed;
+  final void Function()? onLongPress;
+
+  const AnswerButton({
+    super.key, 
+    required this.text,
+    required this.onPressed,
+    this.onLongPress,
+    this.isSelectedAnswer,
+    this.backgroundColor});
+
+  @override
+  Widget build(BuildContext context) {
+    late Color bgColor;
+
+    if (backgroundColor != null) {
+      bgColor = backgroundColor!;
+    } else if (isSelectedAnswer ?? false) {
+      bgColor = getTheme(context).colorScheme.primary;
+    } else {
+      bgColor = getTheme(context).colorScheme.surface;
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 5, bottom: 5),
+      child: expand(ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.all(15),
+          backgroundColor: bgColor,
+          shape: const BeveledRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(0))),
+        ),
+        onPressed: onPressed,
+        onLongPress: onLongPress,
+        child: Markd(text))
+    ));
+  }//e build()
+
+}//e AnswerButton
+
 class MultiChoicePage extends StatefulWidget {
 
   const MultiChoicePage({super.key, required this.title});
@@ -57,29 +102,20 @@ class _MultiChoicePageState extends State<MultiChoicePage> {
     String key = cardData['key']!;
     List<String> values = cardData['values'];
 
-    var txtID = TextItalic(id);
+    var txtID = padLeftRight(TextItalic(id), 15);
     // TODO BUG - Text key can extend offscreen
-    var txtKey = HeaderMarkd(key);
+    var txtKey = padLeftRight(HeaderMarkd(key), 15);
 
     List<Widget> answerBtnList = [];
 
     for (String v in values) {
+      bool isSelectedAnswer = test.getEnteredAnswer() == v;
       answerBtnList.add(
-        Padding(
-          padding: const EdgeInsets.only(top: 5, bottom: 5),
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              padding: EdgeInsets.all(15),
-              backgroundColor: test.getEnteredAnswer() == v? 
-                getTheme(context).colorScheme.primary : getTheme(context).colorScheme.surface,
-              shape: const BeveledRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(0))),
-            ),
-            onPressed: () => setState(() => test.answerCard(v)),
-            onLongPress: () => test.getEnteredAnswer() == v?
-              setState(() => test.answerCard(null)) : null,
-            child: Markd(v))
-        )
+        AnswerButton(
+          text: v,
+          isSelectedAnswer: isSelectedAnswer,
+          onPressed: () => setState(() => test.answerCard(v)),
+          onLongPress: () => isSelectedAnswer? setState(() => test.answerCard(null)) : null)
       );//e add
     }//e for
 
@@ -104,7 +140,7 @@ class _MultiChoicePageState extends State<MultiChoicePage> {
             const Icon(Icons.chevron_left) : const Icon(Icons.circle_outlined)
         )
       ),
-      Expanded(flex: 2, child: Center(child: Text(timeElapsedStr))),
+      Expanded(flex: 2, child: Center(child: Markd(timeElapsedStr, scale: 1.5,))),
       Expanded(
         flex: 1,
         child: IconButton(
@@ -172,10 +208,10 @@ class MultiChoiceResultPage extends StatelessWidget {
 
     for (Flashcard card in test.deck) {
       List<Widget> cardList = [];
-      cardList.add(TextItalic(card.id));
-      cardList.add(const Divider(indent: 1, endIndent: 1));
+      cardList.add(padLeftRight(HeaderMarkd(card.key), 15));
+      cardList.add(padLeftRight(TextItalic(card.deck), 15));
+      cardList.add(const ThickDivider());
     // TODO BUG - Text key can extend offscreen
-      cardList.add(Transform.scale(scale: 1.5, child: Markd(card.key)));
 
       List<Widget> answers = [];
       
@@ -186,33 +222,25 @@ class MultiChoiceResultPage extends StatelessWidget {
           if (ans == card.values[0]) {
             icon = getString('ico_check');
             buttonColor = getTheme(context).colorScheme.primary;
-
           } else {
             icon = getString('ico_cross');
-            buttonColor = getTheme(context).colorScheme.primary;
+            buttonColor = getTheme(context).colorScheme.error;
           }
         } else {
           if (ans == card.values[0]) {
-            icon = getString('ico_mark');
+            icon = getString('ico_check');
             buttonColor = getTheme(context).colorScheme.error;
           }
         }
         answers.add(
-          Padding(
-            padding: const EdgeInsets.only(top: 5, bottom: 5),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.all(15),
-                backgroundColor: buttonColor,
-                shape: const BeveledRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(0))),
-              ),
-              onPressed: () {},
-              child: Markd("$icon $ans"))
-          )
+          AnswerButton(
+            text: "$icon $ans",
+            onPressed: () {},
+            backgroundColor: buttonColor)
         );//e add
       }//e for
       cardList.addAll(answers);
+      cardList.add(const Text(""));
       answeredCards.add(Column(mainAxisSize: MainAxisSize.min, children: cardList));
     }//e for
 
@@ -228,7 +256,9 @@ class MultiChoiceResultPage extends StatelessWidget {
           child: Column(mainAxisSize: MainAxisSize.min, children: answeredCards)
       )))),
       bottomNavigationBar: BottomAppBar(child: Center(
-        child: Text(results['duration']!.toString().substring(0, results['duration']!.toString().length - 7)))),
+        child: Markd(
+          results['duration']!.toString().substring(0, results['duration']!.toString().length - 7),
+          scale: 1.5,))),
     );
   }//e build()
 }//e MultiChoiceResultPage
