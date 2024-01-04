@@ -69,7 +69,7 @@ class _MultiChoicePageState extends State<MultiChoicePage> {
   String filter = Flashcard.filter.join('/');
   MultiChoice test = MultiChoice();
 
-  Duration timeElapsed = Duration();
+  Duration timeElapsed = const Duration();
   String get timeElapsedStr {
     return timeElapsed.toString().substring(0, timeElapsed.toString().length - 7);
   }
@@ -103,7 +103,6 @@ class _MultiChoicePageState extends State<MultiChoicePage> {
     List<String> values = cardData['values'];
 
     var txtID = padLeftRight(TextItalic(id), 15);
-    // TODO BUG - Text key can extend offscreen
     var txtKey = padLeftRight(HeaderMarkd(key), 15);
 
     List<Widget> answerBtnList = [];
@@ -165,7 +164,6 @@ class _MultiChoicePageState extends State<MultiChoicePage> {
 
     return Scaffold(
       appBar: AppBar(
-        // TODO BUG - Text in title extends off screen
         title: TextBold(widget.title),
         centerTitle: true,
       ),
@@ -211,7 +209,6 @@ class MultiChoiceResultPage extends StatelessWidget {
       cardList.add(padLeftRight(HeaderMarkd(card.key), 15));
       cardList.add(padLeftRight(TextItalic(card.deck), 15));
       cardList.add(const ThickDivider());
-    // TODO BUG - Text key can extend offscreen
 
       List<Widget> answers = [];
       
@@ -246,7 +243,6 @@ class MultiChoiceResultPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        // TODO BUG - Text in title extends off screen
         title: TextBold(title),
         centerTitle: true,
       ),
