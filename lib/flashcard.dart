@@ -182,8 +182,9 @@ class Flashcard {
   /// The key for the flashcard
   String key;
   // TODO BUG - Inconsistancies with how deck is stored. Add consistant '/' to start of and end of
-  // deck.
-  /// The deck the flashcard is in
+  // deck. deck will be treated like a file path starting with / and ending with /.
+  // EX /path/to/file/thisisacard
+  /// The deck the flashcard is in. Treated like a file path, starting and ending with /
   String _deck;
   set deck(String deck) { _deck = deck; }
   String get deck { return _deck.endsWith("/") ? _deck : "$_deck/"; }

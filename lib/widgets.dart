@@ -872,6 +872,6 @@ class ThickDivider extends StatelessWidget {
 /// 
 /// This method takes [widget] as a parameter, and returns [widget] with [padding] on its left and
 /// right sides.
-Widget padLeftRight(Widget? widget, double padding) {
+Padding padLeftRight(Widget? widget, double padding) {
   return Padding(padding: EdgeInsets.only(left: padding, right: padding), child: widget,);
 }//e padLeftRight
