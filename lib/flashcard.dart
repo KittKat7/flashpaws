@@ -16,7 +16,16 @@ class Flashcard {
 
   /// get filter Returns the current filter.
   static List<String> get filter { return _filter; }
-  static String get filterString { return _filter.join('/'); }
+  static String get filterString { 
+    String str = _filter.join('/');
+    if (!str.startsWith('#')) {
+      str = validateDeckStr(str);
+    } else {
+      // TODO validate tags
+      str = "$str/";
+    }//e if else
+    return str;
+  }//e get filterString
 
   int confidence;
 
@@ -57,15 +66,18 @@ class Flashcard {
   /// @param List<Flashcard> tempCards
   /// @returns List<Flashcards> cards matching the filter
   static List<Flashcard> getFilteredCards(List<Flashcard> listOfCards) {
+    // If the filter is empty, return all the cards.
     if (filter.isEmpty) return cards;
+    // The list of cards to return.
     List<Flashcard> returnList = [];
+
     for (Flashcard c in listOfCards) {
-      if (c.deck.startsWith(filter.join("/"))) {
+      if (c.deck.startsWith(filterString)) {
         returnList.add(c);
       }//e if
       // for tags
       for (String tag in c.tags) {
-        if (tag.startsWith(filter.join("/"))) {
+        if (tag.startsWith(filterString)) {
           returnList.add(c);
         }//e if
       }//e for
@@ -133,7 +145,7 @@ class Flashcard {
   static void newCard(String key, String deck, List<String> valuesIn, [List<String>? tagsIn]) {
     // Format / trim paramaters
     key = key.trim();
-    deck = deck.trim();
+    deck = validateDeckStr(deck);
     List<String> values = [for (String v in valuesIn) v.trim()];
     tagsIn ??= [];
     List<String> tags = [for (String t in tagsIn) t.trim()];
@@ -177,7 +189,25 @@ class Flashcard {
       cardsJson.add(jsonEncode(card.toJson()));
     }
     hiveBox.put('flashcards', cardsJson);
-  }
+  }//e saveCards
+
+  /// Validates a string to make sure it is formatted correctly as a deck variable.
+  /// 
+  /// Takes a string and ensures that is is formatted correctlty to work as a deck variable and
+  /// meets the requirements for a card to function as expected. Then returns the validated string.
+  static String validateDeckStr(String str) {
+    // Trim string.
+    str = str.trim();
+    // Ensure starting slash.
+    if (!str.startsWith('/')) {
+      str = '/$str';
+    }//e if
+    // Ensure ending slash.
+    if (!str.endsWith('/')) {
+      str = '$str/';
+    }//e if
+    return str;
+  }//e validateDeck
 
   /// The key for the flashcard
   String key;

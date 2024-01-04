@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flashpaws/multichoice_page.dart';
 import 'package:flashpaws/practice_page.dart';
 import 'package:flashpaws/review_page.dart';
+import 'package:flashpaws/update.dart';
 import 'package:flutter/services.dart';
 
 import 'widgets.dart';
@@ -19,7 +20,7 @@ import './lang/en_us.dart' as en_us;
 late Box box;
 String lastUpdate = '20231230T1845';
 
-const int version = 2023102700;
+const int version = 2024010400;
 
 void main() async {
   await flutterkatInit();
@@ -30,12 +31,13 @@ void main() async {
 /// initialize
 /// This function initializes anything variables, like the hive box, that will be needed later on.
 Future<void> initialize() async {
-  // Check `version` with the saved version. If there is a mismatch, //TODO fix the version mismatch.
-  String? savedVerionTmp = flktLoad('version');
-  if (savedVerionTmp != null) {
-    int savedVersion = int.parse(savedVerionTmp);
+  // Check `version` with the saved version. If there is a mismatch.
+  // TODO fix the version mismatch.
+  String? savedVersionTmp = flktLoad('version');
+  if (savedVersionTmp != null) {
+    int savedVersion = int.parse(savedVersionTmp);
     if (savedVersion != version) {
-      print("//TODO VERSION MISMATH CODE EXECUTE HERE");
+      await update(savedVersion, version);
     }
   } else {
     flktSave('version', version.toString());

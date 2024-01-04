@@ -185,24 +185,7 @@ class StartBtn extends StatelessWidget {
   }//e Build
 }//e StartBtn
 
-/// Generates a widget containing layer buttons for the given list of [layers].
-///
-/// The [deckBtns] method takes a list of layer names and a callback function
-/// [updateState]. It creates buttons for resetting the filter and displaying
-/// all decks/cards, buttons for reverting to each applied layer, and buttons for
-/// adding new layers to the filter. The [onPressed] callbacks perform actions
-/// based on the selected layer, such as setting the filter or pushing a new
-/// layer onto the filter.
-///
-/// Example usage:
-/// ```dart
-/// Widget deckButtonsWidget = deckBtns(myLayerList, () {
-///   // Update state logic.
-/// });
-/// ```
-///
-/// The generated list of layer buttons is then used to create a [Wrap] widget
-/// for a flexible layout, aligned to the top left.
+// TODO doc comment and update function
 Widget deckBtns(List<String> layers, void Function() updateState) {
   // All the buttons generated and to be displayed.
   List<Widget> children = [];
@@ -224,11 +207,18 @@ Widget deckBtns(List<String> layers, void Function() updateState) {
     // For every layer up to the layer i, add it to str, then add layer i.
     for (int j = 0; j < i; j++) {
       str += "${Flashcard.filter[j]}/";
-    } str += Flashcard.filter[i];
+    } str += "${Flashcard.filter[i]}/";
+    //e for
+
+    if (!str.startsWith("#") && !str.startsWith("/")) {
+      str = "/$str";
+    }//e if
+    
+    List<String> fltr = str.split("/")..removeWhere((element) => element.isEmpty);
     // Add the DeckBtn with the string of layers split by "/".
     children.add(LayerBtn(
       layer: layer,
-      onPressed: () { Flashcard.setFilter(str.split("/")); updateState(); },
+      onPressed: () { Flashcard.setFilter(fltr); updateState(); },
       isApplied: true
     ));
   }//e for
