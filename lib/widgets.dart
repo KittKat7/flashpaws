@@ -68,7 +68,7 @@ class LayerBtn extends StatelessWidget {
 
 /// A Flutter widget representing a customizable card button.
 ///
-/// This [CardBtn] widget displays a [Flashcard] within an [ElevatedButton] that
+/// This [CardButton] widget displays a [Flashcard] within an [ElevatedButton] that
 /// triggers specified actions on both regular press and long press events.
 ///
 /// The [card] parameter is the flashcard to be displayed within the button.
@@ -96,7 +96,7 @@ class LayerBtn extends StatelessWidget {
 /// the primary color scheme of the current theme. The content of the button is
 /// formatted using the `MarkD` widget, allowing rich text and markdown-like
 /// styling for the flashcard content.
-class CardBtn extends StatelessWidget {
+class CardButton extends StatelessWidget {
   /// The card to be displayed.
   final Flashcard card;
   /// The function to run when the button is pressed.
@@ -104,10 +104,14 @@ class CardBtn extends StatelessWidget {
   final void Function(BuildContext) onLongPress;
 
   /// Constructor
-  const CardBtn({super.key, required this.card, required this.onPressed, required this.onLongPress});
+  const CardButton({super.key, required this.card, required this.onPressed, required this.onLongPress});
 
   @override
   Widget build(BuildContext context) {
+    String tags = card.deckStr;
+    for (String tag in card.tags) {
+      tags += " - $tag";
+    }
     return Row(children: [
       Expanded(child: Padding(
         padding: const EdgeInsets.only(top: 10, left: 1, right: 1),
@@ -125,7 +129,7 @@ class CardBtn extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               HeaderMarkd(card.key),
-              Markd(card.deckStr),
+              Markd(tags),
               const ThickDivider(),
               Markd(card.values[0])
             ]
@@ -239,7 +243,7 @@ Widget deckBtns(List<String> layers, void Function() updateState) {
 /// Generates a widget containing card buttons for the given list of [Flashcard]s.
 ///
 /// The [cardBtns] method takes a list of [Flashcard]s and a callback function
-/// [updateState]. For each card in the list, it creates a [CardBtn] with
+/// [updateState]. For each card in the list, it creates a [CardButton] with
 /// specified [onPressed] and [onLongPress] callbacks. The [onPressed] callback
 /// prints a message to the console, and the [onLongPress] callback displays a
 /// confirmation popup for deleting the card.
@@ -259,7 +263,7 @@ Widget cardBtns(List<Flashcard> cards, void Function() updateState) {
   // for every card in the list of cards, create a button, and add it to a list.
   for (Flashcard card in cards) {
     children.add(
-      CardBtn(
+      CardButton(
         card: card,
         onPressed: () { print("CARD ${card.id}"); },
         onLongPress: (context) {

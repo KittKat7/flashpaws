@@ -22,7 +22,7 @@ class Flashcard {
       str = validateDeckStr(str);
     } else {
       // TODO validate tags
-      str = "$str/";
+      
     }//e if else
     return str;
   }//e get filterString
@@ -43,7 +43,9 @@ class Flashcard {
   /// Also updates the list of cards and subdecks to match the current filter.
   /// param String layer The layer to be added to the filter.
   static void pushFilter(String layer) {
+    print("layer - $layer");
     _filter.add(layer);
+    print("filterstr - $filterString");
     filteredCards = getFilteredCards(filteredCards);
     filteredDecks = getLayers(filteredCards);
   }//e pushFilter
@@ -98,17 +100,15 @@ class Flashcard {
   /// @returns List<String> a list of all subdecks from the provided cards, matching the active
   /// filter
   static List<String> getLayers(List<Flashcard> listOfCards) {
-    // List of subdeck layers to return
+    // List of subdeck layers to return.
     List<String> retList = [];
-    // Join the filter stack into a single string and if it is not empty, add a trailing "/"
-    String filterStr = filter.join("/");
-    if (filterStr.isNotEmpty) filterStr += "/";
+
     // Go through the list of provided cards
     for (Flashcard c in listOfCards) {
       // If the deck of the card does not start with the filter, skip this card
-      if (!c.deck.startsWith(filterStr)) continue;
+      if (!c.deck.startsWith(filterString)) continue;
       // Get the deck for the card with the filter removed from the deck
-      String tmpStr = c.deck.substring(filterStr.length);
+      String tmpStr = c.deck.substring(filterString.length);
       // If the subdeck starts with "/", remove the leading "/"
       if (tmpStr.startsWith("/")) tmpStr = tmpStr.substring(1);
       // Get the next layer in the deck
@@ -121,10 +121,12 @@ class Flashcard {
     // Go through the list of provided cards
     for (Flashcard c in listOfCards) {
       for (String tag in c.tags) {
-        // If the tag of the card does not start with the filter, skip this card
-        if (!tag.startsWith(filterStr)) continue;
+        print("tags ${c.tags}");
+        // If this tag of the card does not start with the filter, skip this tag
+        if (!tag.startsWith("#${filterString.substring(1)}")) { continue; }
         // Get the tag for the card with the filter removed from the tag
-        String tmpStr = tag.substring(filterStr.length);
+        String tmpStr = tag.substring(filterString.length);
+        if (filterString.length == 1) tmpStr = "#$tmpStr";
         // If the subtag starts with "/", remove the leading "/"
         if (tmpStr.startsWith("/")) tmpStr = tmpStr.substring(1);
         // Get the next layer in the tag
