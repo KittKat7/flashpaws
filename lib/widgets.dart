@@ -548,6 +548,7 @@ Widget confidenceBtns(currentConfidence, void Function(int p) setConfidence) {
 }//e confidenceBtns
 
 
+
 /// A stateful widget for creating a new flashcard.
 ///
 /// The [CreateCardAlert] class is a stateful widget that displays an alert dialog

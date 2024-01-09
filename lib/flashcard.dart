@@ -43,9 +43,7 @@ class Flashcard {
   /// Also updates the list of cards and subdecks to match the current filter.
   /// param String layer The layer to be added to the filter.
   static void pushFilter(String layer) {
-    print("layer - $layer");
     _filter.add(layer);
-    print("filterstr - $filterString");
     filteredCards = getFilteredCards(filteredCards);
     filteredDecks = getLayers(filteredCards);
   }//e pushFilter
@@ -121,7 +119,6 @@ class Flashcard {
     // Go through the list of provided cards
     for (Flashcard c in listOfCards) {
       for (String tag in c.tags) {
-        print("tags ${c.tags}");
         // If this tag of the card does not start with the filter, skip this tag
         if (!tag.startsWith("#${filterString.substring(1)}")) { continue; }
         // Get the tag for the card with the filter removed from the tag
@@ -194,7 +191,7 @@ class Flashcard {
   }//e saveCards
 
   /// Validates a string to make sure it is formatted correctly as a deck variable.
-  /// 
+  ///
   /// Takes a string and ensures that is is formatted correctlty to work as a deck variable and
   /// meets the requirements for a card to function as expected. Then returns the validated string.
   static String validateDeckStr(String str) {
@@ -208,6 +205,11 @@ class Flashcard {
     if (!str.endsWith('/')) {
       str = '$str/';
     }//e if
+
+    // Replace ' ' space chars with '_' underscores.
+    str = str.replaceAll(r' ', '_');
+
+    // Return the validated deck.
     return str;
   }//e validateDeck
 
