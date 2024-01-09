@@ -230,7 +230,7 @@ class Flashcard {
   String get id { return deck + key; }
 
   /// Constructor
-  Flashcard(this.key, this._deck, this.values, [List<String>? tags, int? confidence]) : tags = tags ?? [], confidence = confidence ?? -1;
+  Flashcard(this.key, String deck, this.values, [List<String>? tags, int? confidence]) : _deck = validateDeckStr(deck), tags = tags ?? [], confidence = confidence ?? -1;
 
   @override
   String toString() {

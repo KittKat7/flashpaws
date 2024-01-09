@@ -63,21 +63,21 @@ Future<void> initialize() async {
       // Flashcard for how to make a new card.
       Flashcard(
         getString('introcard_how_to_new_card'),
-        'introduction',
+        '/introduction/',
         [getString('introcard_how_to_new_card_answer')],
         []
       ),
       // Flashcard for how to sort cards.
       Flashcard(
         getString('introcard_how_to_sort_cards'),
-        'introduction',
+        '/introduction/',
         [getString('introcard_how_to_sort_cards_answer')],
         []
       ),
       // Flashcard for how to practice the flashcards.
       Flashcard(
         getString('introcard_how_to_practice'),
-        'introduction',
+        '/introduction/',
         [getString('introcard_how_to_practice_answer')],
         []
       ),
