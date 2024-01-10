@@ -14,6 +14,14 @@ Map<String, String> get getLang {
   lang['confirm'] = 'Confirm';
   lang['cancel'] = 'Cancel';
   lang['close'] = 'Close';
+  lang['save'] = 'Save';
+  lang['edit'] = 'Edit';
+  lang['preview'] = 'Preview';
+  lang['flashcard'] = 'Flashcard';
+  lang['term/question'] = 'Term/Question';
+  lang['definition/answer'] = 'Definition/Answer';
+  lang['deck'] = 'Deck';
+  lang['tags'] = 'Tags';
 
   // btns
   lang['btn_all_cards'] = 'All Cards';

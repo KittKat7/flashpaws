@@ -213,26 +213,69 @@ class Flashcard {
     return str;
   }//e validateDeck
 
+  /// Validates the tag to see if it is valid.
+  static String validateTag(String tag) {
+    tag = tag.trim();
+    if (!tag.startsWith('#')) {
+      tag = '#$tag';
+    }
+    if (tag.endsWith('/')) {
+      tag = tag.substring(0, tag.length - 1);
+    }
+    tag.replaceAll(r' ', '_');
+    return tag;
+  }//e validateTag()
+
+  /// Validates the tag list.
+  static List<String> validateTagList(List<String> tags) {
+    tags = tags.toSet().toList();
+    tags.remove('');
+
+    for (int i = 0; i < tags.length; i++) {
+      tags[i] = validateTag(tags[i]);
+    }//e for
+
+    tags = tags.toSet().toList();
+    tags.remove('');
+
+    return tags;
+  }//e validateTagList()
+
+  /// Validates the tag string.
+  static String validateTagStr(String tags) {
+    return validateTagList(tags.split(' ')).join(' ');
+  }//e validateTagStr()
+
+  /// Checks all cards to find another card with [id] already exists.
+  static bool cardIDExists(String id) {
+    for(Flashcard c in cards) {
+      if (c.id == id) return true;
+    }
+    return false;
+  }//e cardIDExists()
+
   /// The key for the flashcard
   String key;
-  // TODO BUG - Inconsistancies with how deck is stored. Add consistant '/' to start of and end of
-  // deck. deck will be treated like a file path starting with / and ending with /.
-  // EX /path/to/file/thisisacard
   /// The deck the flashcard is in. Treated like a file path, starting and ending with /
   String _deck;
-  set deck(String deck) { _deck = deck; }
-  String get deck { return _deck.endsWith("/") ? _deck : "$_deck/"; }
-  String get deckStr { return deck.substring(0, deck.length); }
+  set deck(String deck) { _deck = validateDeckStr(deck); }
+  String get deck { return _deck; }
   /// All possible answers for the flashcard, index 0 is the correct one
-  List<String> values;
+  List<String> _values;
+  List<String> get values { return List<String>.from(_values); }
+  set values(List<String> values) { _values = List<String>.from(values); }
   /// All tags that this card has
-  List<String> tags;
+  List<String> _tags;
+  List<String> get tags { return List<String>.from(_tags); }
+  set tags(List<String> tags) { _tags = List<String>.from(tags); }
+  String get tagsStr { return tags.join(' '); }
+  set tagsStr(String str) { _tags = str.trim().split(' '); }
 
   /// get id Returns the unique id of the card.
   String get id { return deck + key; }
 
   /// Constructor
-  Flashcard(this.key, String deck, this.values, [List<String>? tags, int? confidence]) : _deck = validateDeckStr(deck), tags = tags ?? [], confidence = confidence ?? -1;
+  Flashcard(this.key, String deck, this._values, [List<String>? tags, int? confidence]) : _deck = validateDeckStr(deck), _tags = tags ?? [], confidence = confidence ?? -1;
 
   @override
   String toString() {

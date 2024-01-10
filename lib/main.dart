@@ -102,9 +102,7 @@ Map<String, List<dynamic>> pageRoutes = {
   'review': ['/review/', ReviewPage(title: getString('reviewPage'))],
   'reviewComplete': ['/review/complete/', ReviewCompletePage(title: getString('reviewCompletePage'))],
   'practice': ['/practice/', PracticePage(title: getString('practicePage'))],
-  // TODO BUG - Text in title extends off screen
   'multichoice': ['/multichoice/', MultiChoicePage(title: getString('multichoicePage'))],
-  // TODO BUG - Text in title extends off screen
   'multichoiceResult': ['/multichoice/result/', MultiChoiceResultPage(title: getString('multichoiceResultPage'))],
 };
 
@@ -189,7 +187,7 @@ class _HomePageState extends State<HomePage> {
           child: SingleChildScrollView(child: Column(children: [
             startBtns(),
             deckBtns(Flashcard.filteredDecks, () => setState(() {})),
-            cardBtns(Flashcard.filteredCards, () => setState(() {})),
+            cardBtns(Flashcard.filteredCards, context, () => setState(() {})),
             const Text(""),
           ]
         )))),

@@ -1,4 +1,5 @@
 import 'package:flashpaws/flashcard.dart';
+import 'package:flashpaws/widgets/flashcard_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterkat/flutterkat.dart';
 import 'package:flutterkat/graphics.dart';
@@ -108,7 +109,7 @@ class CardButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String tags = card.deckStr;
+    String tags = card.deck;
     for (String tag in card.tags) {
       tags += " - $tag";
     }
@@ -257,7 +258,7 @@ Widget deckBtns(List<String> layers, void Function() updateState) {
 ///
 /// The generated list of card buttons is then used to create a [Column] widget
 /// containing all the buttons.
-Widget cardBtns(List<Flashcard> cards, void Function() updateState) {
+Widget cardBtns(List<Flashcard> cards, BuildContext context, void Function() updateState) {
   List<Widget> children = [];
   
   // for every card in the list of cards, create a button, and add it to a list.
@@ -265,7 +266,7 @@ Widget cardBtns(List<Flashcard> cards, void Function() updateState) {
     children.add(
       CardButton(
         card: card,
-        onPressed: () { print("CARD ${card.id}"); },
+        onPressed: () { FlashcardWidgetPopup(context: context, card: card, superSetState: updateState); },
         onLongPress: (context) {
           confirmPopup(
             context,
@@ -707,7 +708,7 @@ class _CreateCardAlertState extends State<CreateCardAlert> {
             // Handle confirm
             // Get the text, and ensure propper formatting.
             // Ensure deck ends with '/'
-            if (!deck.endsWith("/")) deck += "/";
+            deck = Flashcard.validateDeckStr(deck);
             List<String> tagsList = [];
             // Ensure tags start with '#'
             for (String t in tags.split(" ")) {
@@ -862,6 +863,21 @@ class ThickDivider extends StatelessWidget {
     return const Divider(thickness: 3);
   }//e build()
 }//e ThickDivider
+
+
+
+/// Displays a divider for separating fields
+/// 
+/// [ThinDivider] A divider which is used to separate fields.
+class ThinDivider extends StatelessWidget {
+  
+  const ThinDivider({super.key});
+  
+  @override
+  Widget build(BuildContext context) {
+    return const Divider(thickness: 1, indent: 5, endIndent: 5,);
+  }//e build()
+}//e ThinDivider
 
 /// Returns a widget with padding on the left and right.
 /// 
