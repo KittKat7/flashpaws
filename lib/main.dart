@@ -19,7 +19,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import './lang/en_us.dart' as en_us;
 
 late Box box;
-String lastUpdate = '20231230T1845';
+String lastUpdate = '20240110T2110';
 
 const int version = 2024010400;
 
