@@ -1,4 +1,5 @@
 
+import 'dart:collection';
 import 'dart:convert';
 
 import 'package:hive_flutter/hive_flutter.dart';
@@ -253,6 +254,19 @@ class Flashcard {
     }
     return false;
   }//e cardIDExists()
+
+  /// Validate the list of values.
+  static List<String> validateValues(List<String> values) {
+    values = LinkedHashSet<String>.from(values).toList();
+    values.remove('');
+    return values;
+  }//e validateValues()
+
+  /// Validates the key.
+  static String validateKey(String key) {
+    if (key.isEmpty) key = 'EMPTY';
+    return key;
+  }//e validateKey()
 
   /// The key for the flashcard
   String key;

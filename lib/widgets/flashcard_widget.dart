@@ -6,9 +6,9 @@ import 'package:flutterkat/flutterkat.dart';
 import 'package:flutterkat/graphics.dart';
 import 'package:flutterkat/widgets.dart';
 
-void FlashcardWidgetPopup({
+void flashcardWidgetPopup({
     required BuildContext context,
-    required Flashcard card,
+    Flashcard? card,
     bool isEditing = false,
     required Function() superSetState
   }) {
@@ -23,11 +23,11 @@ void FlashcardWidgetPopup({
 
 class FlashcardWidget extends StatefulWidget {
 
-  final Flashcard card;
+  final Flashcard? card;
   final bool initIsEditing;
   final Function() superSetState;
 
-  const FlashcardWidget({super.key, required this.card, required this.initIsEditing, required this.superSetState});
+  const FlashcardWidget({super.key, this.card, required this.initIsEditing, required this.superSetState});
 
   @override
   State<FlashcardWidget> createState() => _FlashcardWidgetState();
@@ -35,8 +35,11 @@ class FlashcardWidget extends StatefulWidget {
 
 class _FlashcardWidgetState extends State<FlashcardWidget> {
 
+  late bool isNewCard;
   late bool isEditing;
   late bool isEdited;
+
+  late Flashcard card;
 
   late String key;
   late List<String> values;
@@ -78,14 +81,21 @@ class _FlashcardWidgetState extends State<FlashcardWidget> {
 
   @override
   void initState() {
+    if (widget.card == null) {
+      isNewCard = true;
+      card = Flashcard('', '', ['']);
+    } else {
+      isNewCard = false;
+      card = widget.card!;
+    }
     isEditing = widget.initIsEditing;
     isEdited = false;
 
     // initialize values
-    key = widget.card.key;
-    values = widget.card.values;
-    deck = widget.card.deck;
-    tagsStr = widget.card.tagsStr;
+    key = card.key;
+    values = card.values + [''];
+    deck = card.deck;
+    tagsStr = card.tagsStr;
 
     valueFields = [];
 
@@ -133,10 +143,10 @@ class _FlashcardWidgetState extends State<FlashcardWidget> {
 
   bool checkForChange() {
     bool changed = false;
-    if (!changed && key != widget.card.key) { changed = true; }
-    if (!changed && values != widget.card.values) { changed = true; }
-    if (!changed && deck != widget.card.deck) { changed = true; }
-    if (!changed && tagsStr != widget.card.tagsStr) { changed = true; }
+    if (!changed && key != card.key) { changed = true; }
+    if (!changed && values != card.values + ['']) { changed = true; }
+    if (!changed && deck != card.deck) { changed = true; }
+    if (!changed && tagsStr != card.tagsStr) { changed = true; }
 
     isEdited = changed;
     // if (changed != isEdited) setState(() => isEdited = changed);
@@ -233,7 +243,11 @@ class _FlashcardWidgetState extends State<FlashcardWidget> {
           [(){}]);
         return;
       }//e if
-
+      
+      // Validate key.
+      key = Flashcard.validateKey(key);
+      // Validate values.
+      values = Flashcard.validateValues(values);
       // Validate deck.
       deck = Flashcard.validateDeckStr(deck);
       // Validate tags.
@@ -245,14 +259,16 @@ class _FlashcardWidgetState extends State<FlashcardWidget> {
       void save() {
         setState(() {
           Flashcard.newCard(key, deck, values, tagsStr.split(' '));
-          Flashcard.removeCard(widget.card);
+          if (!isNewCard) {
+            Flashcard.removeCard(widget.card!);
+          }
         });
         widget.superSetState();
         Navigator.pop(context);
       }
 
       // Check for duplicate
-      if (key != widget.card.key || deck != widget.card.deck) {
+      if (key != card.key || deck != card.deck) {
         if (Flashcard.cardIDExists(modCard.id)) {
           confirmPopup(
             context,

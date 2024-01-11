@@ -4,6 +4,7 @@ import 'package:flashpaws/multichoice_page.dart';
 import 'package:flashpaws/practice_page.dart';
 import 'package:flashpaws/review_page.dart';
 import 'package:flashpaws/update.dart';
+import 'package:flashpaws/widgets/flashcard_widget.dart';
 import 'package:flutter/services.dart';
 
 import 'widgets.dart';
@@ -192,14 +193,18 @@ class _HomePageState extends State<HomePage> {
           ]
         )))),
         floatingActionButton: FloatingActionButton(
-          onPressed: () => createCardPopup(
-            context,
-            (p0, p1, p2, [p3]) {
-              Flashcard.newCard(p0, p1, p2, p3);
-              setState(() => Flashcard.setFilter(Flashcard.filter));
-            },
-            Flashcard.filter.join('/')
-          ),
+          // onPressed: () => createCardPopup(
+          //   context,
+          //   (p0, p1, p2, [p3]) {
+          //     Flashcard.newCard(p0, p1, p2, p3);
+          //     setState(() => Flashcard.setFilter(Flashcard.filter));
+          //   },
+          //   Flashcard.filter.join('/')
+          // ),
+          onPressed: () => flashcardWidgetPopup(
+            context: context,
+            superSetState: () => setState(() {}),
+            isEditing: true),
           tooltip: getString('tooltip_create_card'),
           child: const Icon(Icons.add),
         ),
