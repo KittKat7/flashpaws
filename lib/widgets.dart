@@ -129,8 +129,8 @@ class CardButton extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              HeaderMarkd(card.key),
-              Markd(tags),
+              Markd(card.key),
+              Markd('*$tags*'),
               const ThickDivider(),
               Markd(card.values[0])
             ]
