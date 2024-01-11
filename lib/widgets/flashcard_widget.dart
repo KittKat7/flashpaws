@@ -70,7 +70,7 @@ class _FlashcardWidgetState extends State<FlashcardWidget> {
       //create new text box
       valueFields.add(TextField(
         onChanged: (t) => setState(() => _updateValues(n+1, t)),
-        controller: TextEditingController(text: ""),
+        controller: TextEditingController(text: ''),
         decoration: InputDecoration(hintText: getString('hint_create_new_card_values_fake')),
         keyboardType: TextInputType.multiline,
         maxLines: null,
@@ -272,8 +272,8 @@ class _FlashcardWidgetState extends State<FlashcardWidget> {
         if (Flashcard.cardIDExists(modCard.id)) {
           confirmPopup(
             context,
-            "DUPLICATE",
-            "DUPLICATE",
+            getString('header_card_conflict_overwrite'),
+            getString('msg_card_conflict_overwrite'),
             () => save());
         } else {
           save();
@@ -292,8 +292,8 @@ class _FlashcardWidgetState extends State<FlashcardWidget> {
       if (isEdited) {
         confirmPopup(
           context,
-          "CONFERM",
-          "CONFIRM",
+          getString('header_confirm_cancel_modify'),
+          getString('msg_confirm_cancel_modify'),
           () => Navigator.of(context).pop()
         );
       } else {

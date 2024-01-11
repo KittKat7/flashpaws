@@ -19,9 +19,9 @@ import 'package:hive_flutter/hive_flutter.dart';
 import './lang/en_us.dart' as en_us;
 
 late Box box;
-String lastUpdate = '20240110T2110';
+String updateTimeStamp = '20240110T2110';
 
-const int version = 2024010400;
+const int version = 2024011100;
 
 void main() async {
   await flutterkatInit();
@@ -33,7 +33,6 @@ void main() async {
 /// This function initializes anything variables, like the hive box, that will be needed later on.
 Future<void> initialize() async {
   // Check `version` with the saved version. If there is a mismatch.
-  // TODO fix the version mismatch.
   String? savedVersionTmp = flktLoad('version');
   if (savedVersionTmp != null) {
     int savedVersion = int.parse(savedVersionTmp);
@@ -144,7 +143,7 @@ class _HomePageState extends State<HomePage> {
       child: ListView(
         padding: const EdgeInsets.only(top: 20),
         children: [
-          Align(alignment: Alignment.center, child: TextBold(getString('header_settings_drawer', [lastUpdate]))),
+          Align(alignment: Alignment.center, child: TextBold(getString('header_settings_drawer', [updateTimeStamp]))),
           const Divider(),
           ElevatedButton(
             onPressed: () => themeModePopup(context),
