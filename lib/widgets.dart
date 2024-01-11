@@ -130,7 +130,8 @@ class CardButton extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Markd(card.key),
-              Markd('*$tags*'),
+              // Italisized string of the deck and tags.
+              Markd('*${tags.trim()}*'),
               const ThickDivider(),
               Markd(card.values[0])
             ]

@@ -33,11 +33,14 @@ class Flashcard {
   /// setFilter
   /// Sets the filter to the passed parameter, and updates the filtered cards and subdecks.
   /// @param List<String> filter The new filter
-  static void setFilter(List<String> filter) {
-    _filter = filter;
+  static void setFilter(List<String>? filter) {
+    // If null is passed, don't change the filter.
+    _filter = filter ?? _filter;
+    // Update the filteredCards list.
     filteredCards = getFilteredCards(cards);
+    // Update the filteredDecks list.
     filteredDecks = getLayers(filteredCards);
-  }
+  }//e setFilter()
 
   /// pushFilter
   /// Adds a filter layer onto the filter stack.
@@ -67,30 +70,47 @@ class Flashcard {
   /// @param List<Flashcard> tempCards
   /// @returns List<Flashcards> cards matching the filter
   static List<Flashcard> getFilteredCards(List<Flashcard> listOfCards) {
-    // If the filter is empty, return all the cards.
-    if (filter.isEmpty) return cards;
+    // If the filter is empty, sort and return all the cards.
+    if (filter.isEmpty) {
+      cards.sort((a, b) => a.id.toLowerCase().compareTo(b.id.toLowerCase()));
+      return cards;
+    }//e if
+
     // The list of cards to return.
     List<Flashcard> returnList = [];
 
+    // For every card in the passed list of cards, determin if the card is in the filter.
     for (Flashcard c in listOfCards) {
+      // If the cards deck starts with the filter, add the card to the return list.
       if (c.deck.startsWith(filterString)) {
         returnList.add(c);
       }//e if
-      // for tags
+      // For every tag the card has.
       for (String tag in c.tags) {
+        // If the tag starts with the applied filter, add it to the list to return.
         if (tag.startsWith(filterString)) {
           returnList.add(c);
         }//e if
       }//e for
     }//e for
+
+    // Sort the list of cards to return, then return the list.
+    returnList.sort((a, b) => a.id.toLowerCase().compareTo(b.id.toLowerCase()));
     return returnList;
   }//e getFilteredCards
 
+  /// Returns a new list with all the filtered cards, shuffled in a random order.
+  /// 
+  /// Creates a copy list from filtered cards. Then used the shuffle method to randomize the list
+  /// and returns the shuffled list.
   static List<Flashcard> getShuffledFilteredCards() {
+    // Get a temp list of cards as a copy list from filtered cards.
     List<Flashcard> tmpList = List<Flashcard>.from(filteredCards);
+    // Randomize the order of the temp list.
     tmpList.shuffle();
+    // Return the temp list.
     return tmpList;
-  }
+  }//e getShuffledFilteredCards()
 
   /// getSubdecks
   /// Takes a list of cards and gets the a list of all subdecks from these cards matching the
@@ -101,8 +121,9 @@ class Flashcard {
   static List<String> getLayers(List<Flashcard> listOfCards) {
     // List of subdeck layers to return.
     List<String> retList = [];
-
+    
     // Go through the list of provided cards
+    List<String> deckList = [];
     for (Flashcard c in listOfCards) {
       // If the deck of the card does not start with the filter, skip this card
       if (!c.deck.startsWith(filterString)) continue;
@@ -113,11 +134,11 @@ class Flashcard {
       // Get the next layer in the deck
       tmpStr = tmpStr.split("/")[0];
       // Add the layer to the list if it is not allready added AND the layer is not empty
-      if (!retList.contains(tmpStr) && tmpStr.isNotEmpty) retList.add(tmpStr);
+      if (!deckList.contains(tmpStr) && tmpStr.isNotEmpty) deckList.add(tmpStr);
     }//e for
 
-    // Do the same things for tags
     // Go through the list of provided cards
+    List<String> tagList = [];
     for (Flashcard c in listOfCards) {
       for (String tag in c.tags) {
         // If this tag of the card does not start with the filter, skip this tag
@@ -130,43 +151,48 @@ class Flashcard {
         // Get the next layer in the tag
         tmpStr = tmpStr.split("/")[0];
         // Add the layer to the list if it is not allready added AND the layer is not empty
-        if (!retList.contains(tmpStr) && tmpStr.isNotEmpty) retList.add(tmpStr);
+        if (!tagList.contains(tmpStr) && tmpStr.isNotEmpty) tagList.add(tmpStr);
       }//e for
     }//e for
+
+    // Sort the decks and tags by alphabetical order, capitalization does not matter.
+    deckList.sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
+    tagList.sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
+
+    // Combined the deck and tag lists into a single list with the decks coming first.
+    retList = deckList + tagList;
+    
+    // Return the combined list.
     return retList;
   }//e getLayers
 
   /// newCard
-  /// Creates a new card, adds it to the list, and save it to persistant storage.
+  /// Creates a new card, adds it to the list, and save it to persistant storage. If a card with the
+  /// same ID already exists, that card will be deleted and replaces with the new card.
   /// @param String key The key for the card.
   /// @param String deck The deck the card is a part of.
   /// @param List<String> valuesIn A list of answers for the card.
   /// @param List<String>? tagsIn A list of tags the card is part of.
   static void newCard(String key, String deck, List<String> valuesIn, [List<String>? tagsIn]) {
     // Format / trim paramaters
-    key = key.trim();
+    key = validateKey(key);
     deck = validateDeckStr(deck);
-    List<String> values = [for (String v in valuesIn) v.trim()];
+    List<String> values = validateValues(valuesIn);
     tagsIn ??= [];
-    List<String> tags = [for (String t in tagsIn) t.trim()];
+    List<String> tags = validateTagList(tagsIn);
 
-    // Create the new card and check to see if it has already been added. If it has, return and do
-    // nothing.
+    // Search and remove all cards the same as the new card.
     Flashcard card = Flashcard(key, deck, values, tags);
-    String id = card.id;
     for (int i = 0; i < cards.length; i++) {
-      if (cards[i].id == id) {
-        cards[i] = card;
-        return;
+      if (cards[i] == card) {
+        cards.removeAt(i);
       }//e if
     }//e for
 
-    // Add the card, update and sort filtered cards and layers.
+    // Add the card, update cards and layers.
     cards.add(card);
     filteredCards = getFilteredCards(filteredCards);
     filteredDecks = getLayers(filteredCards);
-    filteredDecks.sort((a, b) => a.compareTo(b));
-    filteredCards.sort((a, b) => a.id.compareTo(b.id));
     // Save to persistant.
     saveCards();
   }//e newCard
@@ -229,17 +255,19 @@ class Flashcard {
 
   /// Validates the tag list.
   static List<String> validateTagList(List<String> tags) {
-    tags = tags.toSet().toList();
-    tags.remove('');
+    List<String> _tags = [for (String t in tags) t.trim()];
 
-    for (int i = 0; i < tags.length; i++) {
-      tags[i] = validateTag(tags[i]);
+    _tags = _tags.toSet().toList();
+    _tags.remove('');
+
+    for (int i = 0; i < _tags.length; i++) {
+      _tags[i] = validateTag(_tags[i]);
     }//e for
 
-    tags = tags.toSet().toList();
-    tags.remove('');
+    _tags = _tags.toSet().toList();
+    _tags.remove('');
 
-    return tags;
+    return _tags;
   }//e validateTagList()
 
   /// Validates the tag string.
@@ -257,14 +285,16 @@ class Flashcard {
 
   /// Validate the list of values.
   static List<String> validateValues(List<String> values) {
-    values = LinkedHashSet<String>.from(values).toList();
-    values.remove('');
-    return values;
+    List<String> _values = [for (String v in values) v.trim()];
+    _values = LinkedHashSet<String>.from(_values).toList();
+    _values.remove('');
+    return _values;
   }//e validateValues()
 
   /// Validates the key.
   static String validateKey(String key) {
     if (key.isEmpty) key = 'EMPTY';
+    key = key.trim();
     return key;
   }//e validateKey()
 
@@ -314,4 +344,15 @@ class Flashcard {
   factory Flashcard.fromJson(Map<String, dynamic> json) =>
     Flashcard(json['key'], json['deck'], List<String>.from(json['values']), List<String>.from(json['tags']), json['cnfdnc']);
   //e fromJson
+  
+  /// Returns the hashcode of [id] as it is used to distinguish the cards.
+  @override
+  int get hashCode => id.hashCode;
+  
+  /// Returns true if [other]'s [id] and [id] are the same. Otherwise returns false.
+  @override
+  bool operator ==(Object other) {
+    return other is Flashcard? id == other.id : false;
+  }//e ==
+  
 }//e Flashcard

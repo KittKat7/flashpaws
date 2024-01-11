@@ -35,21 +35,111 @@ class FlashcardWidget extends StatefulWidget {
 
 class _FlashcardWidgetState extends State<FlashcardWidget> {
 
+  /// Whether this is a new card.
   late bool isNewCard;
+  /// Whether in editing mode.
   late bool isEditing;
+  /// Whether the card has been edited.
   late bool isEdited;
 
-  late Flashcard card;
-
+  // Current data, may or may not be modified.
   late String key;
   late List<String> values;
   late String deck;
   late String tagsStr;
 
+  // Old data, used to determine whether changes have been made.
+  late final String oldKey;
+  late final List<String> oldValues;
+  late final String oldDeck;
+  late final String oldTagsStr;
+
+  // Fields for the data.
   late Widget keyField;
   late List<Widget> valueFields;
   late Widget deckField;
   late Widget tagField;
+
+  @override
+  void initState() {
+    // Initialize values.
+    if (widget.card == null) {
+      // If new card.
+      isNewCard = true;
+      // card = Flashcard('', '', ['']);
+      String filter = Flashcard.filterString.length > 1? Flashcard.filterString : '';
+      String deckFilter = '';
+      String tagFilter = '';
+      if (filter.startsWith('/')) {
+        deckFilter = filter;
+      } else if (filter.startsWith('#')) {
+        tagFilter = filter;
+      }
+      key = '';
+      oldKey = '';
+      values = ['', ''];
+      oldValues = ['', ''];
+      deck = deckFilter;
+      oldDeck = deckFilter;
+      tagsStr = tagFilter;
+      oldTagsStr = tagFilter;
+    } else {
+      // If existing card.
+      isNewCard = false;
+      key = widget.card!.key;
+      oldKey = widget.card!.key;
+      values = widget.card!.values + [''];
+      oldValues = widget.card!.values + [''];
+      deck = widget.card!.deck;
+      oldDeck = widget.card!.deck;
+      tagsStr = widget.card!.tagsStr;
+      oldTagsStr = widget.card!.tagsStr;
+    }//e if else
+
+    isEditing = widget.initIsEditing;
+    isEdited = false;
+    valueFields = [];
+
+    // Create the text fields
+    keyField = TextField(
+      controller: TextEditingController(text: key),
+      onChanged: (t) { key = t; _checkForChange(); },
+      decoration: InputDecoration(hintText: getString('hint_create_new_card_key')),
+      keyboardType: TextInputType.multiline,
+      maxLines: null,
+    );//e keyField
+    valueFields.add(TextField(
+      controller: TextEditingController(text: values[0]),
+      onChanged: (t) { setState(() => _updateValues(0, t)); _checkForChange(); },
+      decoration: InputDecoration(hintText: getString('hint_create_new_card_values')),
+      keyboardType: TextInputType.multiline,
+      maxLines: null,
+    ));//e valueFields
+    for (int i = 1; i < values.length; i++) {
+      valueFields.add(TextField(
+        controller: TextEditingController(text: values[i]),
+        onChanged: (t) { setState(() => _updateValues(i, t)); _checkForChange(); },
+        decoration: InputDecoration(hintText: getString('hint_create_new_card_values_fake')),
+        keyboardType: TextInputType.multiline,
+        maxLines: null,
+      ));//e valueFields
+    }//e for
+    deckField = TextField(
+      controller: TextEditingController(text: deck),
+      onChanged: (t) { deck = t; _checkForChange(); },
+      decoration: InputDecoration(hintText: getString('hint_create_new_card_deck')),
+      keyboardType: TextInputType.multiline,
+      maxLines: null,
+    );//e deckField
+    tagField = TextField(
+      controller: TextEditingController(text: tagsStr),
+      onChanged: (t) { tagsStr = t; _checkForChange(); },
+      decoration: InputDecoration(hintText: getString('hint_create_new_card_tags')),
+      keyboardType: TextInputType.multiline,
+      maxLines: null,
+    );//e tagField
+    super.initState();
+  }//e initState()
 
   /// Updates the values entered by the user.
   /// 
@@ -79,74 +169,12 @@ class _FlashcardWidgetState extends State<FlashcardWidget> {
     }//e if
   }//e _updateValues()
 
-  @override
-  void initState() {
-    if (widget.card == null) {
-      isNewCard = true;
-      card = Flashcard('', '', ['']);
-    } else {
-      isNewCard = false;
-      card = widget.card!;
-    }
-    isEditing = widget.initIsEditing;
-    isEdited = false;
-
-    // initialize values
-    key = card.key;
-    values = card.values + [''];
-    deck = card.deck;
-    tagsStr = card.tagsStr;
-
-    valueFields = [];
-
-    // Create the text fields
-    keyField = TextField(
-      controller: TextEditingController(text: key),
-      onChanged: (t) { key = t; checkForChange(); },
-      decoration: InputDecoration(hintText: getString('hint_create_new_card_key')),
-      keyboardType: TextInputType.multiline,
-      maxLines: null,
-    );//e keyField
-    valueFields.add(TextField(
-      controller: TextEditingController(text: values[0]),
-      onChanged: (t) { setState(() => _updateValues(0, t)); checkForChange(); },
-      decoration: InputDecoration(hintText: getString('hint_create_new_card_values')),
-      keyboardType: TextInputType.multiline,
-      maxLines: null,
-    ));//e valueFields
-    for (int i = 1; i < values.length; i++) {
-      valueFields.add(TextField(
-        controller: TextEditingController(text: values[i]),
-        onChanged: (t) { setState(() => _updateValues(i, t)); checkForChange(); },
-        decoration: InputDecoration(hintText: getString('hint_create_new_card_values_fake')),
-        keyboardType: TextInputType.multiline,
-        maxLines: null,
-      ));//e valueFields
-    }//e for
-    deckField = TextField(
-      controller: TextEditingController(text: deck),
-      onChanged: (t) { deck = t; checkForChange(); },
-      decoration: InputDecoration(hintText: getString('hint_create_new_card_deck')),
-      keyboardType: TextInputType.multiline,
-      maxLines: null,
-    );//e deckField
-    tagField = TextField(
-      controller: TextEditingController(text: tagsStr),
-      onChanged: (t) { tagsStr = t; checkForChange(); },
-      decoration: InputDecoration(hintText: getString('hint_create_new_card_tags')),
-      keyboardType: TextInputType.multiline,
-      maxLines: null,
-    );//e tagField
-
-    super.initState();
-  }//e initState()
-
-  bool checkForChange() {
+  bool _checkForChange() {
     bool changed = false;
-    if (!changed && key != card.key) { changed = true; }
-    if (!changed && values != card.values + ['']) { changed = true; }
-    if (!changed && deck != card.deck) { changed = true; }
-    if (!changed && tagsStr != card.tagsStr) { changed = true; }
+    if (!changed && key != oldKey) { changed = true; }
+    if (!changed && values != oldValues + ['']) { changed = true; }
+    if (!changed && deck != oldDeck) { changed = true; }
+    if (!changed && tagsStr != oldTagsStr) { changed = true; }
 
     isEdited = changed;
     // if (changed != isEdited) setState(() => isEdited = changed);
@@ -253,35 +281,42 @@ class _FlashcardWidgetState extends State<FlashcardWidget> {
       // Validate tags.
       tagsStr = Flashcard.validateTagStr(tagsStr);
 
+      /// The modified card.
       Flashcard modCard = Flashcard(key, deck, values, tagsStr.split(' '));
 
-      @override
-      void save() {
+      /// Runs the actual saving functions.
+      void saveConfirmed() {
         setState(() {
+          // if (!isNewCard) {
+          //   Flashcard.removeCard(widget.card!);
+          // }
           Flashcard.newCard(key, deck, values, tagsStr.split(' '));
-          if (!isNewCard) {
-            Flashcard.removeCard(widget.card!);
-          }
         });
+        // Update the list of filtered flashcards. This will update and show the changes that have
+        // been made.
+        Flashcard.setFilter(null);
+        // Update the state up the parent widget to see the changes.
         widget.superSetState();
+        // Pop the flashcard widget.
         Navigator.pop(context);
-      }
+      }//e saveConfirmed()
 
-      // Check for duplicate
-      if (key != card.key || deck != card.deck) {
-        if (Flashcard.cardIDExists(modCard.id)) {
-          confirmPopup(
-            context,
-            getString('header_card_conflict_overwrite'),
-            getString('msg_card_conflict_overwrite'),
-            () => save());
-        } else {
-          save();
-        }//e if else
+      // Check for duplicate.
+      // If the key or deck (what ids the card) has been modified, check to see if a card exists
+      // with the same key. If so, ask the user if they want to overwrite it. Otherwise, save the
+      // flashcard.
+      if ((key != oldKey || deck != oldDeck) && Flashcard.cards.contains(modCard)) {
+        confirmPopup(
+          context,
+          getString('header_card_conflict_overwrite'),
+          getString('msg_card_conflict_overwrite'),
+          () {
+            // Save the card.
+            saveConfirmed();
+          });
       } else {
-        save();
+        saveConfirmed();
       }//e if else
-
       
     }//e save()
 
