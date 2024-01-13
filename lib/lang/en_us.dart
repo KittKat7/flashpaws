@@ -41,7 +41,7 @@ Map<String, String> get getLang {
   lang['header_create_new_card'] = 'Create New Card';
   lang['header_delete_card'] = 'Delete Flashcard';
   lang['header_exit_app'] = 'Exit ${lang['title']}';
-  lang['header_settings_drawer'] = 'Flashpaws - Update \${0}';
+  lang['header_settings_drawer'] = 'Flashpaws - \${0}';
   lang['header_finish_test'] = 'Finish Test?';
   lang['header_finish_review'] = 'Finish Review?';
   lang['header_confirm_modify_card'] = 'Confirm Modification?';

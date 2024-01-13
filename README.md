@@ -7,3 +7,7 @@ Flashpaws - A Slightly cat themed, powerful, and simple flashcard app. Designed 
 - [ ] Export JSON
 - [ ] Import md
 - [ ] Export md
+- [x] Add a saved version marker into the hive db file. That way exported files can be updated aswell.
+- [x] Change tags type from List<String> to String.
+- [ ] BUG when tag shares the same name as deck, subtag buttons will appear when that deck is applied.
+- [ ] Add a way to instead of internally loading have external file to load.

@@ -86,7 +86,7 @@ class Flashcard {
         returnList.add(c);
       }//e if
       // For every tag the card has.
-      for (String tag in c.tags) {
+      for (String tag in c.tagsList) {
         // If the tag starts with the applied filter, add it to the list to return.
         if (tag.startsWith(filterString)) {
           returnList.add(c);
@@ -140,7 +140,7 @@ class Flashcard {
     // Go through the list of provided cards
     List<String> tagList = [];
     for (Flashcard c in listOfCards) {
-      for (String tag in c.tags) {
+      for (String tag in c.tagsList) {
         // If this tag of the card does not start with the filter, skip this tag
         if (!tag.startsWith("#${filterString.substring(1)}")) { continue; }
         // Get the tag for the card with the filter removed from the tag
@@ -182,7 +182,11 @@ class Flashcard {
     List<String> tags = validateTagList(tagsIn);
 
     // Search and remove all cards the same as the new card.
-    Flashcard card = Flashcard(key, deck, values, tags);
+    Flashcard card = Flashcard(
+      key: key,
+      deck: deck,
+      values: values,
+      tagStr: tags.join(' '));
     for (int i = 0; i < cards.length; i++) {
       if (cards[i] == card) {
         cards.removeAt(i);
@@ -309,17 +313,29 @@ class Flashcard {
   List<String> get values { return List<String>.from(_values); }
   set values(List<String> values) { _values = List<String>.from(values); }
   /// All tags that this card has
-  List<String> _tags;
-  List<String> get tags { return List<String>.from(_tags); }
-  set tags(List<String> tags) { _tags = List<String>.from(tags); }
-  String get tagsStr { return tags.join(' '); }
-  set tagsStr(String str) { _tags = str.trim().split(' '); }
+  String _tags;
+  List<String> get tagsList { return List<String>.from(_tags.split(' ')); }
+  set tagsList(List<String> tags) { _tags = List<String>.from(tags).join(' '); }
+  // ignore: unnecessary_getters_setters
+  String get tagStr { return _tags; }
+  set tagStr(String str) { _tags = str; }
 
   /// get id Returns the unique id of the card.
   String get id { return deck + key; }
 
   /// Constructor
-  Flashcard(this.key, String deck, this._values, [List<String>? tags, int? confidence]) : _deck = validateDeckStr(deck), _tags = tags ?? [], confidence = confidence ?? -1;
+  Flashcard({
+    required this.key,
+    required String deck,
+    required List<String> values,
+    String tagStr = '',
+    int? confidence
+    }) :
+    _deck = validateDeckStr(deck),
+    _values = values,
+    _tags = tagStr,
+    confidence = confidence ?? -1;
+  //e Flashcard()
 
   @override
   String toString() {
@@ -333,7 +349,7 @@ class Flashcard {
     'key': key,
     'deck': deck,
     'values': values,
-    'tags': tags,
+    'tags': tagStr,
     'cnfdnc': confidence
   };//e toJson
 
@@ -342,7 +358,12 @@ class Flashcard {
   /// @param Map<String, dynamic> json The JSON style Map to create a Flashcard with.
   /// @return Flashcard A Flashcard created from the Map.
   factory Flashcard.fromJson(Map<String, dynamic> json) =>
-    Flashcard(json['key'], json['deck'], List<String>.from(json['values']), List<String>.from(json['tags']), json['cnfdnc']);
+    Flashcard(
+      key: json['key'],
+      deck: json['deck'],
+      values: List<String>.from(json['values']),
+      tagStr: json['tags'],
+      confidence: json['cnfdnc']);
   //e fromJson
   
   /// Returns the hashcode of [id] as it is used to distinguish the cards.

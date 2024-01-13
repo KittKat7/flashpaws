@@ -19,9 +19,14 @@ import 'package:hive_flutter/hive_flutter.dart';
 import './lang/en_us.dart' as en_us;
 
 late Box box;
-String updateTimeStamp = '20240110T2110';
+const String updateTimeStamp = String.fromEnvironment('buildTimeUTC', defaultValue: 'N/A');
 
-const int version = 2024011100;
+const int version = 2024011300;
+
+/// int version
+Map<String, dynamic> metadata = {};
+
+
 
 void main() async {
   await flutterkatInit();
@@ -32,17 +37,6 @@ void main() async {
 /// initialize
 /// This function initializes anything variables, like the hive box, that will be needed later on.
 Future<void> initialize() async {
-  // Check `version` with the saved version. If there is a mismatch.
-  String? savedVersionTmp = flktLoad('version');
-  if (savedVersionTmp != null) {
-    int savedVersion = int.parse(savedVersionTmp);
-    if (savedVersion != version) {
-      await update(savedVersion, version);
-    }
-  } else {
-    flktSave('version', version.toString());
-  }
-
   // set language
   setLang(en_us.getLang);
   // Set aspect ratio
@@ -50,6 +44,24 @@ Future<void> initialize() async {
   // Initialize hive box.
   await Hive.initFlutter('katapp');
   box = await Hive.openBox('flashpaws');
+
+  // Change from flkt version storage to hive version storage.
+  if (flktLoad('version') != null) {
+    box.put('metadata', json.encode(
+      <String, dynamic>{'version': int.parse(flktLoad('version')!)}));
+    await flktRemove('version');
+  }//e if
+  // Version update etc...
+  if (!box.containsKey('metadata') || box.get('metadata').isEmpty
+    || box.get('metadata')[0] is! String) {
+    box.put('metedata', json.encode(<String, String>{'version': version.toString()}));
+  } else {
+    metadata = json.decode(box.get('metadata'));
+    int savedVersion = metadata['version'];
+    if (savedVersion < version) {
+      await update(savedVersion, version);
+    }//e if
+  }//e if else
   
   // Instanciate the hiveBox variable of Flashcard
   Flashcard.hiveBox = box;
@@ -62,24 +74,21 @@ Future<void> initialize() async {
     List<Flashcard> newCards = [
       // Flashcard for how to make a new card.
       Flashcard(
-        getString('introcard_how_to_new_card'),
-        '/introduction/',
-        [getString('introcard_how_to_new_card_answer')],
-        []
+        key: getString('introcard_how_to_new_card'),
+        deck: '/introduction/',
+        values: [getString('introcard_how_to_new_card_answer')],
       ),
       // Flashcard for how to sort cards.
       Flashcard(
-        getString('introcard_how_to_sort_cards'),
-        '/introduction/',
-        [getString('introcard_how_to_sort_cards_answer')],
-        []
+        key: getString('introcard_how_to_sort_cards'),
+        deck: '/introduction/',
+        values: [getString('introcard_how_to_sort_cards_answer')],
       ),
       // Flashcard for how to practice the flashcards.
       Flashcard(
-        getString('introcard_how_to_practice'),
-        '/introduction/',
-        [getString('introcard_how_to_practice_answer')],
-        []
+        key: getString('introcard_how_to_practice'),
+        deck: '/introduction/',
+        values: [getString('introcard_how_to_practice_answer')],
       ),
     ];//e newCards
     

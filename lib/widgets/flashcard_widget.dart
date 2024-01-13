@@ -92,8 +92,8 @@ class _FlashcardWidgetState extends State<FlashcardWidget> {
       oldValues = widget.card!.values + [''];
       deck = widget.card!.deck;
       oldDeck = widget.card!.deck;
-      tagsStr = widget.card!.tagsStr;
-      oldTagsStr = widget.card!.tagsStr;
+      tagsStr = widget.card!.tagStr;
+      oldTagsStr = widget.card!.tagStr;
     }//e if else
 
     isEditing = widget.initIsEditing;
@@ -282,7 +282,11 @@ class _FlashcardWidgetState extends State<FlashcardWidget> {
       tagsStr = Flashcard.validateTagStr(tagsStr);
 
       /// The modified card.
-      Flashcard modCard = Flashcard(key, deck, values, tagsStr.split(' '));
+      Flashcard modCard = Flashcard(
+        key: key,
+        deck: deck,
+        values: values,
+        tagStr: tagsStr);
 
       /// Runs the actual saving functions.
       void saveConfirmed() {

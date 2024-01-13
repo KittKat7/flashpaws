@@ -110,7 +110,7 @@ class CardButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String tags = card.deck;
-    for (String tag in card.tags) {
+    for (String tag in card.tagsList) {
       tags += " - $tag";
     }
     return Row(children: [
