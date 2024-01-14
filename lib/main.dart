@@ -44,7 +44,7 @@ Future<void> initialize() async {
   // Initialize hive box.
   await Hive.initFlutter('katapp');
   box = await Hive.openBox('flashpaws');
-
+  
   // Change from flkt version storage to hive version storage.
   if (flktLoad('version') != null) {
     box.put('metadata', json.encode(
@@ -54,7 +54,7 @@ Future<void> initialize() async {
   // Version update etc...
   if (!box.containsKey('metadata') || box.get('metadata').isEmpty
     || box.get('metadata')[0] is! String) {
-    box.put('metedata', json.encode(<String, String>{'version': version.toString()}));
+    box.put('metadata', json.encode(<String, dynamic>{'version': version}));
   } else {
     metadata = json.decode(box.get('metadata'));
     int savedVersion = metadata['version'];
