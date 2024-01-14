@@ -121,10 +121,27 @@ class Flashcard {
   static List<String> getLayers(List<Flashcard> listOfCards) {
     // List of subdeck layers to return.
     List<String> retList = [];
+
+    List<String> deckList = [];
+    List<String> tagList = [];
+    if (filterString.startsWith('/')) deckList = _getDeckLayers(listOfCards);
+    if (filterString.startsWith('#') || filterString == '/') tagList = _getTagLayers(listOfCards);
+
+    // Sort the decks and tags by alphabetical order, capitalization does not matter.
+    deckList.sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
+    tagList.sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
+
+    // Combined the deck and tag lists into a single list with the decks coming first.
+    retList = deckList + tagList;
     
+    // Return the combined list.
+    return retList;
+  }//e getLayers
+
+  static List<String> _getDeckLayers(List<Flashcard> cardsList) {
     // Go through the list of provided cards
     List<String> deckList = [];
-    for (Flashcard c in listOfCards) {
+    for (Flashcard c in cardsList) {
       // If the deck of the card does not start with the filter, skip this card
       if (!c.deck.startsWith(filterString)) continue;
       // Get the deck for the card with the filter removed from the deck
@@ -136,10 +153,13 @@ class Flashcard {
       // Add the layer to the list if it is not allready added AND the layer is not empty
       if (!deckList.contains(tmpStr) && tmpStr.isNotEmpty) deckList.add(tmpStr);
     }//e for
+    return deckList;
+  }//e _getDeckLayers()
 
+  static List<String> _getTagLayers(List<Flashcard> cardsList) {
     // Go through the list of provided cards
     List<String> tagList = [];
-    for (Flashcard c in listOfCards) {
+    for (Flashcard c in cardsList) {
       for (String tag in c.tagsList) {
         // If this tag of the card does not start with the filter, skip this tag
         if (!tag.startsWith("#${filterString.substring(1)}")) { continue; }
@@ -154,17 +174,10 @@ class Flashcard {
         if (!tagList.contains(tmpStr) && tmpStr.isNotEmpty) tagList.add(tmpStr);
       }//e for
     }//e for
+    return tagList;
+  }//e _getTagLayers()
 
-    // Sort the decks and tags by alphabetical order, capitalization does not matter.
-    deckList.sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
-    tagList.sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
 
-    // Combined the deck and tag lists into a single list with the decks coming first.
-    retList = deckList + tagList;
-    
-    // Return the combined list.
-    return retList;
-  }//e getLayers
 
   /// newCard
   /// Creates a new card, adds it to the list, and save it to persistant storage. If a card with the
