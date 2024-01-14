@@ -291,9 +291,9 @@ class _FlashcardWidgetState extends State<FlashcardWidget> {
       /// Runs the actual saving functions.
       void saveConfirmed() {
         setState(() {
-          // if (!isNewCard) {
-          //   Flashcard.removeCard(widget.card!);
-          // }
+          if (!isNewCard) {
+            Flashcard.removeCard(widget.card!);
+          }
           Flashcard.newCard(key, deck, values, tagsStr.split(' '));
         });
         // Update the list of filtered flashcards. This will update and show the changes that have
