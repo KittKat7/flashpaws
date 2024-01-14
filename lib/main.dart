@@ -1,8 +1,9 @@
 import 'dart:convert';
 
-import 'package:flashpaws/multichoice_page.dart';
-import 'package:flashpaws/practice_page.dart';
-import 'package:flashpaws/review_page.dart';
+import 'package:flashpaws/inout.dart';
+import 'package:flashpaws/widgets/multichoice_page.dart';
+import 'package:flashpaws/widgets/practice_page.dart';
+import 'package:flashpaws/widgets/review_page.dart';
 import 'package:flashpaws/update.dart';
 import 'package:flashpaws/widgets/flashcard_widget.dart';
 import 'package:flutter/services.dart';
@@ -18,58 +19,52 @@ import 'package:flutterkat/theme.dart' as theme;
 import 'package:hive_flutter/hive_flutter.dart';
 import './lang/en_us.dart' as en_us;
 
-late Box box;
 const String updateTimeStamp = String.fromEnvironment('buildTimeUTC', defaultValue: 'N/A');
-
-const int version = 2024011300;
 
 /// int version
 Map<String, dynamic> metadata = {};
-
-
 
 void main() async {
   await flutterkatInit();
   await initialize();
   flktRunApp(const MyApp());
-}
+}//e main()
 
-/// initialize
 /// This function initializes anything variables, like the hive box, that will be needed later on.
 Future<void> initialize() async {
+  // Initialize app version.
+  setAppVersion(2024011300);
+
   // set language
   setLang(en_us.getLang);
   // Set aspect ratio
   setAspect(3, 4);
   // Initialize hive box.
   await Hive.initFlutter('katapp');
-  box = await Hive.openBox('flashpaws');
+  hiveBox = await Hive.openBox('flashpaws');
   
   // Change from flkt version storage to hive version storage.
   if (flktLoad('version') != null) {
-    box.put('metadata', json.encode(
+    hiveBox.put('metadata', json.encode(
       <String, dynamic>{'version': int.parse(flktLoad('version')!)}));
     await flktRemove('version');
   }//e if
   // Version update etc...
-  if (!box.containsKey('metadata') || box.get('metadata').isEmpty
-    || box.get('metadata')[0] is! String) {
-    box.put('metadata', json.encode(<String, dynamic>{'version': version}));
+  if (!hiveBox.containsKey('metadata') || hiveBox.get('metadata').isEmpty
+    || hiveBox.get('metadata')[0] is! String) {
+    hiveBox.put('metadata', json.encode(<String, dynamic>{'version': appVersion}));
   } else {
-    metadata = json.decode(box.get('metadata'));
+    metadata = json.decode(hiveBox.get('metadata'));
     int savedVersion = metadata['version'];
-    if (savedVersion < version) {
-      await update(savedVersion, version);
+    if (savedVersion < appVersion) {
+      await update(savedVersion, appVersion);
     }//e if
   }//e if else
-  
-  // Instanciate the hiveBox variable of Flashcard
-  Flashcard.hiveBox = box;
 
   // If there are no prexisting cards, or something was saved incorrectly and not saved as a String,
   // create the list of introduction flashcards.
-  if (!box.containsKey('flashcards') || box.get('flashcards').isEmpty
-    || box.get('flashcards')[0] is! String) {
+  if (!hiveBox.containsKey('flashcards') || hiveBox.get('flashcards').isEmpty
+    || hiveBox.get('flashcards')[0] is! String) {
     // List of new flashcards to be added.
     List<Flashcard> newCards = [
       // Flashcard for how to make a new card.
@@ -97,8 +92,8 @@ Future<void> initialize() async {
   }//e if
   
   // For every card in the box, convert it from json, and add it to the list of cards.
-  for (String json in box.get('flashcards')) {
-    Flashcard.cards.add(Flashcard.fromJson(jsonDecode(json)));
+  for (String json in hiveBox.get('flashcards')) {
+    Flashcard.addCard(Flashcard.fromJson(jsonDecode(json)));
   }//e for
 
   // Initialize the filter to be empty.
@@ -148,12 +143,23 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    // The drawer to be displayed on the overview page.
     Drawer drawer = Drawer(
       child: ListView(
         padding: const EdgeInsets.only(top: 20),
         children: [
           Align(alignment: Alignment.center, child: TextBold(getString('header_settings_drawer', [updateTimeStamp]))),
           const Divider(),
+          // Import export buttons.
+          // Export JSON
+          ElevatedButton(
+            onPressed: () => importCardsJson(context, () => setState(() => Flashcard.setFilter(null))),
+            child: Markd(getString('btn_import_json'))),
+          ElevatedButton(
+            onPressed: () => exportCardsJson(metadata, Flashcard.filteredCards),
+            child: Markd(getString('btn_export_json'))),
+          const Divider(),
+          // Theme settings buttons.
           ElevatedButton(
             onPressed: () => themeModePopup(context),
             child: Markd(getString('btn_theme_brightness_menu'))),

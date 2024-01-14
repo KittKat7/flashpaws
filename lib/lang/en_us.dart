@@ -22,6 +22,8 @@ Map<String, String> get getLang {
   lang['definition/answer'] = 'Definition/Answer';
   lang['deck'] = 'Deck';
   lang['tags'] = 'Tags';
+  lang['skip'] = 'Skip';
+  lang['overwrite'] = 'Overwrite';
 
   // btns
   lang['btn_all_cards'] = 'All Cards';
@@ -33,6 +35,9 @@ Map<String, String> get getLang {
   lang['btn_auto_theme'] = 'System Theme';
   lang['btn_theme_brightness_menu'] = 'Change Theme';
   lang['btn_theme_color_menu'] = 'Select Theme Color';
+  lang['btn_export_json'] = 'Export Json';
+  lang['btn_import_json'] = 'Import Json';
+  lang['bnt_apply_to_all'] = 'Apply to all?';
 
   // tooltip
   lang['tooltip_create_card'] = 'Create card';
@@ -47,6 +52,7 @@ Map<String, String> get getLang {
   lang['header_confirm_modify_card'] = 'Confirm Modification?';
   lang['header_confirm_cancel_modify'] = 'Confirm Cancel?';
   lang['header_card_conflict_overwrite'] = 'Overwrite Flashcard Conflict?';
+  lang['header_confirm_overwrite'] = 'Overwrite Existing Card?';
 
   // msg
   lang['msg_confirm_delete_card'] = 'The card \'\${0}\' will be deleted, continue?';
@@ -56,6 +62,7 @@ Map<String, String> get getLang {
   lang['msg_confirm_modify_card'] = 'You are about to perminently change this card, are you sure you with continue?';
   lang['msg_confirm_cancel_modify'] = 'This card has been modified, confirming will erease these changes. Confirm?';
   lang['msg_card_conflict_overwrite'] = 'This conflicts with an existing flashcard. Would you like to overwrite the existing flashcard?';
+  lang['msg_confirm_overwrite'] = 'The flashcard \'\${0}\' allready exists, do you want to overwrite it?';
 
   // texts
   lang['txt_review_stats'] = '## **STATS:**  \n### **Score:** \${0} / \${1} **Percent:** \${2}%';

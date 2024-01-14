@@ -36,10 +36,12 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
 
-  flutterkat:
+  flutterkat: # flutterkat
     path: ../flutterkat
 
-  hive_flutter:
+  hive_flutter: # Local storage database
+  file_picker: # File picker for saving files
+  path_provider: # Managing paths for file IO.
 
 dev_dependencies:
   flutter_test:

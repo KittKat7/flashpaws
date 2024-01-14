@@ -2,9 +2,13 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flashpaws/flashcard.dart';
+import 'package:flashpaws/inout.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 int _version = 0;
+int _appVersion = 0;
+int get appVersion { return _appVersion; }
+void setAppVersion(int ver) { _appVersion = ver; }
 
 Future<void> update(int oldVersion, int newVersion) async {
   try {
@@ -46,7 +50,7 @@ Future<void> _update(int oldVersion, int newVersion) async {
         tagStr: List<String>.from(flashcard['tags'] as List).join(' ')));
     }//e for
 
-    Flashcard.hiveBox = box;
+    hiveBox = box;
     
     // Save the cards with the update applied.
     Flashcard.saveCards(cards);

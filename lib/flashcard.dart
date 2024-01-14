@@ -2,12 +2,18 @@
 import 'dart:collection';
 import 'dart:convert';
 
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:flashpaws/inout.dart';
 
 class Flashcard {
 
   /// The list of all cards.
   static List<Flashcard> cards = [];
+  static void addCard(Flashcard card) {
+    if (cards.contains(card)) {
+      cards.remove(card);
+    }
+    cards.add(card);
+  }//e addCard()
   /// The filter for sorting cards
   static List<String> _filter = [];
   /// The cards that match the current filter
@@ -22,8 +28,7 @@ class Flashcard {
     if (!str.startsWith('#')) {
       str = validateDeckStr(str);
     } else {
-      // TODO validate tags
-      
+      str = validateTagStr(str);
     }//e if else
     return str;
   }//e get filterString
@@ -207,7 +212,7 @@ class Flashcard {
     }//e for
 
     // Add the card, update cards and layers.
-    cards.add(card);
+    addCard(card);
     filteredCards = getFilteredCards(filteredCards);
     filteredDecks = getLayers(filteredCards);
     // Save to persistant.
@@ -222,8 +227,6 @@ class Flashcard {
     cards.remove(card);
     saveCards();
   }//e removeCard
-
-  static late Box<dynamic> hiveBox;
 
   static saveCards([List<Flashcard>? cardsIn]) {
     List<Flashcard> saveCards = cardsIn??=cards;
