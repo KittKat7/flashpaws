@@ -82,6 +82,7 @@ Future<String?> pickInFileDesktop() async {
   String? inputFile = (await FilePicker.platform.pickFiles(
     allowMultiple: false,
     initialDirectory: downloadDir,
+    type: FileType.custom,
     allowedExtensions: ['json', 'flshpws-json']
   ))?.paths[0];
   return inputFile;
@@ -104,6 +105,33 @@ Future<String?> pickReadFileDesktop() async {
   return await readFromFileDesktop(inputFile);
 }
 
+Future<void> pickAndWriteToFileMobile(String name, String content) async {
+    try {
+      // Allow the user to pick a directory
+      String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
+
+      if (selectedDirectory == null) return;
+      // Specify the file path within the selected directory
+      String filePath = '${selectedDirectory}/$name';
+
+      // Open the file in write mode
+      File file = File(filePath);
+      IOSink sink = file.openWrite(mode: FileMode.write);
+
+      // Write content to the file
+      sink.write(content);
+
+      // Close the file
+      await sink.close();
+
+      print('File written successfully at: $filePath');
+
+    } catch (e) {
+      // Handle exceptions if any
+      print('Error picking and writing file: $e');
+    }
+  }
+
 
 
 Future<void> exportCardsJson(Map<String, dynamic> metadata, List<Flashcard> cards) async {
@@ -124,7 +152,7 @@ Future<void> exportCardsJson(Map<String, dynamic> metadata, List<Flashcard> card
   }//e if desktop
 
   else if (GetPlatform.isMobile) {
-
+    pickAndWriteToFileMobile('flashcards.json', content);
   }//e if mobile
 }//e exportCardsJson()
 
@@ -140,7 +168,7 @@ Future<void> importCardsJson(context, Function() onLoadComplete) async {
   }
 
   else if (GetPlatform.isMobile) {
-
+    contentString = await pickReadFileDesktop();
   }
 
   if (contentString == null) return;
