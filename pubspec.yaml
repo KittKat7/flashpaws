@@ -42,6 +42,7 @@ dependencies:
   hive_flutter: # Local storage database
   file_picker: # File picker for saving files
   path_provider: # Managing paths for file IO.
+  universal_html: # Web file management
 
 dev_dependencies:
   flutter_test:

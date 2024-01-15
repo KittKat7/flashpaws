@@ -1,6 +1,8 @@
 
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutterkat/platform.dart';
+import 'package:universal_html/html.dart' as html;
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flashpaws/flashcard.dart';
@@ -11,17 +13,59 @@ import 'package:path_provider/path_provider.dart';
 
 late Box hiveBox;
 
-Future<void> writeToFile(String outputFile, String content) async {
+void writeToFileWeb(String outputFile, String content) {
+  final encodedContent = base64.encode(utf8.encode(content));
+  final dataUri = 'data:text/plain;charset=utf-8;base64,$encodedContent';
+  // ignore: unused_local_variable
+  final anchorElement = html.AnchorElement(href: dataUri)
+    ..setAttribute('download', outputFile)
+    ..click();
+}
+
+Future<String> readFromFileWeb() async {
+  // Create an input element
+  final html.FileUploadInputElement uploadInput = html.FileUploadInputElement();
+  
+  // Allow only text file types
+  // uploadInput.accept = 'text/plain';
+  
+  // Trigger the file selection dialog
+  uploadInput.click();
+  
+  // Wait for the user to select a file
+  await uploadInput.onChange.first;
+  
+  // Access the selected file
+  final file = uploadInput.files!.first;
+  
+  // Create a FileReader
+  final reader = html.FileReader();
+  
+  // Read the file content as text
+  reader.readAsText(file);
+  
+  // Wait for the file to be read
+  await reader.onLoad.first;
+  
+  // Get the text content as a String
+  final text = reader.result as String;
+  
+  return text;
+}//e readFromFileWeb()
+
+
+
+Future<void> writeToFileDesktop(String outputFile, String content) async {
   final file = File(outputFile);
   await file.writeAsString(content);
-}//e writeToFile()
+}//e writeToFileDesktop()
 
-Future<String> readFromFile(String inputFile) async {
+Future<String> readFromFileDesktop(String inputFile) async {
   final file = File(inputFile);
   return await file.readAsString();
-}//e readFromFile()
+}//e readFromFileDesktop()
 
-Future<String?> pickOutFile() async {
+Future<String?> pickOutFileDesktop() async {
   String downloadDir = "${(await getDownloadsDirectory())?.path}/";
 
   String? outputFile = await FilePicker.platform.saveFile(
@@ -30,9 +74,9 @@ Future<String?> pickOutFile() async {
     initialDirectory: downloadDir
   );
   return outputFile;
-}//e pickOutFile()
+}//e pickOutFileDesktop()
 
-Future<String?> pickInFile() async {
+Future<String?> pickInFileDesktop() async {
   String downloadDir = "${(await getDownloadsDirectory())?.path}/";
 
   String? inputFile = (await FilePicker.platform.pickFiles(
@@ -41,45 +85,68 @@ Future<String?> pickInFile() async {
     allowedExtensions: ['json', 'flshpws-json']
   ))?.paths[0];
   return inputFile;
-}//e pickInFile()
+}//e pickInFileDesktop()
 
-Future<void> saveTestFile() async {
-  String? outputFile = await pickOutFile();
-
+Future<void> pickWriteFileDesktop(String content) async {
+  // Get the outputFile as the path for the file to be written.
+  String? outputFile = await pickOutFileDesktop();
+  // If the user cancels, outputFile will be null, in this case: return.
   if (outputFile == null) return;
+  // Write the contents to the file outputFile.
+  await writeToFileDesktop(outputFile, content);
+}//e pickWriteFileDecktop()
 
-  List<String> flashcardsEncoded = hiveBox.get('flashcards');
-  List flashcards = 
-    [for (String card in flashcardsEncoded) json.decode(card)];
-    // [for (String card in flashcardsEncoded) Flashcard.fromJson(json.decode(card))];
+Future<String?> pickReadFileDesktop() async {
+  String? inputFile = await pickInFileDesktop();
 
-  String metadataEncoded = hiveBox.get('metadata');
-  Map<String, dynamic> metadata = json.decode(metadataEncoded);
-  String content = json.encode({'metadata': metadata, 'flashcards': flashcards});
+  if (inputFile == null) return null;
 
-  await writeToFile(outputFile, content);
-}//e saveTestFile()
+  return await readFromFileDesktop(inputFile);
+}
+
+
 
 Future<void> exportCardsJson(Map<String, dynamic> metadata, List<Flashcard> cards) async {
-  String? outputFile = await pickOutFile();
-
-  if (outputFile == null) return;
 
   // List<Flashcard> flashcards = 
   //   [for (Flashcard card in cards) card.toJson()];
   //   [for (String card in flashcardsEncoded) Flashcard.fromJson(json.decode(card))];
-
   String content = json.encode({'metadata': metadata, 'flashcards': cards});
 
-  await writeToFile(outputFile, content);
+  // If the user is on a web platform.
+  if (GetPlatform.isWeb) {
+    // Write the contents to 'flashcards.json'.
+    writeToFileWeb('flashcards.json', content);
+  }//e if web
+  // If the user is on a desktop platform.
+  else if (GetPlatform.isDesktop) {
+    pickWriteFileDesktop(content);
+  }//e if desktop
+
+  else if (GetPlatform.isMobile) {
+
+  }//e if mobile
 }//e exportCardsJson()
 
 Future<void> importCardsJson(context, Function() onLoadComplete) async {
-  String? inputFile = await pickInFile();
+  String? contentString;
 
-  if (inputFile == null) return;
+  if (GetPlatform.isWeb) {
+    contentString = await readFromFileWeb();
+  }
 
-  Map<String, dynamic> content = json.decode(await readFromFile(inputFile));
+  else if (GetPlatform.isDesktop) {
+    contentString = await pickReadFileDesktop();
+  }
+
+  else if (GetPlatform.isMobile) {
+
+  }
+
+  if (contentString == null) return;
+
+
+  Map<String, dynamic> content = json.decode(contentString);
   Map<String, dynamic> metadata = content['metadata'];
   // Check to see if imported json is up to date.
   if (metadata['version'] < appVersion) {
