@@ -1,10 +1,4 @@
-
-import 'package:flashpaws/flashcard.dart';
-import 'package:flashpaws/widgets.dart';
-import 'package:flutter/material.dart';
-import 'package:flutterkat/flutterkat.dart';
-import 'package:flutterkat/graphics.dart';
-import 'package:flutterkat/widgets.dart';
+part of '../widgets.dart';
 
 void flashcardWidgetPopup({
     required BuildContext context,

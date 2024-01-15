@@ -1,7 +1,5 @@
 
-import 'package:flutter/material.dart';
-import 'package:flutterkat/flutterkat.dart';
-import 'package:flutterkat/widgets.dart';
+part of '../widgets.dart';
 
 Future<bool> overwriteConfirmAlertPopup(context, Function(bool a) applyToAll, String cardID) async {
   bool overwriteThis = false;

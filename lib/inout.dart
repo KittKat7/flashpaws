@@ -1,13 +1,13 @@
 
 import 'dart:convert';
 import 'dart:io';
+import 'package:flashpaws/widgets.dart';
 import 'package:flutterkat/platform.dart';
 import 'package:universal_html/html.dart' as html;
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flashpaws/flashcard.dart';
 import 'package:flashpaws/update.dart';
-import 'package:flashpaws/widgets/overwrite_confirm_widget.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 

@@ -1,13 +1,4 @@
-import 'dart:async';
-
-import 'package:flashpaws/flashcard.dart';
-import 'package:flashpaws/multichoice.dart';
-import 'package:flashpaws/widgets.dart';
-import 'package:flutter/material.dart';
-import 'package:flutterkat/flutterkat.dart';
-import 'package:flutterkat/graphics.dart';
-import 'package:flutterkat/theme.dart';
-import 'package:flutterkat/widgets.dart';
+part of '../widgets.dart';
 
 /// A widget which is used as the button for answers in multi choice tests.
 /// 

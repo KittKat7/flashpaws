@@ -1,11 +1,7 @@
 import 'dart:convert';
 
 import 'package:flashpaws/inout.dart';
-import 'package:flashpaws/widgets/multichoice_page.dart';
-import 'package:flashpaws/widgets/practice_page.dart';
-import 'package:flashpaws/widgets/review_page.dart';
 import 'package:flashpaws/update.dart';
-import 'package:flashpaws/widgets/flashcard_widget.dart';
 import 'package:flutter/services.dart';
 
 import 'widgets.dart';
@@ -202,7 +198,8 @@ class _HomePageState extends State<HomePage> {
           child: SingleChildScrollView(child: Column(children: [
             startBtns(),
             deckBtns(Flashcard.filteredDecks, () => setState(() {})),
-            cardBtns(Flashcard.filteredCards, context, () => setState(() {})),
+            CardButtonColumn(cards: Flashcard.filteredCards, updateState: () => setState(() {})),
+            // cardBtns(Flashcard.filteredCards, context, () => setState(() {})),
             const Text(""),
           ]
         )))),

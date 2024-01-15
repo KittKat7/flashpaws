@@ -1,9 +1,4 @@
-import 'package:flashpaws/flashcard.dart';
-import 'package:flashpaws/study.dart';
-import 'package:flashpaws/widgets.dart';
-import 'package:flutter/material.dart';
-import 'package:flutterkat/flutterkat.dart';
-import 'package:flutterkat/widgets.dart';
+part of '../widgets.dart';
 
 class PracticePage extends StatefulWidget {
   const PracticePage({super.key, required this.title});
