@@ -188,10 +188,12 @@ class _FlashcardWidgetState extends State<FlashcardWidget> {
     // If this widget is in editing mode, set the field widgets to be displayed in markdown.
     // Otherwise build it with the fields being editable text fields.
     if (!isEditing) {
-      keyText = Markd(key);
+      keyText = Text(key);
       for (String value in values) {
         valueText.add(
-          Markd(value)
+          // TODO: ERROR with Markd
+          // Markd(value)
+          Text(value)
         );
       }//e for
       deckText = TextItalic(deck);
