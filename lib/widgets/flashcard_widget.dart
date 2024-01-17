@@ -6,13 +6,14 @@ void flashcardWidgetPopup({
     bool isEditing = false,
     required Function() superSetState
   }) {
+  Navigator.push(context, MaterialPageRoute(builder: (context) => FlashcardWidget(card: card, initIsEditing: isEditing, superSetState: superSetState),));
   // showDialog
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return FlashcardWidget(card: card, initIsEditing: isEditing, superSetState: superSetState);
-    }//e builder
-  );//e showDialog
+  // showDialog(
+  //   context: context,
+  //   builder: (BuildContext context) {
+  //     return FlashcardWidget(card: card, initIsEditing: isEditing, superSetState: superSetState);
+  //   }//e builder
+  // );//e showDialog
 }//e createCardPopup
 
 class FlashcardWidget extends StatefulWidget {
@@ -188,12 +189,13 @@ class _FlashcardWidgetState extends State<FlashcardWidget> {
     // If this widget is in editing mode, set the field widgets to be displayed in markdown.
     // Otherwise build it with the fields being editable text fields.
     if (!isEditing) {
-      keyText = Text(key);
+      keyText = Markd(key);
       for (String value in values) {
+        if (value.isEmpty) continue;
         valueText.add(
           // TODO: ERROR with Markd
           // Markd(value)
-          Text(value)
+          Markd(value)
         );
       }//e for
       deckText = TextItalic(deck);
@@ -205,26 +207,9 @@ class _FlashcardWidgetState extends State<FlashcardWidget> {
       tagText = tagField;
     }
 
+    List<Widget> columnChildren = [];
     
     
-    Widget keyContainer = Column(mainAxisSize: MainAxisSize.min, children: [
-      TextBold(getString('term/question')),
-      keyText
-    ],);
-
-    Widget valueContainer = Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
-      TextBold(getString('definition/answer'))] + valueText
-    );
-
-    Widget deckContainer = Column(mainAxisSize: MainAxisSize.min, children: [
-      TextBold(getString('deck')),
-      deckText
-    ],);
-
-    Widget tagContainer = Column(mainAxisSize: MainAxisSize.min, children: [
-      TextBold(getString('tags')),
-      tagText
-    ],);
 
     Widget divider() {
       if (!isEditing) {
@@ -233,16 +218,32 @@ class _FlashcardWidgetState extends State<FlashcardWidget> {
         return const SizedBox();
       }
     }//e divider
+    
+    columnChildren.addAll([
+      TextBold(getString('term/question')),
+      keyText,
+      divider(),
+      TextBold(getString('hint_create_new_card_values')),
+      valueText[0],
+      divider()
+    ]);
 
-    Widget column = Column(mainAxisSize: MainAxisSize.min, children: [
-      keyContainer,
+    if (valueText.length > 1) {
+      columnChildren.add(TextBold(getString('hint_create_new_card_values_fake')));
+      for (Widget wid in valueText.sublist(1)) {
+        columnChildren.addAll([wid, divider()]);
+      }//e for
+    }//e if
+
+    columnChildren.addAll([
+      TextBold(getString('hint_create_new_card_deck')),
+      deckText,
       divider(),
-      valueContainer,
-      divider(),
-      deckContainer,
-      divider(),
-      tagContainer
-    ],);
+      TextBold(getString('hint_create_new_card_tags')),
+      tagText
+    ]);
+
+    Widget column = Column(mainAxisSize: MainAxisSize.min, children: columnChildren);
 
     /// Saves the modified card.
     /// Performs all validation checks and then saved the modified card.
@@ -346,16 +347,16 @@ class _FlashcardWidgetState extends State<FlashcardWidget> {
       setState(() => isEditing = false);
     }//e preview()
 
-    Widget cancelBtn = TextButton(
+    Widget cancelBtn = ElevatedButton(
       onPressed: cancel,
       child: Text(getString('cancel')));
-    Widget saveBtn = TextButton(
+    Widget saveBtn = ElevatedButton(
       onPressed: save,
       child: Text(getString('save')));
-    Widget editBtn = TextButton(
+    Widget editBtn = ElevatedButton(
       onPressed: edit,
       child: Text(getString('edit')));
-    Widget previewBtn = TextButton(
+    Widget previewBtn = ElevatedButton(
       onPressed: preview,
       child: Text(getString('preview')));
 
@@ -374,18 +375,29 @@ class _FlashcardWidgetState extends State<FlashcardWidget> {
       ];
     }
 
+    columnChildren.add(const ThinDivider());
+    columnChildren.add(Row(children: [for (Widget wid in actionBtns) Expanded(flex: 1, child: wid,)]));
+
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) async {
         if (didPop) return;
         cancel();
       },
-      child: Aspect(
-        child: AlertDialog(
-          title: Center(child: HeaderMarkd(getString('flashcard'))),
-          content: SingleChildScrollView(child: column),
-          actions: actionBtns
-        )
+      
+      // child: AlertDialog(
+      //   title: Center(child: HeaderMarkd(getString('flashcard'))),
+      //   content: SingleChildScrollView(child: column),
+      //   actions: actionBtns
+      // )
+      // child: Column(children: [
+      //   Center(child: HeaderMarkd(getString('flashcard'))),
+      //   SingleChildScrollView(child: column),
+      //   Row(children: actionBtns,)
+      // ],)
+      child: Scaffold(
+        appBar: AppBar(centerTitle: true, title: HeaderMarkd(getString('flashcard'))),
+        body: Aspect(child: SingleChildScrollView(child: column)),
       )
     );
   }

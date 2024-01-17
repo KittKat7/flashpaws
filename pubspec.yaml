@@ -43,6 +43,7 @@ dependencies:
   file_picker: # File picker for saving files
   path_provider: # Managing paths for file IO.
   universal_html: # Web file management
+  # flutter_markdown:
 
 dev_dependencies:
   flutter_test:

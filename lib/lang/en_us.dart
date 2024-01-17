@@ -18,10 +18,6 @@ Map<String, String> get getLang {
   lang['edit'] = 'Edit';
   lang['preview'] = 'Preview';
   lang['flashcard'] = 'Flashcard';
-  lang['term/question'] = 'Term/Question';
-  lang['definition/answer'] = 'Definition/Answer';
-  lang['deck'] = 'Deck';
-  lang['tags'] = 'Tags';
   lang['skip'] = 'Skip';
   lang['overwrite'] = 'Overwrite';
 
