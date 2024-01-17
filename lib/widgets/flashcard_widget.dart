@@ -220,7 +220,7 @@ class _FlashcardWidgetState extends State<FlashcardWidget> {
     }//e divider
     
     columnChildren.addAll([
-      TextBold(getString('term/question')),
+      TextBold(getString('hint_create_new_card_key')),
       keyText,
       divider(),
       TextBold(getString('hint_create_new_card_values')),
