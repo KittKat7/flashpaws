@@ -1,6 +1,5 @@
 
 import 'dart:collection';
-import 'dart:convert';
 
 import 'package:flashpaws/inout.dart';
 
@@ -227,15 +226,6 @@ class Flashcard {
     cards.remove(card);
     saveCards();
   }//e removeCard
-
-  static saveCards([List<Flashcard>? cardsIn]) {
-    List<Flashcard> saveCards = cardsIn??=cards;
-    List<String> cardsJson = [];
-    for (Flashcard card in saveCards) {
-      cardsJson.add(jsonEncode(card.toJson()));
-    }
-    hiveBox.put('flashcards', cardsJson);
-  }//e saveCards
 
   /// Validates a string to make sure it is formatted correctly as a deck variable.
   ///

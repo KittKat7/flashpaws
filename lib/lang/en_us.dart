@@ -20,6 +20,7 @@ Map<String, String> get getLang {
   lang['flashcard'] = 'Flashcard';
   lang['skip'] = 'Skip';
   lang['overwrite'] = 'Overwrite';
+  lang['delete'] = 'Delete';
 
   // btns
   lang['btn_all_cards'] = 'All Cards';

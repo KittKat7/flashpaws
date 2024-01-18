@@ -31,7 +31,7 @@ part of '../widgets.dart';
 /// the primary color scheme of the current theme. The content of the button is
 /// formatted using the `MarkD` widget, allowing rich text and markdown-like
 /// styling for the flashcard content.
-class CardButton extends StatelessWidget {
+class CardButton extends StatefulWidget {
   /// The card to be displayed.
   final Flashcard card;
   /// The function to run when the button is pressed.
@@ -42,11 +42,33 @@ class CardButton extends StatelessWidget {
   const CardButton({super.key, required this.card, required this.onPressed, required this.onLongPress});
 
   @override
+  State<CardButton> createState() => _CardButtonState();
+}//e CardBtn
+
+class _CardButtonState extends State<CardButton> {
+  bool isCardFlipped = false;
+
+  @override
   Widget build(BuildContext context) {
-    String tags = card.deck;
-    for (String tag in card.tagsList) {
+
+    String tags = widget.card.deck;
+    for (String tag in widget.card.tagsList) {
       tags += " - $tag";
+    }//e for
+
+    List<Widget> children = [];
+
+    if (isCardFlipped) {
+      children.add(
+        Align(alignment: Alignment.centerLeft, child: Markd(widget.card.values[0]))
+      );
+    } else {
+      children.addAll([
+        Align(alignment: Alignment.centerLeft, child: Markd(widget.card.key)),
+        Align(alignment: Alignment.centerLeft, child: Markd('*${tags.trim()}*'))
+      ]);
     }
+
     return Row(children: [
       Expanded(child: Padding(
         padding: const EdgeInsets.only(top: 10, left: 1, right: 1),
@@ -58,23 +80,24 @@ class CardButton extends StatelessWidget {
             side: BorderSide(width: 1, color: colorScheme(context).primary),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           ),
-          onPressed: () { onPressed(); },
-          onLongPress: () { onLongPress(context); },
+          onPressed: () => setState(() => isCardFlipped = !isCardFlipped),
+          onLongPress: () { widget.onPressed(); /*widget.onLongPress(context);*/ },
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: [
-              Markd(card.key),
-              // Italisized string of the deck and tags.
-              Markd('*${tags.trim()}*'),
-              const ThickDivider(),
-              Markd(card.values[0])
-            ]
+            children: children
+            // [
+            //   Markd(widget.card.key),
+            //   // Italisized string of the deck and tags.
+            //   Markd('*${tags.trim()}*'),
+            //   const ThickDivider(),
+            //   Markd(widget.card.values[0])
+            // ]
           )
         ),
       ))
     ]);
   }//e Build
-}//e CardBtn
+}
 
 
 class CardButtonColumn extends StatelessWidget {

@@ -2,14 +2,43 @@ import 'dart:convert';
 import 'package:flashpaws/lib/inout_desktop.dart';
 import 'package:flashpaws/lib/inout_mobile.dart';
 import 'package:flashpaws/lib/inout_web.dart';
+import 'package:flashpaws/metadata.dart';
 import 'package:flashpaws/widgets.dart';
+import 'package:flutterkat/flutterkat.dart';
 import 'package:flutterkat/platform.dart';
 
 import 'package:flashpaws/flashcard.dart';
 import 'package:flashpaws/update.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
-late Box hiveBox;
+Map<String, dynamic> loadMetadata() {
+  String? contentString = flktLoad('metadata');
+  if (contentString == null) return Map.from(defaultMetadata);
+
+  return json.decode(contentString);
+}
+
+List<Flashcard> loadCards() {
+  String? contentString = flktLoad('flashcards');
+  // If [contentString] is null, then the pick file or read operation was canceled, possibly by the
+  // user. In that case, return without attempting to import.
+  if (contentString == null) return [];
+
+  List<dynamic> content = json.decode(contentString);
+
+  List<Flashcard> flashcards =
+    [for (dynamic card in content) Flashcard.fromJson(card)];  
+
+  return flashcards;
+}
+
+void saveCards([List<Flashcard>? cards]) {
+  // This is what will be writen to the file. Encode the metadata and cards into a map into json.
+  List<Flashcard> saveCards = cards??=Flashcard.cards;
+  String content = json.encode(saveCards);
+
+
+  flktSave('flashcards', content);
+}
 
 
 /// Export [cards] to JSON format and save it to the device.
@@ -127,7 +156,7 @@ Future<void> importCardsJson(context, Function() onLoadComplete) async {
   }//e for
   
   // Save the flashcards, and run [onLoadComplete].
-  Flashcard.saveCards();
+  saveCards();
   onLoadComplete();
 }//e importCardsJson()
 

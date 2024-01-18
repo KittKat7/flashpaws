@@ -1,6 +1,5 @@
-import 'dart:convert';
-
 import 'package:flashpaws/inout.dart';
+import 'package:flashpaws/metadata.dart';
 import 'package:flashpaws/update.dart';
 import 'package:flutter/services.dart';
 
@@ -12,13 +11,9 @@ import 'package:flutterkat/graphics.dart';
 import 'package:flutterkat/widgets.dart';
 import 'flashcard.dart';
 import 'package:flutterkat/theme.dart' as theme;
-import 'package:hive_flutter/hive_flutter.dart';
 import './lang/en_us.dart' as en_us;
 
 const String updateTimeStamp = String.fromEnvironment('buildTimeUTC', defaultValue: 'N/A');
-
-/// int version
-Map<String, dynamic> metadata = {};
 
 void main() async {
   await flutterkatInit();
@@ -28,6 +23,9 @@ void main() async {
 
 /// This function initializes anything variables, like the hive box, that will be needed later on.
 Future<void> initialize() async {
+
+  loadMetadata();
+
   // Initialize app version.
   setAppVersion(2024011300);
 
@@ -36,31 +34,12 @@ Future<void> initialize() async {
   // Set aspect ratio
   setAspect(3, 4);
   // Initialize hive box.
-  await Hive.initFlutter('katapp');
-  hiveBox = await Hive.openBox('flashpaws');
-  
-  // Change from flkt version storage to hive version storage.
-  if (flktLoad('version') != null) {
-    hiveBox.put('metadata', json.encode(
-      <String, dynamic>{'version': int.parse(flktLoad('version')!)}));
-    await flktRemove('version');
-  }//e if
-  // Version update etc...
-  if (!hiveBox.containsKey('metadata') || hiveBox.get('metadata').isEmpty
-    || hiveBox.get('metadata')[0] is! String) {
-    hiveBox.put('metadata', json.encode(<String, dynamic>{'version': appVersion}));
-  } else {
-    metadata = json.decode(hiveBox.get('metadata'));
-    int savedVersion = metadata['version'];
-    if (savedVersion < appVersion) {
-      await update(savedVersion, appVersion);
-    }//e if
-  }//e if else
 
+  List<Flashcard> savedCards = loadCards();
+  
   // If there are no prexisting cards, or something was saved incorrectly and not saved as a String,
   // create the list of introduction flashcards.
-  if (!hiveBox.containsKey('flashcards') || hiveBox.get('flashcards').isEmpty
-    || hiveBox.get('flashcards')[0] is! String) {
+  if (savedCards.isEmpty) {
     // List of new flashcards to be added.
     List<Flashcard> newCards = [
       // Flashcard for how to make a new card.
@@ -84,13 +63,10 @@ Future<void> initialize() async {
     ];//e newCards
     
     // Save flashcards.
-    Flashcard.saveCards(newCards);
+    saveCards(newCards);
   }//e if
   
-  // For every card in the box, convert it from json, and add it to the list of cards.
-  for (String json in hiveBox.get('flashcards')) {
-    Flashcard.addCard(Flashcard.fromJson(jsonDecode(json)));
-  }//e for
+  Flashcard.cards = loadCards();
 
   // Initialize the filter to be empty.
   Flashcard.setFilter([]);

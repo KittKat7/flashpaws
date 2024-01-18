@@ -193,8 +193,6 @@ class _FlashcardWidgetState extends State<FlashcardWidget> {
       for (String value in values) {
         if (value.isEmpty) continue;
         valueText.add(
-          // TODO: ERROR with Markd
-          // Markd(value)
           Markd(value)
         );
       }//e for
@@ -245,6 +243,23 @@ class _FlashcardWidgetState extends State<FlashcardWidget> {
 
     Widget column = Column(mainAxisSize: MainAxisSize.min, children: columnChildren);
 
+    /// Runs the actual saving functions.
+      void saveConfirmed() {
+        setState(() {
+          if (!isNewCard) {
+            Flashcard.removeCard(widget.card!);
+          }
+          Flashcard.newCard(key, deck, values, tagsStr.split(' '));
+        });
+        // Update the list of filtered flashcards. This will update and show the changes that have
+        // been made.
+        Flashcard.setFilter(null);
+        // Update the state up the parent widget to see the changes.
+        widget.superSetState();
+        // Pop the flashcard widget.
+        Navigator.pop(context);
+      }//e saveConfirmed()
+
     /// Saves the modified card.
     /// Performs all validation checks and then saved the modified card.
     void save() {
@@ -285,22 +300,7 @@ class _FlashcardWidgetState extends State<FlashcardWidget> {
         values: values,
         tagStr: tagsStr);
 
-      /// Runs the actual saving functions.
-      void saveConfirmed() {
-        setState(() {
-          if (!isNewCard) {
-            Flashcard.removeCard(widget.card!);
-          }
-          Flashcard.newCard(key, deck, values, tagsStr.split(' '));
-        });
-        // Update the list of filtered flashcards. This will update and show the changes that have
-        // been made.
-        Flashcard.setFilter(null);
-        // Update the state up the parent widget to see the changes.
-        widget.superSetState();
-        // Pop the flashcard widget.
-        Navigator.pop(context);
-      }//e saveConfirmed()
+      
 
       // Check for duplicate.
       // If the key or deck (what ids the card) has been modified, check to see if a card exists
@@ -347,12 +347,21 @@ class _FlashcardWidgetState extends State<FlashcardWidget> {
       setState(() => isEditing = false);
     }//e preview()
 
+    /// Deletes the current card after a confirmation by the user.
+    void delete() {
+      isEdited = false;
+
+    }
+
     Widget cancelBtn = ElevatedButton(
       onPressed: cancel,
       child: Text(getString('cancel')));
     Widget saveBtn = ElevatedButton(
       onPressed: save,
       child: Text(getString('save')));
+    Widget deleteBtn = ElevatedButton(
+      onPressed: delete,
+      child: Text(getString('delete')));
     Widget editBtn = ElevatedButton(
       onPressed: edit,
       child: Text(getString('edit')));
@@ -365,12 +374,14 @@ class _FlashcardWidgetState extends State<FlashcardWidget> {
       actionBtns = [
         cancelBtn,
         previewBtn,
+        deleteBtn,
         saveBtn,
       ];
     } else {
       actionBtns = [
         cancelBtn,
         editBtn,
+        deleteBtn,
         saveBtn,
       ];
     }

@@ -47,7 +47,7 @@ class _ReviewPageState extends State<ReviewPage> {
     var confidBtns = confidenceBtns(
       review.confidence, (p) {
         setState(() => review.setConfidence(p));
-        Flashcard.saveCards();
+        saveCards();
       }
     );
 

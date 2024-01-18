@@ -42,7 +42,7 @@ class _PracticePageState extends State<PracticePage> {
     
     var confidBtns = confidenceBtns(practice.confidence, (p) {
       setState(() => practice.setConfidence(p));
-      Flashcard.saveCards();
+      saveCards();
     });
 
     var navBtns = Row(children: [

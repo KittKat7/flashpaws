@@ -39,7 +39,7 @@ dependencies:
   flutterkat: # flutterkat
     path: ../flutterkat
 
-  hive_flutter: # Local storage database
+  # hive_flutter: # Local storage database
   file_picker: # File picker for saving files
   path_provider: # Managing paths for file IO.
   universal_html: # Web file management
