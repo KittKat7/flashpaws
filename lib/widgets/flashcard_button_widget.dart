@@ -51,6 +51,8 @@ class _CardButtonState extends State<CardButton> {
   @override
   Widget build(BuildContext context) {
 
+    Color bgColor = isCardFlipped? Theme.of(context).colorScheme.primary : Theme.of(context).canvasColor;
+
     String tags = widget.card.deck;
     for (String tag in widget.card.tagsList) {
       tags += " - $tag";
@@ -76,7 +78,7 @@ class _CardButtonState extends State<CardButton> {
           style: ElevatedButton.styleFrom(
             elevation: 0,
             padding: const EdgeInsets.all(10),
-            backgroundColor: Theme.of(context).canvasColor,
+            backgroundColor: bgColor,
             side: BorderSide(width: 1, color: colorScheme(context).primary),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           ),
