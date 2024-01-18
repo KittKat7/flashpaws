@@ -4,21 +4,23 @@ import 'package:flashpaws/lib/inout_mobile.dart';
 import 'package:flashpaws/lib/inout_web.dart';
 import 'package:flashpaws/metadata.dart';
 import 'package:flashpaws/widgets.dart';
-import 'package:flutterkat/flutterkat.dart';
 import 'package:flutterkat/platform.dart';
 
 import 'package:flashpaws/flashcard.dart';
 import 'package:flashpaws/update.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+late final SharedPreferences prefs;
 
 Map<String, dynamic> loadMetadata() {
-  String? contentString = flktLoad('metadata');
+  String? contentString = prefs.getString('metadata');
   if (contentString == null) return Map.from(defaultMetadata);
 
   return json.decode(contentString);
 }
 
 List<Flashcard> loadCards() {
-  String? contentString = flktLoad('flashcards');
+  String? contentString = prefs.getString('flashcards');
   // If [contentString] is null, then the pick file or read operation was canceled, possibly by the
   // user. In that case, return without attempting to import.
   if (contentString == null) return [];
@@ -37,7 +39,7 @@ void saveCards([List<Flashcard>? cards]) {
   String content = json.encode(saveCards);
 
 
-  flktSave('flashcards', content);
+  prefs.setString('flashcards', content);
 }
 
 

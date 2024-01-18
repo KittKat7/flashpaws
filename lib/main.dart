@@ -2,6 +2,7 @@ import 'package:flashpaws/inout.dart';
 import 'package:flashpaws/metadata.dart';
 import 'package:flashpaws/update.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'widgets.dart';
 import 'package:flutter/material.dart';
@@ -16,13 +17,15 @@ import './lang/en_us.dart' as en_us;
 const String updateTimeStamp = String.fromEnvironment('buildTimeUTC', defaultValue: 'N/A');
 
 void main() async {
-  await flutterkatInit();
+  await flutterkatInit('flashpaws');
   await initialize();
   flktRunApp(const MyApp());
 }//e main()
 
 /// This function initializes anything variables, like the hive box, that will be needed later on.
 Future<void> initialize() async {
+  // SharedPreferences.setPrefix('flashpaws');
+  prefs = await SharedPreferences.getInstance();
 
   loadMetadata();
 

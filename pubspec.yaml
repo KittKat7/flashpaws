@@ -44,6 +44,7 @@ dependencies:
   path_provider: # Managing paths for file IO.
   universal_html: # Web file management
   # flutter_markdown:
+  shared_preferences:
 
 dev_dependencies:
   flutter_test:
