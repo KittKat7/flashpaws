@@ -33,14 +33,14 @@ class _ReviewPageState extends State<ReviewPage> {
       onPressed: () => setState(() => review.flipCard()),
       child: Padding(padding: const EdgeInsets.all(10), child: 
         !review.isShowingValue? Column(children: [
-          Markd(review.currentKey),
-          TextItalic(review.currentDeck),
+          Marked(review.currentKey),
+          SimpleText(review.currentDeck, isItalic: true),
           const Divider()])
         : Column(children: [
-          Markd(review.currentKey),
-          TextItalic(review.currentDeck),
+          Marked(review.currentKey),
+          SimpleText(review.currentDeck, isItalic: true),
           const Divider(),
-          Markd(review.currentValue)])
+          Marked(review.currentValue)])
       )//e Padding()
     );
     
@@ -77,7 +77,7 @@ class _ReviewPageState extends State<ReviewPage> {
     
     return Scaffold(
       appBar: AppBar(
-        title: TextBold("${widget.title} - ${review.index + 1}/${review.length}"),
+        title: SimpleText("${widget.title} - ${review.index + 1}/${review.length}", isBold: true,),
         centerTitle: true,
       ),
       body: Aspect(child: Padding(
@@ -101,13 +101,13 @@ class ReviewCompletePage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: TextBold(title),
+        title: SimpleText(title, isBold: true),
         centerTitle: true,
       ),
       body: Aspect(child: Padding(
         padding: const EdgeInsets.only(top: 10),
         child: Align(alignment: Alignment.center, child: SingleChildScrollView(child: 
-        Markd(getString('txt_review_stats', [results['points'], results['total'], results['percent']]))
+        Marked(getString('txt_review_stats', [results['points'], results['total'], results['percent']]))
       )))),
     );
   }//e build()

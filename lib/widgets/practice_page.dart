@@ -29,14 +29,14 @@ class _PracticePageState extends State<PracticePage> {
       onPressed: () => setState(() => practice.flipCard()),
       child: Padding(padding: const EdgeInsets.all(10), child: 
         !practice.isShowingValue? Column(children: [
-          Markd(practice.currentKey),
-          TextItalic(practice.currentDeck),
+          Marked(practice.currentKey),
+          SimpleText(practice.currentDeck, isItalic: true),
           const Divider()])
         : Column(children: [
-          Markd(practice.currentKey),
-          TextItalic(practice.currentDeck),
+          Marked(practice.currentKey),
+          SimpleText(practice.currentDeck, isItalic: true),
           const Divider(),
-          Markd(practice.currentValue)])
+          Marked(practice.currentValue)])
       )//e Padding()
     );
     
@@ -62,7 +62,7 @@ class _PracticePageState extends State<PracticePage> {
     
     return Scaffold(
       appBar: AppBar(
-        title: TextBold(getString('practicePage', [practice.cardsPracticed])),
+        title: SimpleText(getString('practicePage', [practice.cardsPracticed]), isBold: true),
         centerTitle: true,
       ),
       body: Aspect(child: Padding(

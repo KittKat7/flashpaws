@@ -40,18 +40,18 @@ class _OverwriteConfirmAlertState extends State<OverwriteConfirmAlert> {
             setState(() => applyAll = a ?? false );
             widget.applyToAll(applyAll);
           }),
-          Markd(getString('bnt_apply_to_all')),
+          Marked(getString('bnt_apply_to_all')),
           TextButton(
             onPressed: () { Navigator.of(context).pop(); widget.overwriteThis(false); },
-            child: Markd(getString('skip'))
+            child: Marked(getString('skip'))
           ),
           TextButton(
             onPressed: () { Navigator.of(context).pop(); widget.overwriteThis(true); },
-            child: Markd(getString('overwrite'))
+            child: Marked(getString('overwrite'))
           ),
         ],
-        title: Markd(getString('header_confirm_overwrite')),
-        content: Markd(getString('msg_confirm_overwrite', [widget.cardID])),
+        title: Marked(getString('header_confirm_overwrite')),
+        content: Marked(getString('msg_confirm_overwrite', [widget.cardID])),
       )
     );
   }//e build()

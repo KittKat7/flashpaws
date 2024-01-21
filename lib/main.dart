@@ -2,30 +2,33 @@ import 'package:flashpaws/inout.dart';
 import 'package:flashpaws/metadata.dart';
 import 'package:flashpaws/update.dart';
 import 'package:flutter/services.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutterkat/flutterkat.dart';
+import 'package:kittkatflutterlibrary/kittkatflutterlibrary.dart';
 
 import 'widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterkat/flutterkat.dart';
 import 'package:flutterkat/lang.dart';
 import 'package:flutterkat/graphics.dart';
-import 'package:flutterkat/widgets.dart';
 import 'flashcard.dart';
-import 'package:flutterkat/theme.dart' as theme;
+// import 'package:flutterkat/theme.dart' as theme;
 import './lang/en_us.dart' as en_us;
+// import 'package:flutterkat/flutterkat.dart' as flkt;
 
 const String updateTimeStamp = String.fromEnvironment('buildTimeUTC', defaultValue: 'N/A');
 
+AppTheme theme = AppTheme();
+
 void main() async {
-  await flutterkatInit('flashpaws');
+  // await flutterkatInit('flashpaws');
   await initialize();
-  flktRunApp(const MyApp());
+  runThemedApp(MyApp(), theme);
 }//e main()
 
 /// This function initializes anything variables, like the hive box, that will be needed later on.
 Future<void> initialize() async {
   // SharedPreferences.setPrefix('flashpaws');
-  prefs = await SharedPreferences.getInstance();
+  // prefs = await SharedPreferences.getInstance();
+  await initiateSharedPreferences(prefix: 'flashpaws-');
 
   loadMetadata();
 
@@ -35,7 +38,8 @@ Future<void> initialize() async {
   // set language
   setLang(en_us.getLang);
   // Set aspect ratio
-  setAspect(3, 4);
+  Aspect.aspectWidth = 3;
+  Aspect.aspectHeight = 4;
   // Initialize hive box.
 
   List<Flashcard> savedCards = loadCards();
@@ -95,8 +99,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: getString('title'),
-      theme: theme.getLightTheme(context),
-      darkTheme: theme.getDarkTheme(context),
+      theme: theme.getThemeDataLight(context),
+      darkTheme: theme.getThemeDataDark(context),
+      // darkTheme: theme.getDarkTheme(context),
       themeMode: theme.getThemeMode(context),
       // home: const HomePage(title: 'Flutter Demo Home Page'),
       routes: genRoutes(pageRoutes),
@@ -123,25 +128,27 @@ class _HomePageState extends State<HomePage> {
       child: ListView(
         padding: const EdgeInsets.only(top: 20),
         children: [
-          Align(alignment: Alignment.center, child: TextBold(getString('header_settings_drawer', [updateTimeStamp]))),
+          Align(alignment: Alignment.center, child: SimpleText(
+            getString('header_settings_drawer', [updateTimeStamp]),
+            isBold: true,)),
           const Divider(),
           // Import export buttons.
           // Export JSON
           ElevatedButton(
             onPressed: () => importCardsJson(context, () => setState(() => Flashcard.setFilter(null))),
-            child: Markd(getString('btn_import_json'))),
+            child: Marked(getString('btn_import_json'))),
           ElevatedButton(
             onPressed: () => exportCardsJson(metadata, Flashcard.filteredCards),
-            child: Markd(getString('btn_export_json'))),
+            child: Marked(getString('btn_export_json'))),
           const Divider(),
           // Theme settings buttons.
           ElevatedButton(
-            onPressed: () => themeModePopup(context),
-            child: Markd(getString('btn_theme_brightness_menu'))),
+            onPressed: () => theme.cycleThemeMode()/*themeModePopup(context)*/,
+            child: Marked(getString('btn_theme_brightness_menu'))),
           ElevatedButton(
             // onPressed: () => getColorTheme(context).cycleColor(),
-            onPressed: () => themeColorPopup(context),
-            child: Markd(getString('btn_theme_color_menu')))
+            onPressed: () => theme.cylceColor()/*themeColorPopup(context, theme)*/,
+            child: Marked(getString('btn_theme_color_menu')))
         ]
       )
     );
@@ -168,7 +175,7 @@ class _HomePageState extends State<HomePage> {
               Scaffold.of(context).openDrawer(); 
             });
           }),
-          title: TextBold(widget.title),
+          title: SimpleText(widget.title, isBold: true,),
           centerTitle: true,
         ),
         drawer: drawer,

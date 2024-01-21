@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutterkat/flutterkat.dart';
 import 'package:flutterkat/graphics.dart';
 import 'package:flutterkat/theme.dart';
-import 'package:flutterkat/widgets.dart';
+// import 'package:flutterkat/widgets.dart';
 import 'package:flashpaws/study.dart';
 import 'package:flashpaws/flashcard.dart';
 import 'package:flashpaws/multichoice.dart';
+import 'package:kittkatflutterlibrary/kittkatflutterlibrary.dart';
 
 part 'widgets/flashcard_button_widget.dart';
 part 'widgets/flashcard_widget.dart';
@@ -57,7 +58,7 @@ class LayerBtn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // the child the button will display.
-    Widget child = Markd(layer);
+    Widget child = Marked(layer);
     // The styling for not selected buttons.
     ButtonStyle priStyle = ElevatedButton.styleFrom(backgroundColor: colorScheme(context).primaryContainer);
     // The styling for selected buttons.
@@ -122,7 +123,7 @@ class StartBtn extends StatelessWidget {
     return ElevatedButton(
       style: style,
       onPressed: () => onPressed(context),
-      child: Row(mainAxisAlignment: MainAxisAlignment.center, mainAxisSize: MainAxisSize.min, children: [icon, Markd(text)])
+      child: Row(mainAxisAlignment: MainAxisAlignment.center, mainAxisSize: MainAxisSize.min, children: [icon, Marked(text)])
     );
   }//e Build
 }//e StartBtn
@@ -253,13 +254,13 @@ void themeModePopup(BuildContext context) {
     children: [
       ElevatedButton(
         onPressed: () => getAppThemeMode(context).setLightMode(),
-        child: Markd(getString('btn_light_theme'))),
+        child: Marked(getString('btn_light_theme'))),
       ElevatedButton(
         onPressed: () => getAppThemeMode(context).setDarkMode(),
-        child: Markd(getString('btn_dark_theme'))),
+        child: Marked(getString('btn_dark_theme'))),
       ElevatedButton(
         onPressed: () => getAppThemeMode(context).setAutoMode(),
-        child: Markd(getString('btn_auto_theme'))),
+        child: Marked(getString('btn_auto_theme'))),
   ]);
 
   // showDialog
@@ -267,7 +268,7 @@ void themeModePopup(BuildContext context) {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Markd(getString('btn_theme_brightness_menu')),
+        title: Marked(getString('btn_theme_brightness_menu')),
         content: themeModeList,
         actions: <Widget>[
           TextButton(
@@ -297,7 +298,7 @@ void themeModePopup(BuildContext context) {
 ///
 /// The method dynamically generates the color buttons based on the available
 /// theme colors and their corresponding names.
-void themeColorPopup(BuildContext context) {
+void themeColorPopup(BuildContext context, AppTheme theme) {
 
   List<String> colors = getAvailableThemeColors;
 
@@ -306,7 +307,7 @@ void themeColorPopup(BuildContext context) {
   for (String c in colors) {
     colorButtons.add(
       ElevatedButton(
-        onPressed:() => getColorTheme(context).setColor(c),
+        onPressed:() => theme.cylceColor(),
         child: Text("${c.substring(0, 1).toUpperCase()}${c.substring(1).toLowerCase()}"))
     );
   }
@@ -320,7 +321,7 @@ void themeColorPopup(BuildContext context) {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Markd(getString('btn_theme_brightness_menu')),
+        title: Marked(getString('btn_theme_brightness_menu')),
         content: themeModeList,
         actions: <Widget>[
           TextButton(
@@ -474,7 +475,7 @@ void alertPopup(
   for (int i = 0; i < btnStrings.length && i < btnActions.length; i++) {
     actions.add(
       TextButton(
-        child: Markd(btnStrings[i]),
+        child: Marked(btnStrings[i]),
         onPressed: () { Navigator.of(context).pop(); btnActions[i](); },
       )
     );
@@ -484,8 +485,8 @@ void alertPopup(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Markd(title),
-        content: Markd(message),
+        title: Marked(title),
+        content: Marked(message),
         actions: actions,
       );
     }//e builder
@@ -506,7 +507,7 @@ class HeaderMarkd extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Markd(data, scale: scale);
+    return Marked(data, scale: scale);
   }//e build()
 }//e HeaderMarkd
 

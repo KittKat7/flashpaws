@@ -31,10 +31,16 @@ dependencies:
   flutter:
     sdk: flutter
 
+  # # The following adds the Cupertino Icons font to your application.
+  # # Use with the CupertinoIcons class for iOS style icons.
+  # cupertino_icons: ^1.0.2
 
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
+  kittkatflutterlibrary:
+    path: ../kittkatflutterlibrary
+    # git:
+    #   url: https://github.com/KittKat7/kittkatflutterlibrary.git
+    #   ref: dev # branch name
+
 
   flutterkat: # flutterkat
     path: ../flutterkat

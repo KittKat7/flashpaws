@@ -189,15 +189,15 @@ class _FlashcardWidgetState extends State<FlashcardWidget> {
     // If this widget is in editing mode, set the field widgets to be displayed in markdown.
     // Otherwise build it with the fields being editable text fields.
     if (!isEditing) {
-      keyText = Markd(key);
+      keyText = Marked(key);
       for (String value in values) {
         if (value.isEmpty) continue;
         valueText.add(
-          Markd(value)
+          Marked(value)
         );
       }//e for
-      deckText = TextItalic(deck);
-      tagText = TextItalic(tagsStr);
+      deckText = SimpleText(deck, isItalic: true);
+      tagText = SimpleText(tagsStr, isItalic: true);
     } else {
       keyText = keyField;
       valueText = valueFields;
@@ -218,26 +218,26 @@ class _FlashcardWidgetState extends State<FlashcardWidget> {
     }//e divider
     
     columnChildren.addAll([
-      TextBold(getString('hint_create_new_card_key')),
+      SimpleText(getString('hint_create_new_card_key'), isBold: true),
       keyText,
       divider(),
-      TextBold(getString('hint_create_new_card_values')),
+      SimpleText(getString('hint_create_new_card_values'), isBold: true,),
       valueText[0],
       divider()
     ]);
 
     if (valueText.length > 1) {
-      columnChildren.add(TextBold(getString('hint_create_new_card_values_fake')));
+      columnChildren.add(SimpleText(getString('hint_create_new_card_values_fake'), isBold: true));
       for (Widget wid in valueText.sublist(1)) {
         columnChildren.addAll([wid, divider()]);
       }//e for
     }//e if
 
     columnChildren.addAll([
-      TextBold(getString('hint_create_new_card_deck')),
+      SimpleText(getString('hint_create_new_card_deck'), isBold: true),
       deckText,
       divider(),
-      TextBold(getString('hint_create_new_card_tags')),
+      SimpleText(getString('hint_create_new_card_tags'), isBold: true),
       tagText
     ]);
 

@@ -8,19 +8,17 @@ import 'package:flutterkat/platform.dart';
 
 import 'package:flashpaws/flashcard.dart';
 import 'package:flashpaws/update.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-late final SharedPreferences prefs;
+import 'package:kittkatflutterlibrary/kittkatflutterlibrary.dart';
 
 Map<String, dynamic> loadMetadata() {
-  String? contentString = prefs.getString('metadata');
+  String? contentString = prefsGetString('metadata');
   if (contentString == null) return Map.from(defaultMetadata);
 
   return json.decode(contentString);
 }
 
 List<Flashcard> loadCards() {
-  String? contentString = prefs.getString('flashcards');
+  String? contentString = prefsGetString('flashcards');
   // If [contentString] is null, then the pick file or read operation was canceled, possibly by the
   // user. In that case, return without attempting to import.
   if (contentString == null) return [];
@@ -39,7 +37,7 @@ void saveCards([List<Flashcard>? cards]) {
   String content = json.encode(saveCards);
 
 
-  prefs.setString('flashcards', content);
+  prefsSetString('flashcards', content);
 }
 
 

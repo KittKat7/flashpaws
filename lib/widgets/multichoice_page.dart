@@ -58,7 +58,7 @@ class AnswerButton extends StatelessWidget {
         ),
         onPressed: onPressed,
         onLongPress: onLongPress,
-        child: Markd(text))
+        child: Marked(text))
     ));
   }//e build()
 
@@ -140,7 +140,7 @@ class _MultiChoicePageState extends State<MultiChoicePage> {
     Padding txtKey = padLeftRight(HeaderMarkd(key), 15);
     // A Text widget which is padded on the left and right, where the data is the deck of the
     // flashcard.
-    Padding txtDeck = padLeftRight(TextItalic(deck), 15);
+    Padding txtDeck = padLeftRight(SimpleText(deck, isItalic: true), 15);
 
     // A list of [Widget]s which will hold all the [AnswerButton]s for the cards [values].
     List<Widget> answerBtnList = [];
@@ -186,7 +186,7 @@ class _MultiChoicePageState extends State<MultiChoicePage> {
         )
       ),
       // The time elapsed timer.
-      Expanded(flex: 2, child: Center(child: Markd(timeElapsedStr, scale: 1.5,))),
+      Expanded(flex: 2, child: Center(child: Marked(timeElapsedStr, scale: 1.5,))),
       // The right navigation button.
       Expanded(
         flex: 1,
@@ -214,7 +214,7 @@ class _MultiChoicePageState extends State<MultiChoicePage> {
       appBar: AppBar(
         // TODO make back button require confirmation.
         // TODO update the page title.
-        title: TextBold(widget.title),
+        title: SimpleText(widget.title, isBold: true),
         centerTitle: true,
       ),
       body: Aspect(child: Padding(
@@ -249,7 +249,7 @@ class MultiChoiceResultPage extends StatelessWidget {
     num percent = (results['percent']!*100).round();
 
     answeredCards.add(
-      Markd(getString('txt_multichoice_stats', [points, total, percent]))
+      Marked(getString('txt_multichoice_stats', [points, total, percent]))
     );
 
     answeredCards.add(const Text(""));
@@ -257,7 +257,7 @@ class MultiChoiceResultPage extends StatelessWidget {
     for (Flashcard card in test.deck) {
       List<Widget> cardList = [];
       cardList.add(padLeftRight(HeaderMarkd(card.key), 15));
-      cardList.add(padLeftRight(TextItalic(card.deck), 15));
+      cardList.add(padLeftRight(SimpleText(card.deck, isItalic: true), 15));
       cardList.add(const ThickDivider());
 
       List<Widget> answers = [];
@@ -293,7 +293,7 @@ class MultiChoiceResultPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: TextBold(title),
+        title: SimpleText(title, isBold: true),
         centerTitle: true,
       ),
       body: Aspect(child: Padding(
@@ -302,7 +302,7 @@ class MultiChoiceResultPage extends StatelessWidget {
           child: Column(mainAxisSize: MainAxisSize.min, children: answeredCards)
       )))),
       bottomNavigationBar: BottomAppBar(child: Center(
-        child: Markd(
+        child: Marked(
           results['duration']!.toString().substring(0, results['duration']!.toString().length - 7),
           scale: 1.5,))),
     );

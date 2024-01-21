@@ -62,12 +62,12 @@ class _CardButtonState extends State<CardButton> {
 
     if (isCardFlipped) {
       children.add(
-        Align(alignment: Alignment.centerLeft, child: Markd(widget.card.values[0]))
+        Align(alignment: Alignment.centerLeft, child: Marked(widget.card.values[0]))
       );
     } else {
       children.addAll([
-        Align(alignment: Alignment.centerLeft, child: Markd(widget.card.key)),
-        Align(alignment: Alignment.centerLeft, child: Markd('*${tags.trim()}*'))
+        Align(alignment: Alignment.centerLeft, child: Marked(widget.card.key)),
+        Align(alignment: Alignment.centerLeft, child: Marked('*${tags.trim()}*'))
       ]);
     }
 
