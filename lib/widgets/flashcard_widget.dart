@@ -99,14 +99,14 @@ class _FlashcardWidgetState extends State<FlashcardWidget> {
     keyField = TextField(
       controller: TextEditingController(text: key),
       onChanged: (t) { key = t; _checkForChange(); },
-      decoration: InputDecoration(hintText: getString('hint_create_new_card_key')),
+      decoration: InputDecoration(hintText: getLang('hint_create_new_card_key')),
       keyboardType: TextInputType.multiline,
       maxLines: null,
     );//e keyField
     valueFields.add(TextField(
       controller: TextEditingController(text: values[0]),
       onChanged: (t) { setState(() => _updateValues(0, t)); _checkForChange(); },
-      decoration: InputDecoration(hintText: getString('hint_create_new_card_values')),
+      decoration: InputDecoration(hintText: getLang('hint_create_new_card_values')),
       keyboardType: TextInputType.multiline,
       maxLines: null,
     ));//e valueFields
@@ -114,7 +114,7 @@ class _FlashcardWidgetState extends State<FlashcardWidget> {
       valueFields.add(TextField(
         controller: TextEditingController(text: values[i]),
         onChanged: (t) { setState(() => _updateValues(i, t)); _checkForChange(); },
-        decoration: InputDecoration(hintText: getString('hint_create_new_card_values_fake')),
+        decoration: InputDecoration(hintText: getLang('hint_create_new_card_values_fake')),
         keyboardType: TextInputType.multiline,
         maxLines: null,
       ));//e valueFields
@@ -122,14 +122,14 @@ class _FlashcardWidgetState extends State<FlashcardWidget> {
     deckField = TextField(
       controller: TextEditingController(text: deck),
       onChanged: (t) { deck = t; _checkForChange(); },
-      decoration: InputDecoration(hintText: getString('hint_create_new_card_deck')),
+      decoration: InputDecoration(hintText: getLang('hint_create_new_card_deck')),
       keyboardType: TextInputType.multiline,
       maxLines: null,
     );//e deckField
     tagField = TextField(
       controller: TextEditingController(text: tagsStr),
       onChanged: (t) { tagsStr = t; _checkForChange(); },
-      decoration: InputDecoration(hintText: getString('hint_create_new_card_tags')),
+      decoration: InputDecoration(hintText: getLang('hint_create_new_card_tags')),
       keyboardType: TextInputType.multiline,
       maxLines: null,
     );//e tagField
@@ -156,7 +156,7 @@ class _FlashcardWidgetState extends State<FlashcardWidget> {
       valueFields.add(TextField(
         onChanged: (t) => setState(() => _updateValues(n+1, t)),
         controller: TextEditingController(text: ''),
-        decoration: InputDecoration(hintText: getString('hint_create_new_card_values_fake')),
+        decoration: InputDecoration(hintText: getLang('hint_create_new_card_values_fake')),
         keyboardType: TextInputType.multiline,
         maxLines: null,
       ));
@@ -218,26 +218,26 @@ class _FlashcardWidgetState extends State<FlashcardWidget> {
     }//e divider
     
     columnChildren.addAll([
-      SimpleText(getString('hint_create_new_card_key'), isBold: true),
+      SimpleText(getLang('hint_create_new_card_key'), isBold: true),
       keyText,
       divider(),
-      SimpleText(getString('hint_create_new_card_values'), isBold: true,),
+      SimpleText(getLang('hint_create_new_card_values'), isBold: true,),
       valueText[0],
       divider()
     ]);
 
     if (valueText.length > 1) {
-      columnChildren.add(SimpleText(getString('hint_create_new_card_values_fake'), isBold: true));
+      columnChildren.add(SimpleText(getLang('hint_create_new_card_values_fake'), isBold: true));
       for (Widget wid in valueText.sublist(1)) {
         columnChildren.addAll([wid, divider()]);
       }//e for
     }//e if
 
     columnChildren.addAll([
-      SimpleText(getString('hint_create_new_card_deck'), isBold: true),
+      SimpleText(getLang('hint_create_new_card_deck'), isBold: true),
       deckText,
       divider(),
-      SimpleText(getString('hint_create_new_card_tags'), isBold: true),
+      SimpleText(getLang('hint_create_new_card_tags'), isBold: true),
       tagText
     ]);
 
@@ -267,9 +267,9 @@ class _FlashcardWidgetState extends State<FlashcardWidget> {
       if (key.isEmpty) {
         alertPopup(
           context,
-          getString('err_hdr_create_empty_key'),
-          getString('err_msg_create_empty_key'),
-          [getString('confirm')],
+          getLang('err_hdr_create_empty_key'),
+          getLang('err_msg_create_empty_key'),
+          [getLang('confirm')],
           [(){}]);
         return;
       }//e if
@@ -277,9 +277,9 @@ class _FlashcardWidgetState extends State<FlashcardWidget> {
       if (values[0].isEmpty) {
         alertPopup(
           context,
-          getString('err_hdr_create_empty_values'),
-          getString('err_msg_create_empty_values'),
-          [getString('confirm')],
+          getLang('err_hdr_create_empty_values'),
+          getLang('err_msg_create_empty_values'),
+          [getLang('confirm')],
           [(){}]);
         return;
       }//e if
@@ -309,8 +309,8 @@ class _FlashcardWidgetState extends State<FlashcardWidget> {
       if ((key != oldKey || deck != oldDeck) && Flashcard.cards.contains(modCard)) {
         confirmPopup(
           context,
-          getString('header_card_conflict_overwrite'),
-          getString('msg_card_conflict_overwrite'),
+          getLang('header_card_conflict_overwrite'),
+          getLang('msg_card_conflict_overwrite'),
           () {
             // Save the card.
             saveConfirmed();
@@ -328,8 +328,8 @@ class _FlashcardWidgetState extends State<FlashcardWidget> {
       if (isEdited) {
         confirmPopup(
           context,
-          getString('header_confirm_cancel_modify'),
-          getString('msg_confirm_cancel_modify'),
+          getLang('header_confirm_cancel_modify'),
+          getLang('msg_confirm_cancel_modify'),
           () => Navigator.of(context).pop()
         );
       } else {
@@ -355,19 +355,19 @@ class _FlashcardWidgetState extends State<FlashcardWidget> {
 
     Widget cancelBtn = ElevatedButton(
       onPressed: cancel,
-      child: Text(getString('cancel')));
+      child: Text(getLang('cancel')));
     Widget saveBtn = ElevatedButton(
       onPressed: save,
-      child: Text(getString('save')));
+      child: Text(getLang('save')));
     Widget deleteBtn = ElevatedButton(
       onPressed: delete,
-      child: Text(getString('delete')));
+      child: Text(getLang('delete')));
     Widget editBtn = ElevatedButton(
       onPressed: edit,
-      child: Text(getString('edit')));
+      child: Text(getLang('edit')));
     Widget previewBtn = ElevatedButton(
       onPressed: preview,
-      child: Text(getString('preview')));
+      child: Text(getLang('preview')));
 
     List<Widget> actionBtns = [];
     if (isEditing) {
@@ -397,17 +397,17 @@ class _FlashcardWidgetState extends State<FlashcardWidget> {
       },
       
       // child: AlertDialog(
-      //   title: Center(child: HeaderMarkd(getString('flashcard'))),
+      //   title: Center(child: HeaderMarkd(getLang('flashcard'))),
       //   content: SingleChildScrollView(child: column),
       //   actions: actionBtns
       // )
       // child: Column(children: [
-      //   Center(child: HeaderMarkd(getString('flashcard'))),
+      //   Center(child: HeaderMarkd(getLang('flashcard'))),
       //   SingleChildScrollView(child: column),
       //   Row(children: actionBtns,)
       // ],)
       child: Scaffold(
-        appBar: AppBar(centerTitle: true, title: HeaderMarkd(getString('flashcard'))),
+        appBar: AppBar(centerTitle: true, title: HeaderMarkd(getLang('flashcard'))),
         body: Aspect(child: SingleChildScrollView(child: column)),
       )
     );

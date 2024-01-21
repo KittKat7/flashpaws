@@ -1,10 +1,6 @@
 import 'dart:async';
 import 'package:flashpaws/inout.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterkat/flutterkat.dart';
-import 'package:flutterkat/graphics.dart';
-import 'package:flutterkat/theme.dart';
-// import 'package:flutterkat/widgets.dart';
 import 'package:flashpaws/study.dart';
 import 'package:flashpaws/flashcard.dart';
 import 'package:flashpaws/multichoice.dart';
@@ -135,7 +131,7 @@ Widget deckBtns(List<String> layers, void Function() updateState) {
   
   // Add a button to reset the filter and display all decks / cards.
   children.add(LayerBtn(
-    layer: getString('btn_all_cards'),
+    layer: getLang('btn_all_cards'),
     onPressed: () { Flashcard.setFilter([]); updateState(); },
     isApplied: true,
   ));
@@ -200,18 +196,21 @@ Widget startBtns() {
 
   Widget practice = StartBtn(
     icon: const Icon(Icons.play_arrow),
-    text: getString('btn_practice'),
-    onPressed: (context) => Navigator.of(context).pushNamed(getRoute('practice'))
+    text: getLang('btn_practice'),
+    // onPressed: (context) => Navigator.of(context).pushNamed(getRoute('practice'))
+    onPressed: (context) => Navigator.of(context).push(genRoute(const PracticePage(title: "")))
   );
   Widget review = StartBtn(
     icon: const Icon(Icons.fast_forward),
-    text: getString('btn_review'),
-    onPressed: (context) => Navigator.of(context).pushNamed(getRoute('review'))
+    text: getLang('btn_review'),
+    // onPressed: (context) => Navigator.of(context).pushNamed(getRoute('review'))
+    onPressed: (context) => Navigator.of(context).push(genRoute(const ReviewPage(title: "")))
   );
   Widget multitest = StartBtn(
     icon: const Icon(Icons.check_box),
-    text: getString('btn_multitest'),
-    onPressed: (context) => Navigator.of(context).pushNamed(getRoute('multichoice'))
+    text: getLang('btn_multitest'),
+    // onPressed: (context) => Navigator.of(context).pushNamed(getRoute('multichoice'))
+    onPressed: (context) => Navigator.of(context).push(genRoute(const MultiChoicePage(title: "")))
   );
 
   Widget wrap = Align(alignment: Alignment.topCenter, child: Wrap(alignment: WrapAlignment.start, children: [practice, review, multitest]));
@@ -253,14 +252,14 @@ void themeModePopup(BuildContext context) {
     mainAxisSize: MainAxisSize.min,
     children: [
       ElevatedButton(
-        onPressed: () => getAppThemeMode(context).setLightMode(),
-        child: Marked(getString('btn_light_theme'))),
+        onPressed: () => appTheme.setLightMode(),
+        child: Marked(getLang('btn_light_theme'))),
       ElevatedButton(
-        onPressed: () => getAppThemeMode(context).setDarkMode(),
-        child: Marked(getString('btn_dark_theme'))),
+        onPressed: () => appTheme.setDarkMode(),
+        child: Marked(getLang('btn_dark_theme'))),
       ElevatedButton(
-        onPressed: () => getAppThemeMode(context).setAutoMode(),
-        child: Marked(getString('btn_auto_theme'))),
+        onPressed: () => appTheme.setSystemMode(),
+        child: Marked(getLang('btn_auto_theme'))),
   ]);
 
   // showDialog
@@ -268,11 +267,11 @@ void themeModePopup(BuildContext context) {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Marked(getString('btn_theme_brightness_menu')),
+        title: Marked(getLang('btn_theme_brightness_menu')),
         content: themeModeList,
         actions: <Widget>[
           TextButton(
-            child: Text(getString('close')),
+            child: Text(getLang('close')),
             onPressed: () {
               Navigator.of(context).pop();
             },//e onPressed
@@ -300,15 +299,16 @@ void themeModePopup(BuildContext context) {
 /// theme colors and their corresponding names.
 void themeColorPopup(BuildContext context, AppTheme theme) {
 
-  List<String> colors = getAvailableThemeColors;
+  final List<MaterialColor> colors = getAvailableColors();
 
   List<Widget> colorButtons = [];
 
-  for (String c in colors) {
+  for (MaterialColor color in colors) {
+    String c = '${color.red}, ${color.green}, ${color.blue}';
     colorButtons.add(
       ElevatedButton(
-        onPressed:() => theme.cylceColor(),
-        child: Text("${c.substring(0, 1).toUpperCase()}${c.substring(1).toLowerCase()}"))
+        onPressed:() => theme.setColor(color),
+        child: Marked("${c.substring(0, 1).toUpperCase()}${c.substring(1).toLowerCase()}"))
     );
   }
 
@@ -321,11 +321,11 @@ void themeColorPopup(BuildContext context, AppTheme theme) {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Marked(getString('btn_theme_brightness_menu')),
+        title: Marked(getLang('btn_theme_brightness_menu')),
         content: themeModeList,
         actions: <Widget>[
           TextButton(
-            child: Text(getString('close')),
+            child: Text(getLang('close')),
             onPressed: () {
               Navigator.of(context).pop();
             },//e onPressed

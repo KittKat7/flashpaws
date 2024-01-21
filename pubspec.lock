@@ -184,13 +184,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutterkat:
-    dependency: "direct main"
-    description:
-      path: "../flutterkat"
-      relative: true
-    source: path
-    version: "0.0.1"
   html:
     dependency: transitive
     description:

@@ -42,14 +42,14 @@ class AnswerButton extends StatelessWidget {
     if (backgroundColor != null) {
       bgColor = backgroundColor!;
     } else if (isSelectedAnswer) {
-      bgColor = getTheme(context).colorScheme.primary;
+      bgColor = colorScheme(context).primary;
     } else {
-      bgColor = getTheme(context).colorScheme.surface;
+      bgColor = colorScheme(context).surface;
     }//e if elif else
 
     return Padding(
       padding: const EdgeInsets.only(top: 5, bottom: 5),
-      child: expand(ElevatedButton(
+      child: ElevatedButton( // TODO REMOVED expanded around elevated button
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.all(15),
           backgroundColor: bgColor,
@@ -59,7 +59,7 @@ class AnswerButton extends StatelessWidget {
         onPressed: onPressed,
         onLongPress: onLongPress,
         child: Marked(text))
-    ));
+    );
   }//e build()
 
 }//e AnswerButton
@@ -195,14 +195,16 @@ class _MultiChoicePageState extends State<MultiChoicePage> {
             setState(() => test.nextCard()) :
             confirmPopup(
               context,
-              getString('header_finish_test'),
-              getString('msg_finish_test'),
+              getLang('header_finish_test'),
+              getLang('msg_finish_test'),
               () {
                 test.endTime = DateTime.now();
                 MultiChoice.test = test;
                 // Navigator.of(context).pop();
-                Navigator.of(context).popAndPushNamed(
-                  getRoute('multichoiceResult'));
+                // Navigator.of(context).popAndPushNamed(
+                //   getRoute('multichoiceResult'));
+                Navigator.pop(context);
+                Navigator.push(context, genRoute(MultiChoiceResultPage(title: "")));
               }),
           icon: test.hasNextCard() ?
             const Icon(Icons.chevron_right) : const Icon(Icons.check)
@@ -249,7 +251,7 @@ class MultiChoiceResultPage extends StatelessWidget {
     num percent = (results['percent']!*100).round();
 
     answeredCards.add(
-      Marked(getString('txt_multichoice_stats', [points, total, percent]))
+      Marked(getLang('txt_multichoice_stats', [points, total, percent]))
     );
 
     answeredCards.add(const Text(""));
@@ -264,19 +266,19 @@ class MultiChoiceResultPage extends StatelessWidget {
       
       for (String ans in test.values[card.id]!) {
         String icon = "";
-        Color buttonColor = getTheme(context).colorScheme.surface;
+        Color buttonColor = colorScheme(context).surface;
         if (ans == test.userAnswers[card.id]) {
           if (ans == card.values[0]) {
-            icon = getString('ico_check');
-            buttonColor = getTheme(context).colorScheme.primary;
+            icon = getLang('ico_check');
+            buttonColor = colorScheme(context).primary;
           } else {
-            icon = getString('ico_cross');
-            buttonColor = getTheme(context).colorScheme.error;
+            icon = getLang('ico_cross');
+            buttonColor = colorScheme(context).error;
           }
         } else {
           if (ans == card.values[0]) {
-            icon = getString('ico_check');
-            buttonColor = getTheme(context).colorScheme.error;
+            icon = getLang('ico_check');
+            buttonColor = colorScheme(context).error;
           }
         }
         answers.add(

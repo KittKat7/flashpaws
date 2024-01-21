@@ -2,13 +2,10 @@ import 'package:flashpaws/inout.dart';
 import 'package:flashpaws/metadata.dart';
 import 'package:flashpaws/update.dart';
 import 'package:flutter/services.dart';
-import 'package:flutterkat/flutterkat.dart';
 import 'package:kittkatflutterlibrary/kittkatflutterlibrary.dart';
 
 import 'widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterkat/lang.dart';
-import 'package:flutterkat/graphics.dart';
 import 'flashcard.dart';
 // import 'package:flutterkat/theme.dart' as theme;
 import './lang/en_us.dart' as en_us;
@@ -36,7 +33,7 @@ Future<void> initialize() async {
   setAppVersion(2024011300);
 
   // set language
-  setLang(en_us.getLang);
+  setLangMap(en_us.getLang);
   // Set aspect ratio
   Aspect.aspectWidth = 3;
   Aspect.aspectHeight = 4;
@@ -51,21 +48,21 @@ Future<void> initialize() async {
     List<Flashcard> newCards = [
       // Flashcard for how to make a new card.
       Flashcard(
-        key: getString('introcard_how_to_new_card'),
+        key: getLang('introcard_how_to_new_card'),
         deck: '/introduction/',
-        values: [getString('introcard_how_to_new_card_answer')],
+        values: [getLang('introcard_how_to_new_card_answer')],
       ),
       // Flashcard for how to sort cards.
       Flashcard(
-        key: getString('introcard_how_to_sort_cards'),
+        key: getLang('introcard_how_to_sort_cards'),
         deck: '/introduction/',
-        values: [getString('introcard_how_to_sort_cards_answer')],
+        values: [getLang('introcard_how_to_sort_cards_answer')],
       ),
       // Flashcard for how to practice the flashcards.
       Flashcard(
-        key: getString('introcard_how_to_practice'),
+        key: getLang('introcard_how_to_practice'),
         deck: '/introduction/',
-        values: [getString('introcard_how_to_practice_answer')],
+        values: [getLang('introcard_how_to_practice_answer')],
       ),
     ];//e newCards
     
@@ -80,14 +77,14 @@ Future<void> initialize() async {
 }//e initialize()
 
 /// Stores data for all the page routes.
-Map<String, List<dynamic>> pageRoutes = {
-  'home': ['/', HomePage(title: getString('title'))],
-  'review': ['/review/', ReviewPage(title: getString('reviewPage'))],
-  'reviewComplete': ['/review/complete/', ReviewCompletePage(title: getString('reviewCompletePage'))],
-  'practice': ['/practice/', PracticePage(title: getString('practicePage'))],
-  'multichoice': ['/multichoice/', MultiChoicePage(title: getString('multichoicePage'))],
-  'multichoiceResult': ['/multichoice/result/', MultiChoiceResultPage(title: getString('multichoiceResultPage'))],
-};
+// Map<String, List<dynamic>> pageRoutes = {
+//   'home': ['/', HomePage(title: getLang('title'))],
+//   'review': ['/review/', ReviewPage(title: getLang('reviewPage'))],
+//   'reviewComplete': ['/review/complete/', ReviewCompletePage(title: getLang('reviewCompletePage'))],
+//   'practice': ['/practice/', PracticePage(title: getLang('practicePage'))],
+//   'multichoice': ['/multichoice/', MultiChoicePage(title: getLang('multichoicePage'))],
+//   'multichoiceResult': ['/multichoice/result/', MultiChoiceResultPage(title: getLang('multichoiceResultPage'))],
+// };
 
 /// MyApp
 /// The app :)
@@ -98,13 +95,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: getString('title'),
+      title: getLang('title'),
       theme: theme.getThemeDataLight(context),
       darkTheme: theme.getThemeDataDark(context),
       // darkTheme: theme.getDarkTheme(context),
       themeMode: theme.getThemeMode(context),
-      // home: const HomePage(title: 'Flutter Demo Home Page'),
-      routes: genRoutes(pageRoutes),
+      home: const HomePage(title: ""),
+      // routes: genRoutes(pageRoutes),
     );
   }
 }
@@ -129,26 +126,26 @@ class _HomePageState extends State<HomePage> {
         padding: const EdgeInsets.only(top: 20),
         children: [
           Align(alignment: Alignment.center, child: SimpleText(
-            getString('header_settings_drawer', [updateTimeStamp]),
+            getLang('header_settings_drawer', [updateTimeStamp]),
             isBold: true,)),
           const Divider(),
           // Import export buttons.
           // Export JSON
           ElevatedButton(
             onPressed: () => importCardsJson(context, () => setState(() => Flashcard.setFilter(null))),
-            child: Marked(getString('btn_import_json'))),
+            child: Marked(getLang('btn_import_json'))),
           ElevatedButton(
             onPressed: () => exportCardsJson(metadata, Flashcard.filteredCards),
-            child: Marked(getString('btn_export_json'))),
+            child: Marked(getLang('btn_export_json'))),
           const Divider(),
           // Theme settings buttons.
           ElevatedButton(
-            onPressed: () => theme.cycleThemeMode()/*themeModePopup(context)*/,
-            child: Marked(getString('btn_theme_brightness_menu'))),
+            onPressed: () => themeModePopup(context),
+            child: Marked(getLang('btn_theme_brightness_menu'))),
           ElevatedButton(
             // onPressed: () => getColorTheme(context).cycleColor(),
-            onPressed: () => theme.cylceColor()/*themeColorPopup(context, theme)*/,
-            child: Marked(getString('btn_theme_color_menu')))
+            onPressed: () => themeColorPopup(context, theme),
+            child: Marked(getLang('btn_theme_color_menu')))
         ]
       )
     );
@@ -161,8 +158,8 @@ class _HomePageState extends State<HomePage> {
         } else {
           confirmPopup(
             context,
-            getString('header_exit_app'),
-            getString('msg_confirm_app_exit'),
+            getLang('header_exit_app'),
+            getLang('msg_confirm_app_exit'),
             () => SystemChannels.platform.invokeMethod('SystemNavigator.pop')
           );
         }
@@ -175,7 +172,7 @@ class _HomePageState extends State<HomePage> {
               Scaffold.of(context).openDrawer(); 
             });
           }),
-          title: SimpleText(widget.title, isBold: true,),
+          title: SimpleText(getLang('title'), isBold: true),
           centerTitle: true,
         ),
         drawer: drawer,
@@ -202,7 +199,7 @@ class _HomePageState extends State<HomePage> {
             context: context,
             superSetState: () => setState(() {}),
             isEditing: true),
-          tooltip: getString('tooltip_create_card'),
+          tooltip: getLang('tooltip_create_card'),
           child: const Icon(Icons.add),
         ),
       ),

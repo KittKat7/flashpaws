@@ -122,8 +122,8 @@ class CardButtonColumn extends StatelessWidget {
           onLongPress: (context) {
             confirmPopup(
               context,
-              getString('header_delete_card'),
-              getString('msg_confirm_delete_card', [card.id]),
+              getLang('header_delete_card'),
+              getLang('msg_confirm_delete_card', [card.id]),
               () { Flashcard.removeCard(card); Flashcard.setFilter(Flashcard.filter); updateState(); }
             );//e confirmPopup
           },//e onLongPress
@@ -166,8 +166,8 @@ Widget cardBtns(List<Flashcard> cards, BuildContext context, void Function() upd
         onLongPress: (context) {
           confirmPopup(
             context,
-            getString('header_delete_card'),
-            getString('msg_confirm_delete_card', [card.id]),
+            getLang('header_delete_card'),
+            getLang('msg_confirm_delete_card', [card.id]),
             () { Flashcard.removeCard(card); Flashcard.setFilter(Flashcard.filter); updateState(); }
           );//e confirmPopup
         },//e onLongPress

@@ -42,8 +42,8 @@ dependencies:
     #   ref: dev # branch name
 
 
-  flutterkat: # flutterkat
-    path: ../flutterkat
+  # flutterkat: # flutterkat
+  #   path: ../flutterkat
 
   # hive_flutter: # Local storage database
   file_picker: # File picker for saving files

@@ -12,7 +12,9 @@ class ReviewPage extends StatefulWidget {
 class _ReviewPageState extends State<ReviewPage> {
 
   completeReview() {
-    Navigator.of(context).popAndPushNamed(getRoute('reviewComplete'));
+    Navigator.pop(context);
+    Navigator.push(context, genRoute(ReviewCompletePage(title: "")));
+    // Navigator.of(context).popAndPushNamed(getRoute('reviewComplete'));
   }
 
   @override
@@ -67,8 +69,8 @@ class _ReviewPageState extends State<ReviewPage> {
           onPressed: () => review.hasNextCard()? setState(() => review.nextCard()) :
             confirmPopup(
               context,
-              getString('header_finish_review'),
-              getString('msg_finish_review'),
+              getLang('header_finish_review'),
+              getLang('msg_finish_review'),
               completeReview),
           icon: review.hasNextCard()? const Icon(Icons.chevron_right) : const Icon(Icons.check)
         )
@@ -107,7 +109,7 @@ class ReviewCompletePage extends StatelessWidget {
       body: Aspect(child: Padding(
         padding: const EdgeInsets.only(top: 10),
         child: Align(alignment: Alignment.center, child: SingleChildScrollView(child: 
-        Marked(getString('txt_review_stats', [results['points'], results['total'], results['percent']]))
+        Marked(getLang('txt_review_stats', [results['points'], results['total'], results['percent']]))
       )))),
     );
   }//e build()

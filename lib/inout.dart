@@ -4,7 +4,6 @@ import 'package:flashpaws/lib/inout_mobile.dart';
 import 'package:flashpaws/lib/inout_web.dart';
 import 'package:flashpaws/metadata.dart';
 import 'package:flashpaws/widgets.dart';
-import 'package:flutterkat/platform.dart';
 
 import 'package:flashpaws/flashcard.dart';
 import 'package:flashpaws/update.dart';
@@ -51,18 +50,18 @@ Future<void> exportCardsJson(Map<String, dynamic> metadata, List<Flashcard> card
   String content = json.encode({'metadata': metadata, 'flashcards': cards});
 
   // If the app is running on web, run the save method for web apps.
-  if (GetPlatform.isWeb) {
+  if (AppPlatform.isWeb) {
     // Write the contents to 'flashcards.json'.
     writeToFileWeb('flashcards.json', content);
   }//e if web
 
   // Else if the app is running on a desktop platform, run the save method for desktop apps.
-  else if (GetPlatform.isDesktop) {
+  else if (AppPlatform.isDesktop) {
     pickWriteFileDesktop(content);
   }//e if desktop
 
   // Else if the app is running on a mobile platform, run the save method for mobile apps.
-  else if (GetPlatform.isMobile) {
+  else if (AppPlatform.isMobile) {
     pickAndWriteToFileMobile('flashcards.json', content);
   }//e if mobile
 }//e exportCardsJson()
@@ -83,19 +82,19 @@ Future<void> importCardsJson(context, Function() onLoadComplete) async {
   String? contentString;
 
   // If the app is running as a web app, run the web specific method to pick and read from a file.
-  if (GetPlatform.isWeb) {
+  if (AppPlatform.isWeb) {
     contentString = await readFromFileWeb();
   }//e if web app
 
   // Else if the app is running as a desktop app, run the desktop specific method to pick and read
   // from a file.
-  else if (GetPlatform.isDesktop) {
+  else if (AppPlatform.isDesktop) {
     contentString = await pickReadFileDesktop();
   }//e if desktop app
 
   // Else if the app is running as a mobile app, run the mobile specific method to pick and read
   // from a file.
-  else if (GetPlatform.isMobile) {
+  else if (AppPlatform.isMobile) {
     contentString = await pickReadFileMobile();
   }//e if mobile app
 

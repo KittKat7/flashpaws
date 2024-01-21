@@ -62,7 +62,7 @@ class _PracticePageState extends State<PracticePage> {
     
     return Scaffold(
       appBar: AppBar(
-        title: SimpleText(getString('practicePage', [practice.cardsPracticed]), isBold: true),
+        title: SimpleText(getLang('practicePage', [practice.cardsPracticed]), isBold: true),
         centerTitle: true,
       ),
       body: Aspect(child: Padding(
