@@ -18,7 +18,6 @@ AppTheme theme = AppTheme();
 bool isLite = true;
 
 void main() async {
-  // await flutterkatInit('flashpaws');
   await initialize();
   runThemedApp(MyApp());
 }//e main()
@@ -27,8 +26,7 @@ void main() async {
 Future<void> initialize() async {
 
   AppInformation.setAppInfo('flashpaws', theme);
-
-  await initiateSharedPreferences(prefix: 'flashpaws-');
+  initSharedPreferences();
   
   // Initialize app version.
   setAppVersion(2024011300);

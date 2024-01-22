@@ -9,15 +9,15 @@ import 'package:flashpaws/flashcard.dart';
 import 'package:flashpaws/update.dart';
 import 'package:kittkatflutterlibrary/kittkatflutterlibrary.dart';
 
-AppDocuments appDocs = AppDocuments();
+AppInternalFiles appFiles = AppInternalFiles();
 
 Future<void> initiateIO() async {
-  await appDocs.initiate();
+  await appFiles.initialize();
 }
 
 
 Future<List<Flashcard>> loadCards() async {
-  String? contentString = await appDocs.readAppDoc('flashpaws.json');
+  String? contentString = await appFiles.readString('flashpaws.json');
   // If [contentString] is null, then the pick file or read operation was canceled, possibly by the
   // user. In that case, return without attempting to import.
   if (contentString == null) return [];
@@ -38,7 +38,7 @@ void saveCards([List<Flashcard>? cards]) {
   // This is what will be writen to the file. Encode the metadata and cards into a map into json.
   List<Flashcard> saveCards = cards??=Flashcard.cards;
   String content = json.encode({'metadata': metadata, 'flashcards': saveCards});
-  appDocs.writeAppDoc('flashpaws.json', content);
+  appFiles.writeString('flashpaws.json', content);
   // prefsSetString('flashcards', content);
 }
 
