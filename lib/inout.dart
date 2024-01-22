@@ -9,23 +9,27 @@ import 'package:flashpaws/flashcard.dart';
 import 'package:flashpaws/update.dart';
 import 'package:kittkatflutterlibrary/kittkatflutterlibrary.dart';
 
-Map<String, dynamic> loadMetadata() {
-  String? contentString = prefsGetString('metadata');
-  if (contentString == null) return Map.from(defaultMetadata);
+AppDocuments appDocs = AppDocuments();
 
-  return json.decode(contentString);
+Future<void> initiateIO() async {
+  await appDocs.initiate();
 }
 
-List<Flashcard> loadCards() {
-  String? contentString = prefsGetString('flashcards');
+
+Future<List<Flashcard>> loadCards() async {
+  String? contentString = await appDocs.readAppDoc('flashpaws.json');
   // If [contentString] is null, then the pick file or read operation was canceled, possibly by the
   // user. In that case, return without attempting to import.
   if (contentString == null) return [];
 
-  List<dynamic> content = json.decode(contentString);
+  Map<String, dynamic> content = json.decode(contentString);
+
+  metadata = content['metadata'];
+
+  List<dynamic> flashcardData = content['flashcards'];
 
   List<Flashcard> flashcards =
-    [for (dynamic card in content) Flashcard.fromJson(card)];  
+    [for (dynamic card in flashcardData) Flashcard.fromJson(card)];  
 
   return flashcards;
 }
@@ -33,10 +37,9 @@ List<Flashcard> loadCards() {
 void saveCards([List<Flashcard>? cards]) {
   // This is what will be writen to the file. Encode the metadata and cards into a map into json.
   List<Flashcard> saveCards = cards??=Flashcard.cards;
-  String content = json.encode(saveCards);
-
-
-  prefsSetString('flashcards', content);
+  String content = json.encode({'metadata': metadata, 'flashcards': saveCards});
+  appDocs.writeAppDoc('flashpaws.json', content);
+  // prefsSetString('flashcards', content);
 }
 
 

@@ -15,20 +15,21 @@ const String updateTimeStamp = String.fromEnvironment('buildTimeUTC', defaultVal
 
 AppTheme theme = AppTheme();
 
+bool isLite = true;
+
 void main() async {
   // await flutterkatInit('flashpaws');
   await initialize();
-  runThemedApp(MyApp(), theme);
+  runThemedApp(MyApp());
 }//e main()
 
 /// This function initializes anything variables, like the hive box, that will be needed later on.
 Future<void> initialize() async {
-  // SharedPreferences.setPrefix('flashpaws');
-  // prefs = await SharedPreferences.getInstance();
+
+  AppInformation.setAppInfo('flashpaws', theme);
+
   await initiateSharedPreferences(prefix: 'flashpaws-');
-
-  loadMetadata();
-
+  
   // Initialize app version.
   setAppVersion(2024011300);
 
@@ -39,7 +40,7 @@ Future<void> initialize() async {
   Aspect.aspectHeight = 4;
   // Initialize hive box.
 
-  List<Flashcard> savedCards = loadCards();
+  List<Flashcard> savedCards = await loadCards();
   
   // If there are no prexisting cards, or something was saved incorrectly and not saved as a String,
   // create the list of introduction flashcards.
@@ -70,7 +71,7 @@ Future<void> initialize() async {
     saveCards(newCards);
   }//e if
   
-  Flashcard.cards = loadCards();
+  Flashcard.cards = await loadCards();
 
   // Initialize the filter to be empty.
   Flashcard.setFilter([]);
