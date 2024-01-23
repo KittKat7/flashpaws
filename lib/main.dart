@@ -26,8 +26,8 @@ void main() async {
 Future<void> initialize() async {
 
   AppInformation.setAppInfo('flashpaws', theme);
-  initSharedPreferences();
-  initiateIO();
+  await initSharedPreferences();
+  await initiateIO();
   
   // Initialize app version.
   setAppVersion(2024011300);
